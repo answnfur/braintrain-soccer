@@ -933,96 +933,364 @@
        2. 훈련 일정
     --------------------------------- */
 
-    function schedule() {
-      return `
-        <div class="grid">
-          <form id="sessionForm" class="card">
-            <h2>${tr("훈련 추가", "Add training")}</h2>
+function schedule() {
+  const sessions = [...db.sessions].sort((a, b) => {
+    return (
+      a.date.localeCompare(b.date) ||
+      a.name.localeCompare(b.name)
+    );
+  });
 
-            ${field(
-              tr("훈련 이름", "Session name"),
-              "name",
-              "text",
-              'maxlength="100"'
-            )}
+  const completedCount = sessions.filter(
+    session => session.done
+  ).length;
 
-            ${field(
-              tr("날짜", "Date"),
-              "date",
-              "date",
-              `value="${date()}"`
-            )}
+  const plannedCount = sessions.length - completedCount;
 
-            ${field(
-              tr("시간 (분)", "Duration (min)"),
-              "minutes",
-              "number",
-              'min="1" max="600" value="60"'
-            )}
+  const totalMinutes = sessions.reduce(
+    (total, session) => total + session.minutes,
+    0
+  );
 
-            ${field(
-              tr(
-                "예상 또는 실제 운동자각도 RPE (1–10)",
-                "Expected or actual perceived exertion RPE (1–10)"
-              ),
-              "rpe",
-              "number",
-              'min="1" max="10" value="5"'
-            )}
+  return `
+    <!-- 일정 요약 -->
+    <div class="stats">
+      ${card(
+        tr("전체 일정", "Total sessions"),
+        sessions.length
+      )}
 
-            <p class="tiny">
+      ${card(
+        tr("예정 훈련", "Planned sessions"),
+        plannedCount
+      )}
+
+      ${card(
+        tr("완료 훈련", "Completed sessions"),
+        completedCount
+      )}
+
+      ${card(
+        tr("전체 계획·기록 시간", "Total scheduled minutes"),
+        totalMinutes,
+        tr("분", "min")
+      )}
+    </div>
+
+    <!-- 스케줄 표 -->
+    <div class="card" style="margin-bottom:20px">
+      <div
+        style="
+          display:flex;
+          align-items:center;
+          justify-content:space-between;
+          gap:12px;
+          flex-wrap:wrap;
+          margin-bottom:18px;
+        "
+      >
+        <h2 style="margin:0">
+          ${tr("훈련 스케줄 표", "Training schedule")}
+        </h2>
+
+        <span class="tag">
+          ${tr("날짜순 정렬", "SORTED BY DATE")}
+        </span>
+      </div>
+
+      ${
+        sessions.length
+          ? `
+            <div class="tablewrap">
+              <table style="min-width:680px">
+                <caption class="sr">
+                  ${tr(
+                    "등록한 훈련 일정과 완료 상태",
+                    "Saved training sessions and completion status"
+                  )}
+                </caption>
+
+                <thead>
+                  <tr>
+                    <th scope="col">
+                      ${tr("날짜", "Date")}
+                    </th>
+
+                    <th scope="col">
+                      ${tr("요일", "Day")}
+                    </th>
+
+                    <th scope="col">
+                      ${tr("훈련 내용", "Session")}
+                    </th>
+
+                    <th scope="col">
+                      ${tr("시간", "Duration")}
+                    </th>
+
+                    <th scope="col">
+                      ${tr("강도", "Intensity")}
+                    </th>
+
+                    <th scope="col">
+                      ${tr("상태", "Status")}
+                    </th>
+
+                    <th scope="col">
+                      ${tr("관리", "Actions")}
+                    </th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  ${sessions.map(session => {
+                    const sessionDate = new Date(
+                      session.date + "T12:00:00"
+                    );
+
+                    const weekday = Number.isNaN(
+                      sessionDate.getTime()
+                    )
+                      ? "—"
+                      : sessionDate.toLocaleDateString(
+                          lang === "ko" ? "ko-KR" : "en-GB",
+                          { weekday: "short" }
+                        );
+
+                    const isToday = session.date === date();
+
+                    return `
+                      <tr
+                        style="${
+                          isToday
+                            ? "background:rgba(201,243,107,0.07)"
+                            : ""
+                        }"
+                      >
+                        <td style="white-space:nowrap">
+                          <strong>
+                            ${esc(session.date)}
+                          </strong>
+
+                          ${
+                            isToday
+                              ? `
+                                <span
+                                  class="tag"
+                                  style="margin-left:6px"
+                                >
+                                  ${tr("오늘", "TODAY")}
+                                </span>
+                              `
+                              : ""
+                          }
+                        </td>
+
+                        <td style="white-space:nowrap">
+                          ${esc(weekday)}
+                        </td>
+
+                        <td style="overflow-wrap:anywhere">
+                          ${esc(session.name)}
+                        </td>
+
+                        <td style="white-space:nowrap">
+                          ${session.minutes}
+                          ${tr("분", "min")}
+                        </td>
+
+                        <td style="white-space:nowrap">
+                          RPE ${session.rpe}
+                        </td>
+
+                        <td style="white-space:nowrap">
+                          <span
+                            class="tag"
+                            style="${
+                              session.done
+                                ? ""
+                                : "background:#263445;color:#d5dfeb"
+                            }"
+                          >
+                            ${
+                              session.done
+                                ? tr("완료 ✓", "Done ✓")
+                                : tr("예정", "Planned")
+                            }
+                          </span>
+                        </td>
+
+                        <td>
+                          <div
+                            class="actions"
+                            style="flex-wrap:nowrap"
+                          >
+                            <button
+                              class="secondary"
+                              style="white-space:nowrap"
+                              data-toggle="${esc(session.id)}"
+                              aria-label="${esc(
+                                session.name + " " +
+                                (
+                                  session.done
+                                    ? tr("완료 취소", "Mark incomplete")
+                                    : tr("완료 처리", "Mark done")
+                                )
+                              )}"
+                            >
+                              ${
+                                session.done
+                                  ? tr("완료 취소", "Undo")
+                                  : tr("완료 처리", "Mark done")
+                              }
+                            </button>
+
+                            ${del("sessions", session.id)}
+                          </div>
+                        </td>
+                      </tr>
+                    `;
+                  }).join("")}
+                </tbody>
+              </table>
+            </div>
+
+            <p class="tiny" style="margin-bottom:0">
               ${tr(
-                "완료 후 실제 시간과 강도가 다르면 기존 항목을 삭제하고 다시 입력하세요.",
-                "If actual duration or effort differs, delete the entry and re-enter it after completion."
+                "오늘 일정은 연두색으로 강조됩니다. 모바일에서는 표를 좌우로 밀어서 확인하세요.",
+                "Today's sessions are highlighted. Swipe the table horizontally on mobile."
               )}
             </p>
+          `
+          : `
+            <div class="empty">
+              ${tr(
+                "아직 등록된 일정이 없습니다. 아래에서 첫 훈련을 추가해 보세요.",
+                "No sessions yet. Add your first training session below."
+              )}
+            </div>
+          `
+      }
+    </div>
 
-            <button>
-              ${tr("일정 추가", "Add session")}
-            </button>
-          </form>
+    <!-- 새 일정 입력 -->
+    <div class="grid">
+      <form id="sessionForm" class="card">
+        <h2>
+          ${tr("새 훈련 일정 추가", "Add a training session")}
+        </h2>
 
-          <div class="card">
-            <h2>${tr("전체 일정", "All sessions")}</h2>
+        ${field(
+          tr("훈련 이름", "Session name"),
+          "name",
+          "text",
+          'maxlength="100" placeholder="' +
+          tr(
+            "예: 패스 훈련, 개인 기술, 팀 훈련",
+            "e.g. Passing, individual skills, team training"
+          ) +
+          '"'
+        )}
 
-            ${
-              [...db.sessions]
-                .sort((a, b) => b.date.localeCompare(a.date))
-                .map(session => `
-                  <div class="row">
-                    <div>
-                      <strong>${esc(session.name)}</strong>
+        ${field(
+          tr("훈련 날짜", "Training date"),
+          "date",
+          "date",
+          `value="${date()}"`
+        )}
 
-                      <div class="tiny">
-                        ${esc(session.date)}
-                        · ${session.minutes} min
-                        · RPE ${session.rpe}
-                      </div>
-                    </div>
+        ${field(
+          tr("훈련 시간 (분)", "Duration (minutes)"),
+          "minutes",
+          "number",
+          'min="1" max="600" value="60"'
+        )}
 
-                    <div class="actions">
-                      <button
-                        class="secondary"
-                        data-toggle="${esc(session.id)}"
-                      >
-                        ${
-                          session.done
-                            ? tr("완료 ✓", "Done ✓")
-                            : tr("완료 처리", "Mark done")
-                        }
-                      </button>
+        ${field(
+          tr(
+            "예상 또는 실제 운동자각도 RPE (1–10)",
+            "Expected or actual perceived exertion RPE (1–10)"
+          ),
+          "rpe",
+          "number",
+          'min="1" max="10" value="5"'
+        )}
 
-                      ${del("sessions", session.id)}
-                    </div>
-                  </div>
-                `).join("") || empty()
-            }
+        <p class="tiny">
+          ${tr(
+            "실제 훈련 시간이나 강도가 계획과 달라지면 해당 항목을 삭제하고 실제 기록으로 다시 입력하세요.",
+            "If actual duration or intensity differs, delete the entry and re-enter the actual values."
+          )}
+        </p>
+
+        <button type="submit">
+          ${tr("스케줄에 추가", "Add to schedule")}
+        </button>
+      </form>
+
+      <div class="card">
+        <span class="tag">SCHEDULE GUIDE</span>
+
+        <h2 style="margin-top:20px">
+          ${tr("스케줄 사용 방법", "How to use your schedule")}
+        </h2>
+
+        <div class="row">
+          <div>
+            <strong>
+              ${tr("01 · 일정 등록", "01 · Plan")}
+            </strong>
+
+            <p class="sub">
+              ${tr(
+                "훈련 이름, 날짜, 시간과 강도를 입력하세요.",
+                "Enter the session name, date, duration and intensity."
+              )}
+            </p>
           </div>
         </div>
-      `;
-    }
 
-    /* ---------------------------------
+        <div class="row">
+          <div>
+            <strong>
+              ${tr("02 · 훈련 완료", "02 · Complete")}
+            </strong>
+
+            <p class="sub">
+              ${tr(
+                "훈련을 마친 뒤 표에서 '완료 처리'를 누르세요.",
+                "After training, press 'Mark done' in the table."
+              )}
+            </p>
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <strong>
+              ${tr("03 · 성장 분석 확인", "03 · Review")}
+            </strong>
+
+            <p class="sub">
+              ${tr(
+                "완료한 훈련은 성장 분석의 훈련 시간과 부하 요약에 반영됩니다.",
+                "Completed sessions contribute to training time and load summaries in Progress."
+              )}
+            </p>
+          </div>
+        </div>
+
+        <div class="notice">
+          ${tr(
+            "훈련과 회복을 함께 계획하세요. 통증이나 심한 피로가 있다면 코치 또는 의료 전문가와 상담하세요.",
+            "Plan recovery alongside training. Consult a coach or healthcare professional if you experience pain or severe fatigue."
+          )}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
        3. 경기 기록
     --------------------------------- */
 
