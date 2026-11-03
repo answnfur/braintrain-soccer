@@ -3,25 +3,1974 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>나의 웹사이트</title>
+  <title>TOUCHLINE | Player Performance</title>
 
   <style>
+    :root {
+      --bg: #0c1118;
+      --panel: #151e29;
+      --line: #2b3848;
+      --text: #eef3f8;
+      --muted: #b1bfce;
+      --accent: #c9f36b;
+    }
+
     * {
       box-sizing: border-box;
     }
 
     body {
       margin: 0;
-      min-height: 100vh;
-      background-color: #f5f5f5;
-      color: #222222;
-      font-family: system-ui, "Apple SD Gothic Neo", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font: 15px system-ui, "Apple SD Gothic Neo", sans-serif;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+      background: var(--accent);
+      border: 0;
+      border-radius: 7px;
+      padding: 11px 16px;
+      color: #15200b;
+      font-weight: 700;
+    }
+
+    button.secondary {
+      background: #263445;
+      color: var(--text);
+    }
+
+    button.danger {
+      background: #472a33;
+      color: #ffd8df;
+    }
+
+    button:focus-visible,
+    a:focus-visible {
+      outline: 3px solid #fff;
+      outline-offset: 3px;
+    }
+
+    aside {
+      position: fixed;
+      inset: 0 auto 0 0;
+      width: 238px;
+      background: #101721;
+      border-right: 1px solid var(--line);
+      padding: 30px 20px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand {
+      font-size: 23px;
+      font-weight: 900;
+      letter-spacing: -1px;
+    }
+
+    .brand span {
+      color: var(--accent);
+    }
+
+    .eyebrow {
+      color: var(--accent);
+      font-size: 11px;
+      letter-spacing: 2px;
+      font-weight: 700;
+    }
+
+    .sub {
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .brand + .sub {
+      font-size: 11px;
+    }
+
+    nav {
+      display: grid;
+      gap: 7px;
+      margin-top: 40px;
+    }
+
+    nav button {
+      text-align: left;
+      background: transparent;
+      color: var(--muted);
+      padding: 13px;
+    }
+
+    nav button.active {
+      background: #233126;
+      color: var(--accent);
+    }
+
+    .asidefoot {
+      margin-top: auto;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    main {
+      margin-left: 238px;
+      padding: 28px 40px;
+      max-width: 1600px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 22px;
+      gap: 12px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    h1 {
+      font-size: clamp(26px, 4vw, 42px);
+      margin: 12px 0;
+      letter-spacing: -1.4px;
+    }
+
+    h2 {
+      font-size: 19px;
+      margin: 0 0 18px;
+    }
+
+    h3 {
+      margin: 0 0 12px;
+      font-size: 16px;
+    }
+
+    .hero {
+      padding: 34px 0 24px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      padding: 23px;
+      min-width: 0;
+    }
+
+    .num {
+      font-size: 34px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin: 14px 0 6px;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 5px 8px;
+      border-radius: 5px;
+      background: #263927;
+      color: var(--accent);
+      font-size: 11px;
+    }
+
+    .field {
+      display: grid;
+      gap: 7px;
+      margin-bottom: 16px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      background: #0f1721;
+      color: var(--text);
+      border: 1px solid #405167;
+      border-radius: 7px;
+      padding: 11px;
+      min-width: 0;
+    }
+
+    textarea {
+      min-height: 80px;
+    }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      padding: 15px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .row:last-child {
+      border: 0;
+    }
+
+    .row .actions {
+      flex-shrink: 0;
+    }
+
+    .tiny {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .empty {
+      padding: 22px 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    video {
+      width: 100%;
+      max-height: 460px;
+      background: #080c11;
+      border-radius: 8px;
+    }
+
+    .reaction {
+      width: 100%;
+      min-height: 150px;
+      background: #263445;
+      color: white;
+      font-size: 22px;
+      margin: 15px 0;
+    }
+
+    .reaction.ready {
+      background: var(--accent);
+      color: #13220b;
+    }
+
+    .notice {
+      border-left: 3px solid var(--accent);
+      padding: 12px 16px;
+      background: #19251f;
+      color: #d8e7d4;
+      font-size: 13px;
+      line-height: 1.7;
+      margin: 16px 0;
+    }
+
+    footer {
+      margin-top: 35px;
+      padding: 18px 0;
+      color: var(--muted);
+      font-size: 12px;
+      border-top: 1px solid var(--line);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    th,
+    td {
+      padding: 13px 10px;
+      text-align: left;
+      border-bottom: 1px solid var(--line);
+    }
+
+    th {
+      color: var(--muted);
+    }
+
+    .tablewrap {
+      overflow: auto;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--accent);
+      color: #15200b;
+      padding: 14px 24px;
+      border-radius: 9px;
+      z-index: 10;
+    }
+
+    .sr {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+    }
+
+    @media (max-width: 1000px) {
+      aside {
+        width: 190px;
+        padding: 25px 12px;
+      }
+
+      main {
+        margin-left: 190px;
+        padding: 22px;
+      }
+
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 700px) {
+      aside {
+        position: static;
+        width: auto;
+        padding: 18px;
+      }
+
+      nav {
+        display: flex;
+        overflow: auto;
+        margin-top: 18px;
+      }
+
+      nav button {
+        white-space: nowrap;
+      }
+
+      .asidefoot {
+        display: none;
+      }
+
+      main {
+        margin: 0;
+        padding: 18px;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .card {
+        padding: 18px;
+      }
+
+      header {
+        align-items: flex-start;
+      }
+
+      .actions {
+        gap: 6px;
+      }
+
+      button {
+        padding: 10px 12px;
+      }
+
+      .hero {
+        padding-top: 24px;
+      }
+
+      .row {
+        flex-wrap: wrap;
+      }
     }
   </style>
 </head>
+
 <body>
+  <aside>
+    <div class="brand">TOUCH<span>LINE</span></div>
+    <div class="sub">PLAYER PERFORMANCE SYSTEM</div>
 
-  <!-- 앞으로 이곳에 제목, 이미지, 버튼 등을 추가하면 됩니다. -->
+    <nav id="nav" aria-label="Main navigation"></nav>
 
+    <div class="asidefoot">
+      PERSONAL WORKSPACE
+      <br><br>
+      LOCAL DATA · NO CLOUD SYNC
+    </div>
+  </aside>
+
+  <main>
+    <header>
+      <div>
+        <div class="eyebrow">PERFORMANCE LAB</div>
+        <div class="tiny" id="today"></div>
+      </div>
+
+      <div class="actions">
+        <button class="secondary" id="export"></button>
+
+        <label
+          style="
+            cursor: pointer;
+            padding: 10px;
+            background: #263445;
+            border-radius: 7px;
+          "
+        >
+          <span id="importText"></span>
+          <input
+            type="file"
+            id="import"
+            accept="application/json,.json"
+            class="sr"
+          >
+        </label>
+
+        <button id="lang" class="secondary">EN</button>
+      </div>
+    </header>
+
+    <div class="hero">
+      <div class="eyebrow" id="sectionTag"></div>
+      <h1 id="title"></h1>
+      <p class="sub" id="subtitle"></p>
+    </div>
+
+    <div id="content"></div>
+    <footer id="footer"></footer>
+  </main>
+
+  <div id="status" role="status" aria-live="polite"></div>
+
+  <script>
+    "use strict";
+
+    /* ---------------------------------
+       기본 설정
+    --------------------------------- */
+
+    const $ = id => document.getElementById(id);
+
+    const tr = (ko, en) => lang === "ko" ? ko : en;
+
+    const KEY = "touchline-v1";
+
+    let lang = "ko";
+    let page = "overview";
+
+    let timer = null;
+    let readyAt = 0;
+    let phase = "idle";
+
+    let videoURL = null;
+    let storageOK = true;
+
+    const blank = () => ({
+      version: 1,
+      sessions: [],
+      matches: [],
+      recovery: [],
+      tags: [],
+      reactions: []
+    });
+
+    let db = blank();
+
+    /* ---------------------------------
+       백업 데이터 검증
+    --------------------------------- */
+
+    function valid(x) {
+      return (
+        x &&
+        x.version === 1 &&
+
+        [
+          "sessions",
+          "matches",
+          "recovery",
+          "tags",
+          "reactions"
+        ].every(key => Array.isArray(x[key])) &&
+
+        x.sessions.every(r =>
+          r &&
+          typeof r.id === "string" &&
+          typeof r.name === "string" &&
+          typeof r.date === "string" &&
+          Number.isFinite(r.minutes) &&
+          r.minutes >= 0 &&
+          r.minutes <= 600 &&
+          Number.isFinite(r.rpe) &&
+          r.rpe >= 1 &&
+          r.rpe <= 10 &&
+          typeof r.done === "boolean"
+        ) &&
+
+        x.matches.every(r =>
+          r &&
+          typeof r.id === "string" &&
+          typeof r.opponent === "string" &&
+          typeof r.date === "string" &&
+          ["minutes", "goals", "assists"].every(key =>
+            Number.isFinite(r[key]) &&
+            r[key] >= 0 &&
+            r[key] <= 999
+          )
+        ) &&
+
+        x.recovery.every(r =>
+          r &&
+          typeof r.id === "string" &&
+          typeof r.date === "string" &&
+          Number.isFinite(r.sleep) &&
+          r.sleep >= 0 &&
+          r.sleep <= 24 &&
+          ["fatigue", "pain"].every(key =>
+            Number.isFinite(r[key]) &&
+            r[key] >= 0 &&
+            r[key] <= 10
+          )
+        ) &&
+
+        x.tags.every(r =>
+          r &&
+          typeof r.id === "string" &&
+          typeof r.file === "string" &&
+          typeof r.note === "string" &&
+          Number.isFinite(r.time) &&
+          r.time >= 0
+        ) &&
+
+        x.reactions.every(r =>
+          r &&
+          typeof r.date === "string" &&
+          Number.isFinite(r.ms) &&
+          r.ms >= 0
+        )
+      );
+    }
+
+    /* ---------------------------------
+       기존 기록 불러오기
+    --------------------------------- */
+
+    try {
+      const raw = localStorage.getItem(KEY);
+
+      if (raw) {
+        const parsed = JSON.parse(raw);
+
+        if (valid(parsed)) {
+          db = parsed;
+        }
+      }
+
+      lang = (
+        localStorage.getItem(KEY + "-lang") === "en"
+          ? "en"
+          : "ko"
+      );
+    } catch (error) {
+      storageOK = false;
+    }
+
+    /* ---------------------------------
+       공통 유틸리티
+    --------------------------------- */
+
+    function save() {
+      try {
+        localStorage.setItem(KEY, JSON.stringify(db));
+        storageOK = true;
+        return true;
+      } catch (error) {
+        storageOK = false;
+
+        toast(tr(
+          "브라우저 저장 실패: JSON으로 백업하세요.",
+          "Storage failed: export a JSON backup."
+        ));
+
+        return false;
+      }
+    }
+
+    function toast(text) {
+      $("status").className = "toast";
+      $("status").textContent = text;
+
+      setTimeout(() => {
+        $("status").className = "";
+        $("status").textContent = "";
+      }, 3500);
+    }
+
+    const esc = value => String(value).replace(
+      /[&<>"']/g,
+      character => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      }[character])
+    );
+
+    const uid = () => (
+      crypto.randomUUID
+        ? crypto.randomUUID()
+        : Date.now() + "-" + Math.random().toString(36).slice(2)
+    );
+
+    function date() {
+      const d = new Date();
+
+      return [
+        d.getFullYear(),
+        String(d.getMonth() + 1).padStart(2, "0"),
+        String(d.getDate()).padStart(2, "0")
+      ].join("-");
+    }
+
+    const names = {
+      overview: ["대시보드", "Overview"],
+      schedule: ["훈련 일정", "Training schedule"],
+      matches: ["경기 기록", "Match records"],
+      recovery: ["회복 관리", "Recovery"],
+      programs: ["훈련 프로그램", "Programs"],
+      growth: ["성장 분석", "Progress"],
+      brain: ["인지·반응 훈련", "Cognitive training"],
+      video: ["영상 분석", "Video review"]
+    };
+
+    const sum = (array, key) => array.reduce(
+      (total, row) => total + row[key],
+      0
+    );
+
+    const done = () => db.sessions.filter(
+      session => session.done
+    );
+
+    function card(label, value, unit = "") {
+      return `
+        <div class="card">
+          <div class="tiny">${label}</div>
+
+          <div class="num">
+            ${value}
+            <span style="font-size:14px;color:var(--muted)">
+              ${unit}
+            </span>
+          </div>
+
+          <span class="tiny">
+            ${tr(
+              "내가 입력한 기록 기준",
+              "Based on your entries"
+            )}
+          </span>
+        </div>
+      `;
+    }
+
+    function field(label, name, type = "text", extra = "") {
+      return `
+        <label class="field">
+          ${label}
+
+          <input
+            name="${name}"
+            type="${type}"
+            ${extra}
+            required
+          >
+        </label>
+      `;
+    }
+
+    function del(kind, id) {
+      return `
+        <button
+          class="danger"
+          data-del="${kind}"
+          data-id="${esc(id)}"
+        >
+          ${tr("삭제", "Delete")}
+        </button>
+      `;
+    }
+
+    function empty() {
+      return `
+        <div class="empty">
+          ${tr(
+            "아직 기록이 없습니다. 첫 기록을 추가해 주세요.",
+            "No records yet. Add your first entry."
+          )}
+        </div>
+      `;
+    }
+
+    /* ---------------------------------
+       전체 화면 렌더링
+    --------------------------------- */
+
+    function render() {
+      clearTimeout(timer);
+      phase = "idle";
+
+      document.documentElement.lang = lang;
+
+      $("lang").textContent = (
+        lang === "ko" ? "EN" : "한국어"
+      );
+
+      $("export").textContent = tr(
+        "백업 내보내기",
+        "Export backup"
+      );
+
+      $("importText").textContent = tr(
+        "가져오기",
+        "Import"
+      );
+
+      $("today").textContent = new Date().toLocaleDateString(
+        lang === "ko" ? "ko-KR" : "en-GB",
+        {
+          year: "numeric",
+          month: "long",
+          day: "numeric"
+        }
+      );
+
+      $("nav").innerHTML = Object.entries(names).map(
+        ([key, labels], index) => `
+          <button
+            data-page="${key}"
+            class="${key === page ? "active" : ""}"
+            ${key === page ? 'aria-current="page"' : ""}
+          >
+            <span style="opacity:.5;margin-right:12px">
+              0${index + 1}
+            </span>
+
+            ${labels[lang === "ko" ? 0 : 1]}
+          </button>
+        `
+      ).join("");
+
+      $("title").textContent = names[page][
+        lang === "ko" ? 0 : 1
+      ];
+
+      $("sectionTag").textContent = (
+        "PLAYER DEVELOPMENT / " + page.toUpperCase()
+      );
+
+      $("subtitle").textContent = tr(
+        "훈련부터 회복까지, 나의 경기력을 체계적으로 관리하세요.",
+        "Plan your training. Track your recovery. Build your game."
+      );
+
+      $("footer").textContent = tr(
+        "개인용 도구 · 현재 기기의 브라우저에만 저장됩니다. 정기적으로 백업하세요. 의료 진단·자동 AI 분석을 제공하지 않습니다.",
+        "Personal tool · Stored in this browser only. Export backups regularly. No medical diagnosis or automated AI analysis."
+      );
+
+      const screens = {
+        overview,
+        schedule,
+        matches,
+        recovery,
+        programs,
+        growth,
+        brain,
+        video
+      };
+
+      const warning = !storageOK
+        ? `
+          <div class="notice">
+            ${tr(
+              "브라우저 저장을 사용할 수 없습니다. 백업을 내보내 주세요.",
+              "Browser storage unavailable. Please export a backup."
+            )}
+          </div>
+        `
+        : "";
+
+      $("content").innerHTML = warning + screens[page]();
+
+      bind();
+    }
+
+    /* ---------------------------------
+       1. 대시보드
+    --------------------------------- */
+
+    function overview() {
+      const completed = done();
+
+      const latest = [...db.recovery].sort(
+        (a, b) => b.date.localeCompare(a.date)
+      )[0];
+
+      const upcoming = db.sessions
+        .filter(session => !session.done)
+        .sort((a, b) => a.date.localeCompare(b.date));
+
+      return `
+        <div class="stats">
+          ${card(
+            tr("완료한 훈련", "Completed sessions"),
+            completed.length
+          )}
+
+          ${card(
+            tr("누적 훈련 시간", "Training time"),
+            sum(completed, "minutes"),
+            tr("분", "min")
+          )}
+
+          ${card(
+            tr("경기 출전", "Matches played"),
+            db.matches.length
+          )}
+
+          ${card(
+            tr("최근 수면", "Latest sleep"),
+            latest ? latest.sleep : "—",
+            tr("시간", "h")
+          )}
+        </div>
+
+        <div class="grid">
+          <div class="card">
+            <h2>
+              ${tr("다가오는 훈련", "Upcoming sessions")}
+            </h2>
+
+            ${
+              upcoming.slice(0, 4).map(session => `
+                <div class="row">
+                  <div>
+                    <strong>${esc(session.name)}</strong>
+
+                    <div class="tiny">
+                      ${esc(session.date)}
+                      · ${session.minutes} min
+                      · RPE ${session.rpe}
+                    </div>
+                  </div>
+
+                  <span class="tag">
+                    ${tr("예정", "PLANNED")}
+                  </span>
+                </div>
+              `).join("") || empty()
+            }
+
+            <button
+              class="secondary"
+              data-page="schedule"
+            >
+              ${tr("일정 관리 →", "Manage schedule →")}
+            </button>
+          </div>
+
+          <div class="card">
+            <span class="tag">
+              TRAIN · RECOVER · REPEAT
+            </span>
+
+            <h2 style="margin-top:24px">
+              ${tr("오늘의 체크인", "Daily check-in")}
+            </h2>
+
+            <p class="sub">
+              ${tr(
+                "수면과 피로, 통증을 기록하고 훈련 전 자신의 상태를 확인하세요. 기록의 일관성이 성장 분석의 출발점입니다.",
+                "Log sleep, fatigue and pain before training. Consistent entries are the starting point for understanding progress."
+              )}
+            </p>
+
+            <button data-page="recovery">
+              ${tr("회복 기록하기", "Log recovery")}
+            </button>
+
+            <div class="notice">
+              ${tr(
+                "실제 기록이 없으므로 임의의 성과 수치를 표시하지 않습니다.",
+                "No invented performance metrics: your dashboard starts with your own data."
+              )}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    /* ---------------------------------
+       2. 훈련 일정
+    --------------------------------- */
+
+    function schedule() {
+      return `
+        <div class="grid">
+          <form id="sessionForm" class="card">
+            <h2>${tr("훈련 추가", "Add training")}</h2>
+
+            ${field(
+              tr("훈련 이름", "Session name"),
+              "name",
+              "text",
+              'maxlength="100"'
+            )}
+
+            ${field(
+              tr("날짜", "Date"),
+              "date",
+              "date",
+              `value="${date()}"`
+            )}
+
+            ${field(
+              tr("시간 (분)", "Duration (min)"),
+              "minutes",
+              "number",
+              'min="1" max="600" value="60"'
+            )}
+
+            ${field(
+              tr(
+                "예상 또는 실제 운동자각도 RPE (1–10)",
+                "Expected or actual perceived exertion RPE (1–10)"
+              ),
+              "rpe",
+              "number",
+              'min="1" max="10" value="5"'
+            )}
+
+            <p class="tiny">
+              ${tr(
+                "완료 후 실제 시간과 강도가 다르면 기존 항목을 삭제하고 다시 입력하세요.",
+                "If actual duration or effort differs, delete the entry and re-enter it after completion."
+              )}
+            </p>
+
+            <button>
+              ${tr("일정 추가", "Add session")}
+            </button>
+          </form>
+
+          <div class="card">
+            <h2>${tr("전체 일정", "All sessions")}</h2>
+
+            ${
+              [...db.sessions]
+                .sort((a, b) => b.date.localeCompare(a.date))
+                .map(session => `
+                  <div class="row">
+                    <div>
+                      <strong>${esc(session.name)}</strong>
+
+                      <div class="tiny">
+                        ${esc(session.date)}
+                        · ${session.minutes} min
+                        · RPE ${session.rpe}
+                      </div>
+                    </div>
+
+                    <div class="actions">
+                      <button
+                        class="secondary"
+                        data-toggle="${esc(session.id)}"
+                      >
+                        ${
+                          session.done
+                            ? tr("완료 ✓", "Done ✓")
+                            : tr("완료 처리", "Mark done")
+                        }
+                      </button>
+
+                      ${del("sessions", session.id)}
+                    </div>
+                  </div>
+                `).join("") || empty()
+            }
+          </div>
+        </div>
+      `;
+    }
+
+    /* ---------------------------------
+       3. 경기 기록
+    --------------------------------- */
+
+    function matches() {
+      return `
+        <div class="grid">
+          <form id="matchForm" class="card">
+            <h2>${tr("경기 기록 추가", "Log a match")}</h2>
+
+            ${field(
+              tr("상대 팀", "Opponent"),
+              "opponent",
+              "text",
+              'maxlength="100"'
+            )}
+
+            ${field(
+              tr("경기 날짜", "Match date"),
+              "date",
+              "date",
+              `value="${date()}"`
+            )}
+
+            ${field(
+              tr("출전 시간 (분)", "Minutes played"),
+              "minutes",
+              "number",
+              'min="0" max="200" value="90"'
+            )}
+
+            ${field(
+              tr("득점", "Goals"),
+              "goals",
+              "number",
+              'min="0" max="99" value="0"'
+            )}
+
+            ${field(
+              tr("도움", "Assists"),
+              "assists",
+              "number",
+              'min="0" max="99" value="0"'
+            )}
+
+            <button>
+              ${tr("경기 저장", "Save match")}
+            </button>
+          </form>
+
+          <div class="card">
+            <h2>${tr("경기 히스토리", "Match history")}</h2>
+
+            ${
+              [...db.matches]
+                .sort((a, b) => b.date.localeCompare(a.date))
+                .map(match => `
+                  <div class="row">
+                    <div>
+                      <strong>
+                        vs ${esc(match.opponent)}
+                      </strong>
+
+                      <div class="tiny">
+                        ${esc(match.date)}
+                        · ${match.minutes} min
+                        · ${match.goals} G
+                        / ${match.assists} A
+                      </div>
+                    </div>
+
+                    ${del("matches", match.id)}
+                  </div>
+                `).join("") || empty()
+            }
+          </div>
+        </div>
+      `;
+    }
+
+    /* ---------------------------------
+       4. 회복 관리
+    --------------------------------- */
+
+    function recovery() {
+      const latest = [...db.recovery].sort(
+        (a, b) => b.date.localeCompare(a.date)
+      )[0];
+
+      return `
+        <div class="grid">
+          <form id="recoveryForm" class="card">
+            <h2>
+              ${tr("오늘의 회복 체크", "Recovery check-in")}
+            </h2>
+
+            ${field(
+              tr("날짜", "Date"),
+              "date",
+              "date",
+              `value="${date()}"`
+            )}
+
+            ${field(
+              tr("수면 시간", "Sleep hours"),
+              "sleep",
+              "number",
+              'min="0" max="24" step="0.5" value="8"'
+            )}
+
+            ${field(
+              tr(
+                "피로도 (0=없음, 10=매우 심함)",
+                "Fatigue (0=none, 10=extreme)"
+              ),
+              "fatigue",
+              "number",
+              'min="0" max="10" value="3"'
+            )}
+
+            ${field(
+              tr(
+                "통증 (0=없음, 10=매우 심함)",
+                "Pain (0=none, 10=extreme)"
+              ),
+              "pain",
+              "number",
+              'min="0" max="10" value="0"'
+            )}
+
+            <button>
+              ${tr("회복 기록 저장", "Save check-in")}
+            </button>
+          </form>
+
+          <div class="card">
+            <h2>
+              ${tr("회복 기록", "Recovery history")}
+            </h2>
+
+            <div class="notice">
+              ${tr(
+                "통증이나 심한 피로가 있으면 훈련을 강행하지 말고 코치·의료 전문가와 상담하세요. 이 화면은 기록 도구이며 부상 위험을 예측하지 않습니다.",
+                "If you have pain or severe fatigue, do not push through training; consult a coach or healthcare professional. This log does not predict injury risk."
+              )}
+            </div>
+
+            ${
+              latest
+                ? `
+                  <p class="sub">
+                    ${tr("최근 기록", "Latest")}:
+                    ${esc(latest.date)}
+                  </p>
+                `
+                : ""
+            }
+
+            ${
+              [...db.recovery]
+                .sort((a, b) => b.date.localeCompare(a.date))
+                .map(record => `
+                  <div class="row">
+                    <div>
+                      ${esc(record.date)}
+
+                      <div class="tiny">
+                        ${tr("수면", "Sleep")}
+                        ${record.sleep}h
+                        · ${tr("피로", "Fatigue")}
+                        ${record.fatigue}/10
+                        · ${tr("통증", "Pain")}
+                        ${record.pain}/10
+                      </div>
+                    </div>
+
+                    ${del("recovery", record.id)}
+                  </div>
+                `).join("") || empty()
+            }
+          </div>
+        </div>
+      `;
+    }
+
+    /* ---------------------------------
+       5. 훈련 프로그램
+    --------------------------------- */
+
+    const plans = [
+      {
+        ko: "볼 컨트롤 & 스캐닝",
+        en: "Ball control & scanning",
+        minutes: 25,
+        rpe: 4,
+
+        k: "가벼운 워밍업 5분 → 볼 터치 8분 → 패스 전 어깨 너머 확인 7분 → 정리운동 5분",
+
+        e: "Easy warm-up 5 min → ball touches 8 min → shoulder checks before passing 7 min → cool-down 5 min"
+      },
+      {
+        ko: "패스 & 판단",
+        en: "Passing & decisions",
+        minutes: 30,
+        rpe: 5,
+
+        k: "워밍업 5분 → 양발 패스 10분 → 파트너의 색상 신호에 따라 패스 방향 선택 10분 → 정리운동 5분",
+
+        e: "Warm-up 5 min → two-foot passing 10 min → choose passing direction from partner colour cues 10 min → cool-down 5 min"
+      },
+      {
+        ko: "가벼운 회복 루틴",
+        en: "Gentle recovery routine",
+        minutes: 20,
+        rpe: 2,
+
+        k: "편안한 걷기 10분 → 통증 없는 범위의 가동성 운동 5분 → 편안한 호흡과 휴식 5분",
+
+        e: "Comfortable walking 10 min → pain-free mobility 5 min → comfortable breathing and rest 5 min"
+      }
+    ];
+
+    function programs() {
+      return `
+        <div class="notice">
+          ${tr(
+            "일반적인 예시 프로그램입니다. 연령·훈련 경험·현재 몸 상태에 맞춰 코치와 강도 및 시간을 조정하세요. 통증이 생기면 중단하세요.",
+            "These are general examples. Adjust duration and intensity with a coach for your age, experience and current condition. Stop if pain occurs."
+          )}
+        </div>
+
+        <div class="grid">
+          ${plans.map((plan, index) => `
+            <div class="card">
+              <span class="tag">
+                ${plan.minutes} MIN · RPE ${plan.rpe}
+              </span>
+
+              <h2 style="margin-top:20px">
+                ${tr(plan.ko, plan.en)}
+              </h2>
+
+              <p class="sub">
+                ${tr(plan.k, plan.e)}
+              </p>
+
+              <button data-plan="${index}">
+                ${tr("오늘 일정에 추가", "Add to today")}
+              </button>
+            </div>
+          `).join("")}
+        </div>
+      `;
+    }
+
+    /* ---------------------------------
+       6. 성장 분석
+    --------------------------------- */
+
+    function growth() {
+      const completed = done();
+      const weeks = [];
+
+      for (let index = 3; index >= 0; index--) {
+        const end = new Date();
+
+        end.setHours(0, 0, 0, 0);
+        end.setDate(end.getDate() - index * 7);
+
+        const start = new Date(end);
+        start.setDate(start.getDate() - 6);
+
+        const format = d => [
+          d.getFullYear(),
+          String(d.getMonth() + 1).padStart(2, "0"),
+          String(d.getDate()).padStart(2, "0")
+        ].join("-");
+
+        const from = format(start);
+        const to = format(end);
+
+        const rows = completed.filter(
+          record => record.date >= from && record.date <= to
+        );
+
+        weeks.push({
+          from,
+          to,
+          count: rows.length,
+          minutes: sum(rows, "minutes"),
+
+          load: rows.reduce(
+            (total, row) => total + row.minutes * row.rpe,
+            0
+          )
+        });
+      }
+
+      return `
+        <div class="stats">
+          ${card(
+            tr("완료 훈련", "Completed"),
+            completed.length
+          )}
+
+          ${card(
+            tr("누적 훈련", "Total training"),
+            sum(completed, "minutes"),
+            "min"
+          )}
+
+          ${card(
+            tr("누적 득점", "Total goals"),
+            sum(db.matches, "goals")
+          )}
+
+          ${card(
+            tr("누적 도움", "Total assists"),
+            sum(db.matches, "assists")
+          )}
+        </div>
+
+        <div class="card">
+          <h2>
+            ${tr("최근 4주 훈련 요약", "Last four weeks")}
+          </h2>
+
+          <div class="tablewrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>${tr("기간", "Period")}</th>
+                  <th>${tr("완료 수", "Sessions")}</th>
+                  <th>${tr("시간(분)", "Minutes")}</th>
+                  <th>
+                    ${tr(
+                      "주관적 부하(AU)",
+                      "Subjective load (AU)"
+                    )}
+                  </th>
+                </tr>
+              </thead>
+
+              <tbody>
+                ${weeks.map(week => `
+                  <tr>
+                    <td>${week.from} — ${week.to}</td>
+                    <td>${week.count}</td>
+                    <td>${week.minutes}</td>
+                    <td>${week.load}</td>
+                  </tr>
+                `).join("")}
+              </tbody>
+            </table>
+          </div>
+
+          <div class="notice">
+            ${tr(
+              "부하 = 완료한 각 훈련의 시간(분) × 입력 RPE의 합입니다. 각 행은 오늘을 끝으로 나눈 7일 구간입니다. 이 요약은 훈련량을 설명할 뿐, 실력 향상이나 부상 위험을 판정하지 않습니다.",
+              "Load = sum of completed session minutes × entered RPE. Rows are rolling seven-day windows ending today. These summaries describe recorded volume, not skill improvement or injury risk."
+            )}
+          </div>
+        </div>
+      `;
+    }
+
+    /* ---------------------------------
+       7. 인지·반응 훈련
+    --------------------------------- */
+
+    function brain() {
+      return `
+        <div class="grid">
+          <div class="card">
+            <span class="tag">REACTION LAB</span>
+
+            <h2 style="margin-top:20px">
+              ${tr(
+                "시각 반응 연습",
+                "Visual reaction practice"
+              )}
+            </h2>
+
+            <p class="sub">
+              ${tr(
+                "시작을 누른 뒤 초록색으로 바뀔 때 클릭하세요. 초록색 전 클릭하면 기록되지 않습니다.",
+                "Press start, then tap when the panel turns green. Early taps are not recorded."
+              )}
+            </p>
+
+            <button id="reaction" class="reaction">
+              ${tr("시작", "Start")}
+            </button>
+
+            <div
+              id="reactionResult"
+              aria-live="polite"
+              class="sub"
+            ></div>
+
+            <div class="notice">
+              ${tr(
+                "브라우저·화면·입력 장치 지연이 포함되는 연습용 측정입니다. 뇌 기능 검사나 축구 실력 평가가 아니며 축구 경기력 향상을 보장하지 않습니다.",
+                "Practice measurement includes browser, display and input latency. Not a brain-function test or football assessment; performance transfer is not guaranteed."
+              )}
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>
+              ${tr(
+                "인지 훈련 설계",
+                "Cognitive practice design"
+              )}
+            </h2>
+
+            <p class="sub">
+              ${tr(
+                "주의 전환·시각 탐색·선택 반응을 축구 동작과 함께 연습합니다. 패스 전 주변 확인, 파트너 신호에 따른 방향 선택처럼 실제 상황과 연결해 보세요. 난도는 코치와 조정하세요.",
+                "Practise attention switching, visual search and choice responses alongside football actions. Try scanning before a pass and selecting a direction from partner cues. Adjust difficulty with a coach."
+              )}
+            </p>
+
+            <h3>
+              ${tr("최근 반응 기록", "Recent reaction times")}
+            </h3>
+
+            ${
+              db.reactions.slice(-8).reverse().map(record => `
+                <div class="row">
+                  <span class="tiny">
+                    ${esc(record.date)}
+                  </span>
+
+                  <strong>${record.ms} ms</strong>
+                </div>
+              `).join("") || empty()
+            }
+          </div>
+        </div>
+      `;
+    }
+
+    /* ---------------------------------
+       8. 영상 리뷰
+    --------------------------------- */
+
+    function video() {
+      return `
+        <div class="grid">
+          <div class="card">
+            <h2>
+              ${tr("내 영상 불러오기", "Open your video")}
+            </h2>
+
+            <label class="field">
+              ${tr("기기 내 영상 파일", "Local video file")}
+
+              <input
+                type="file"
+                id="videoFile"
+                accept="video/*"
+              >
+            </label>
+
+            <video
+              id="player"
+              controls
+              playsinline
+            ></video>
+
+            <p class="tiny">
+              ${tr(
+                "영상은 서버로 업로드되지 않으며 새로고침 후 다시 선택해야 합니다. MP4 등 브라우저 지원 형식을 사용하세요.",
+                "Video stays on your device and must be selected again after refresh. Use a browser-supported format such as MP4."
+              )}
+            </p>
+
+            <label class="field">
+              ${tr(
+                "현재 장면 메모",
+                "Note for current frame"
+              )}
+
+              <textarea
+                id="videoNote"
+                maxlength="1000"
+                placeholder="${tr(
+                  "예: 패스 전 주변 확인",
+                  "Example: scan before receiving"
+                )}"
+              ></textarea>
+            </label>
+
+            <button id="tagVideo">
+              ${tr(
+                "현재 시점 태그 저장",
+                "Tag current time"
+              )}
+            </button>
+
+            <div class="notice">
+              ${tr(
+                "수동 영상 리뷰 도구입니다. 선수 추적·자세 인식·자동 AI 분석은 제공하지 않습니다. 파일명과 시간, 메모만 저장됩니다.",
+                "Manual review tool. No tracking, pose estimation or automated AI analysis. Only filename, timestamp and notes are saved."
+              )}
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>${tr("장면 태그", "Scene tags")}</h2>
+
+            ${
+              db.tags.map(tag => `
+                <div class="row">
+                  <div>
+                    <strong>${esc(tag.note)}</strong>
+
+                    <div class="tiny">
+                      ${esc(tag.file)}
+                      ·
+                      ${Math.floor(tag.time / 60)}:${
+                        String(
+                          Math.floor(tag.time % 60)
+                        ).padStart(2, "0")
+                      }
+                    </div>
+                  </div>
+
+                  <div class="actions">
+                    <button
+                      class="secondary"
+                      data-seek="${esc(tag.id)}"
+                    >
+                      ${tr("이동", "Seek")}
+                    </button>
+
+                    ${del("tags", tag.id)}
+                  </div>
+                </div>
+              `).join("") || empty()
+            }
+          </div>
+        </div>
+      `;
+    }
+
+    /* ---------------------------------
+       이벤트 연결
+    --------------------------------- */
+
+    function bind() {
+      // 메뉴 이동
+      document.querySelectorAll("[data-page]").forEach(
+        button => {
+          button.onclick = () => {
+            page = button.dataset.page;
+            render();
+            window.scrollTo(0, 0);
+          };
+        }
+      );
+
+      // 기록 삭제
+      document.querySelectorAll("[data-del]").forEach(
+        button => {
+          button.onclick = () => {
+            const accepted = confirm(tr(
+              "이 기록을 삭제할까요?",
+              "Delete this entry?"
+            ));
+
+            if (!accepted) return;
+
+            const collection = button.dataset.del;
+
+            db[collection] = db[collection].filter(
+              record => record.id !== button.dataset.id
+            );
+
+            save();
+            render();
+          };
+        }
+      );
+
+      // 훈련 완료 상태 변경
+      document.querySelectorAll("[data-toggle]").forEach(
+        button => {
+          button.onclick = () => {
+            const session = db.sessions.find(
+              item => item.id === button.dataset.toggle
+            );
+
+            session.done = !session.done;
+
+            save();
+            render();
+          };
+        }
+      );
+
+      // 프로그램을 오늘 일정에 추가
+      document.querySelectorAll("[data-plan]").forEach(
+        button => {
+          button.onclick = () => {
+            const plan = plans[Number(button.dataset.plan)];
+
+            db.sessions.push({
+              id: uid(),
+              date: date(),
+              name: tr(plan.ko, plan.en),
+              minutes: plan.minutes,
+              rpe: plan.rpe,
+              done: false
+            });
+
+            save();
+
+            toast(tr(
+              "오늘 일정에 추가했습니다.",
+              "Added to today's schedule."
+            ));
+          };
+        }
+      );
+
+      // 기록 입력 폼
+      const forms = [
+        [
+          "sessionForm",
+          "sessions",
+          ["minutes", "rpe"]
+        ],
+        [
+          "matchForm",
+          "matches",
+          ["minutes", "goals", "assists"]
+        ],
+        [
+          "recoveryForm",
+          "recovery",
+          ["sleep", "fatigue", "pain"]
+        ]
+      ];
+
+      forms.forEach(([id, collection, numeric]) => {
+        const form = $(id);
+
+        if (!form) return;
+
+        form.onsubmit = event => {
+          event.preventDefault();
+
+          const data = Object.fromEntries(
+            new FormData(event.target)
+          );
+
+          for (const key of numeric) {
+            data[key] = Number(data[key]);
+          }
+
+          data.id = uid();
+
+          if (collection === "sessions") {
+            data.name = data.name.trim();
+            data.done = false;
+
+            if (!data.name) return;
+          }
+
+          if (collection === "matches") {
+            data.opponent = data.opponent.trim();
+
+            if (!data.opponent) return;
+          }
+
+          if (collection === "recovery") {
+            const existing = db.recovery.find(
+              record => record.date === data.date
+            );
+
+            if (existing) {
+              const accepted = confirm(tr(
+                "같은 날짜의 회복 기록을 바꿀까요?",
+                "Replace the check-in for this date?"
+              ));
+
+              if (!accepted) return;
+
+              db.recovery = db.recovery.filter(
+                record => record.date !== data.date
+              );
+            }
+          }
+
+          db[collection].push(data);
+
+          save();
+          render();
+
+          toast(tr(
+            "기록을 추가했습니다.",
+            "Entry added."
+          ));
+        };
+      });
+
+      // 반응 연습
+      if ($("reaction")) {
+        $("reaction").onclick = () => {
+          const button = $("reaction");
+
+          if (phase === "idle") {
+            phase = "waiting";
+
+            button.classList.remove("ready");
+            button.textContent = tr("기다리세요…", "Wait…");
+
+            timer = setTimeout(() => {
+              phase = "ready";
+              readyAt = performance.now();
+
+              button.classList.add("ready");
+              button.textContent = tr("지금 클릭!", "Tap now!");
+            }, 1500 + Math.random() * 3000);
+
+          } else if (phase === "waiting") {
+            clearTimeout(timer);
+            phase = "idle";
+
+            button.textContent = tr(
+              "너무 빨라요! 다시 시작",
+              "Too soon! Restart"
+            );
+
+          } else {
+            const milliseconds = Math.round(
+              performance.now() - readyAt
+            );
+
+            db.reactions.push({
+              date: new Date().toISOString(),
+              ms: milliseconds
+            });
+
+            save();
+            render();
+
+            $("reactionResult").textContent = (
+              milliseconds + " ms"
+            );
+          }
+        };
+      }
+
+      // 영상 불러오기 및 태그
+      if ($("videoFile")) {
+        if (videoURL) {
+          URL.revokeObjectURL(videoURL);
+          videoURL = null;
+        }
+
+        $("videoFile").onchange = event => {
+          const file = event.target.files[0];
+
+          if (!file) return;
+
+          if (videoURL) {
+            URL.revokeObjectURL(videoURL);
+          }
+
+          videoURL = URL.createObjectURL(file);
+
+          $("player").src = videoURL;
+          $("player").dataset.file = file.name;
+        };
+
+        $("tagVideo").onclick = () => {
+          const player = $("player");
+          const note = $("videoNote").value.trim();
+
+          if (
+            !player.dataset.file ||
+            !note ||
+            player.readyState < 1
+          ) {
+            toast(tr(
+              "영상을 불러온 뒤 메모를 입력하세요.",
+              "Load a video and enter a note."
+            ));
+
+            return;
+          }
+
+          db.tags.push({
+            id: uid(),
+            file: player.dataset.file,
+            time: player.currentTime,
+            note
+          });
+
+          save();
+
+          // 태그 목록을 갱신하면서 현재 영상 유지
+          const currentTime = player.currentTime;
+          const filename = player.dataset.file;
+          const currentURL = videoURL;
+
+          videoURL = null;
+
+          render();
+
+          videoURL = currentURL;
+
+          $("player").src = currentURL;
+          $("player").dataset.file = filename;
+
+          $("player").addEventListener(
+            "loadedmetadata",
+            () => {
+              $("player").currentTime = currentTime;
+            },
+            { once: true }
+          );
+        };
+
+        document.querySelectorAll("[data-seek]").forEach(
+          button => {
+            button.onclick = () => {
+              const tag = db.tags.find(
+                item => item.id === button.dataset.seek
+              );
+
+              const player = $("player");
+
+              if (
+                player.dataset.file !== tag.file ||
+                player.readyState < 1
+              ) {
+                toast(tr(
+                  "해당 파일을 먼저 선택하세요. 파일명만 비교하므로 같은 이름의 파일에 주의하세요.",
+                  "Select the matching file first. Matching uses filename only."
+                ));
+
+                return;
+              }
+
+              player.currentTime = tag.time;
+            };
+          }
+        );
+      }
+    }
+
+    /* ---------------------------------
+       언어 전환
+    --------------------------------- */
+
+    $("lang").onclick = () => {
+      lang = lang === "ko" ? "en" : "ko";
+
+      try {
+        localStorage.setItem(KEY + "-lang", lang);
+      } catch (error) {
+        // 언어는 저장 실패 시에도 현재 화면에 적용
+      }
+
+      render();
+    };
+
+    /* ---------------------------------
+       JSON 백업 내보내기
+    --------------------------------- */
+
+    $("export").onclick = () => {
+      const blob = new Blob(
+        [JSON.stringify(db, null, 2)],
+        { type: "application/json" }
+      );
+
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement("a");
+
+      anchor.href = url;
+      anchor.download = `touchline-backup-${date()}.json`;
+      anchor.click();
+
+      setTimeout(() => {
+        URL.revokeObjectURL(url);
+      }, 1000);
+    };
+
+    /* ---------------------------------
+       JSON 백업 가져오기
+    --------------------------------- */
+
+    $("import").onchange = async event => {
+      const file = event.target.files[0];
+
+      if (!file) return;
+
+      try {
+        if (file.size > 5000000) {
+          throw new Error("Backup too large");
+        }
+
+        const imported = JSON.parse(await file.text());
+
+        if (!valid(imported)) {
+          throw new Error("Invalid backup");
+        }
+
+        const accepted = confirm(tr(
+          "현재 기록 전체를 백업 파일로 교체할까요? 먼저 내보내기로 기존 기록을 보관하세요.",
+          "Replace ALL current records with this backup? Export your existing records first."
+        ));
+
+        if (!accepted) return;
+
+        db = imported;
+
+        save();
+        render();
+
+        toast(tr(
+          "백업을 가져왔습니다.",
+          "Backup imported."
+        ));
+
+      } catch (error) {
+        toast(tr(
+          "올바른 TOUCHLINE 백업 JSON이 아닙니다.",
+          "Invalid TOUCHLINE backup JSON."
+        ));
+
+      } finally {
+        event.target.value = "";
+      }
+    };
+
+    window.addEventListener("beforeunload", () => {
+      if (videoURL) {
+        URL.revokeObjectURL(videoURL);
+      }
+    });
+
+    // 첫 화면 표시
+    render();
+  </script>
 </body>
 </html>
