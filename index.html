@@ -138,3 +138,1237 @@ h3 { margin: 0 0 12px; }
 
 .card {
   background: var(--panel);
+  border: 1px solid var(--line);
+  padding: 22px;
+  border-radius: 12px;
+  min-width: 0;
+  margin-bottom: 20px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.number {
+  font-size: 36px;
+  font-weight: 800;
+  margin-top: 12px;
+}
+
+label {
+  display: grid;
+  gap: 8px;
+  margin: 14px 0;
+  color: var(--muted);
+}
+
+input, select, textarea {
+  width: 100%;
+  min-width: 0;
+  background: #0f1721;
+  color: var(--text);
+  border: 1px solid #405167;
+  border-radius: 7px;
+  padding: 11px;
+}
+
+textarea { min-height: 110px; resize: vertical; }
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.row:last-child { border: 0; }
+
+.calendar-scroll { overflow-x: auto; }
+
+.week, .calendar {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  min-width: 650px;
+}
+
+.week span {
+  text-align: center;
+  padding: 18px;
+  color: var(--muted);
+}
+
+.calendar {
+  border-top: 1px solid var(--line);
+  border-left: 1px solid var(--line);
+}
+
+.day {
+  min-height: 140px;
+  padding: 8px;
+  border-radius: 0;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
+  text-align: left;
+  overflow: hidden;
+}
+
+.day:hover { background: #1d2a38; filter: none; }
+.day.blank { background: var(--bg); }
+.day.selected { box-shadow: inset 0 0 0 2px var(--accent); }
+
+.date-number {
+  align-self: flex-end;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  font-size: 17px;
+}
+
+.today {
+  background: var(--accent);
+  color: #17230c;
+  border-radius: 50%;
+}
+
+.event {
+  background: #24364c;
+  color: #e7effa;
+  padding: 7px;
+  border: 1px solid #354a63;
+  border-radius: 5px;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.event.done {
+  background: #283b2a;
+  color: var(--accent);
+  border-color: #3c5437;
+}
+
+.journal-mark { color: var(--accent); font-size: 11px; }
+.small { font-size: 12px; color: var(--muted); }
+
+.notice {
+  padding: 14px;
+  background: #1c2b23;
+  border-left: 3px solid var(--accent);
+  line-height: 1.8;
+  color: #d5e4d0;
+  margin: 18px 0;
+}
+
+.table-wrap { overflow: auto; }
+table { width: 100%; border-collapse: collapse; }
+th, td {
+  text-align: left;
+  padding: 13px;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+th { color: var(--muted); }
+
+video { width: 100%; background: black; max-height: 450px; }
+#reaction { width: 100%; min-height: 150px; font-size: 22px; }
+footer {
+  margin-top: 30px;
+  border-top: 1px solid var(--line);
+  padding-top: 20px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+#message {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: var(--accent);
+  color: #17230c;
+  padding: 12px 20px;
+  border-radius: 8px;
+  z-index: 20;
+}
+
+#message:empty { display: none; }
+
+@media (max-width: 850px) {
+  aside { position: static; width: auto; padding: 20px; }
+  nav { display: flex; overflow-x: auto; margin-top: 18px; }
+  nav button { white-space: nowrap; }
+  main { margin-left: 0; padding: 20px; }
+  .grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 500px) {
+  .stats { grid-template-columns: 1fr; gap: 0; }
+  .card { padding: 16px; }
+  h1 { font-size: 28px; }
+}
+</style>
+</head>
+
+<body>
+<aside>
+  <div class="brand">TOUCH<span>LINE</span></div>
+  <div class="brand-sub">PLAYER PERFORMANCE SYSTEM</div>
+  <nav id="nav" aria-label="메인 메뉴"></nav>
+</aside>
+
+<main>
+  <header>
+    <div>
+      <div class="eyebrow">PERFORMANCE LAB</div>
+      <p id="todayLabel" class="small"></p>
+    </div>
+    <div class="actions">
+      <button id="backup" class="secondary">백업 / Backup</button>
+      <button id="language" class="secondary">EN</button>
+    </div>
+  </header>
+
+  <h1 id="heading">TOUCHLINE</h1>
+  <p class="muted" id="description"></p>
+  <div id="content">
+    <p>화면을 불러오는 중입니다. / Loading…</p>
+  </div>
+
+  <footer id="footer"></footer>
+</main>
+
+<div id="message" role="status" aria-live="polite"></div>
+
+<script>
+"use strict";
+
+/* 기본 상태 */
+const STORE = "touchline-v1";
+const $ = id => document.getElementById(id);
+
+let language = "ko";
+let currentPage = "schedule";
+let selectedDate = localDate(new Date());
+let monthDate = new Date();
+monthDate.setDate(1);
+
+let reactionTimer = null;
+let reactionState = "idle";
+let reactionStart = 0;
+let videoURL = null;
+let journalDirty = false;
+
+function localDate(d) {
+  return [
+    d.getFullYear(),
+    String(d.getMonth() + 1).padStart(2, "0"),
+    String(d.getDate()).padStart(2, "0")
+  ].join("-");
+}
+
+function text(ko, en) {
+  return language === "ko" ? ko : en;
+}
+
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, c => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  }[c]));
+}
+
+function makeID() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2);
+}
+
+let data = {
+  version: 1,
+  sessions: [],
+  matches: [],
+  recovery: [],
+  journals: [],
+  tags: [],
+  reactions: []
+};
+
+/* 이전 기록 읽기 */
+try {
+  const saved = JSON.parse(localStorage.getItem(STORE) || "null");
+
+  if (saved && typeof saved === "object") {
+    for (const key of [
+      "sessions", "matches", "recovery",
+      "journals", "tags", "reactions"
+    ]) {
+      if (Array.isArray(saved[key])) {
+        data[key] = saved[key].filter(
+          item => item && typeof item === "object"
+        );
+      }
+    }
+  }
+} catch (error) {
+  console.warn("Could not load local records.", error);
+}
+
+function notify(message) {
+  $("message").textContent = message;
+  setTimeout(() => { $("message").textContent = ""; }, 3500);
+}
+
+function save() {
+  try {
+    localStorage.setItem(STORE, JSON.stringify(data));
+    return true;
+  } catch (error) {
+    notify(text(
+      "브라우저 저장에 실패했습니다. 백업 버튼으로 기록을 보관하세요.",
+      "Storage failed. Export a backup."
+    ));
+    return false;
+  }
+}
+
+function allowNavigation() {
+  if (!journalDirty) return true;
+
+  return confirm(text(
+    "저장하지 않은 일지를 버리고 이동할까요?",
+    "Discard unsaved journal changes?"
+  ));
+}
+
+function field(label, name, type, value, attributes = "") {
+  return `
+    <label>
+      ${label}
+      <input
+        name="${name}"
+        type="${type}"
+        value="${escapeHTML(value)}"
+        ${attributes}
+        required
+      >
+    </label>
+  `;
+}
+
+const pages = {
+  overview: ["대시보드", "Overview"],
+  schedule: ["훈련 일정 · 일지", "Schedule & journal"],
+  matches: ["경기 기록", "Match records"],
+  recovery: ["회복 관리", "Recovery"],
+  programs: ["훈련 프로그램", "Programs"],
+  growth: ["성장 분석", "Progress"],
+  brain: ["인지·반응 훈련", "Reaction practice"],
+  video: ["영상 리뷰", "Video review"]
+};
+
+function deleteButton(collection, id) {
+  return `
+    <button
+      class="danger"
+      data-delete="${collection}"
+      data-id="${escapeHTML(id)}"
+    >${text("삭제", "Delete")}</button>
+  `;
+}
+
+function noRecords() {
+  return `<p class="muted">${text(
+    "아직 기록이 없습니다.",
+    "No records yet."
+  )}</p>`;
+}
+
+function render() {
+  clearTimeout(reactionTimer);
+  reactionState = "idle";
+  journalDirty = false;
+
+  if (videoURL) {
+    URL.revokeObjectURL(videoURL);
+    videoURL = null;
+  }
+
+  document.documentElement.lang = language;
+  $("language").textContent = language === "ko" ? "EN" : "한국어";
+
+  $("todayLabel").textContent = new Date().toLocaleDateString(
+    language === "ko" ? "ko-KR" : "en-GB"
+  );
+
+  $("heading").textContent = pages[currentPage][
+    language === "ko" ? 0 : 1
+  ];
+
+  $("description").textContent = text(
+    "훈련과 회복을 기록하고, 나만의 성장 과정을 관리하세요.",
+    "Plan training, track recovery and document your progress."
+  );
+
+  $("nav").innerHTML = Object.entries(pages).map(
+    ([key, label]) => `
+      <button
+        data-page="${key}"
+        class="${key === currentPage ? "active" : ""}"
+      >${label[language === "ko" ? 0 : 1]}</button>
+    `
+  ).join("");
+
+  const views = {
+    overview: overviewView,
+    schedule: scheduleView,
+    matches: matchesView,
+    recovery: recoveryView,
+    programs: programsView,
+    growth: growthView,
+    brain: brainView,
+    video: videoView
+  };
+
+  $("content").innerHTML = views[currentPage]();
+
+  $("footer").textContent = text(
+    "개인용 관리 도구 · 현재 브라우저에 저장됩니다. 정기적으로 백업하세요. 의료 진단 및 자동 AI 영상 분석은 제공하지 않습니다.",
+    "Personal workspace · Stored in this browser. Export backups regularly. No medical diagnosis or automated AI video analysis."
+  );
+
+  bindEvents();
+}
+
+/* 대시보드 */
+function overviewView() {
+  const completed = data.sessions.filter(s => s.done);
+  const minutes = completed.reduce(
+    (total, s) => total + (Number(s.minutes) || 0), 0
+  );
+
+  return `
+    <div class="stats">
+      <div class="card">
+        <span class="muted">${text("완료 훈련", "Completed")}</span>
+        <div class="number">${completed.length}</div>
+      </div>
+      <div class="card">
+        <span class="muted">${text("훈련 시간 · 분", "Training minutes")}</span>
+        <div class="number">${minutes}</div>
+      </div>
+      <div class="card">
+        <span class="muted">${text("경기 기록", "Matches logged")}</span>
+        <div class="number">${data.matches.length}</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="eyebrow">PLAN · TRAIN · REFLECT</div>
+      <h2 style="margin-top:18px">
+        ${text("오늘의 훈련을 계획하세요.", "Plan your next session.")}
+      </h2>
+      <p class="muted">
+        ${text(
+          "달력에서 날짜를 선택하고, 훈련과 일지를 함께 관리하세요.",
+          "Select a date in the calendar to manage training and reflections."
+        )}
+      </p>
+      <button data-page="schedule">
+        ${text("달력 열기", "Open calendar")}
+      </button>
+    </div>
+  `;
+}
+
+/* 월간 달력 + 일지 */
+function scheduleView() {
+  const year = monthDate.getFullYear();
+  const month = monthDate.getMonth();
+  const firstWeekday = new Date(year, month, 1).getDay();
+  const totalDays = new Date(year, month + 1, 0).getDate();
+
+  const title = monthDate.toLocaleDateString(
+    language === "ko" ? "ko-KR" : "en-GB",
+    { year: "numeric", month: "long" }
+  );
+
+  let cells = "";
+
+  for (let i = 0; i < firstWeekday; i++) {
+    cells += '<div class="day blank" aria-hidden="true"></div>';
+  }
+
+  for (let day = 1; day <= totalDays; day++) {
+    const key = localDate(new Date(year, month, day));
+    const sessions = data.sessions.filter(s => s.date === key);
+    const hasJournal = data.journals.some(j => j.date === key);
+
+    cells += `
+      <button
+        class="day ${key === selectedDate ? "selected" : ""}"
+        data-date="${key}"
+        aria-label="${key}"
+        aria-pressed="${key === selectedDate}"
+      >
+        <span class="date-number ${
+          key === localDate(new Date()) ? "today" : ""
+        }">${day}</span>
+
+        ${sessions.slice(0, 2).map(s => `
+          <span class="event ${s.done ? "done" : ""}">
+            ${s.done ? "✓ " : ""}${escapeHTML(s.name)}
+          </span>
+        `).join("")}
+
+        ${sessions.length > 2
+          ? `<span class="small">+${sessions.length - 2}</span>`
+          : ""}
+
+        ${hasJournal
+          ? `<span class="journal-mark">✎ ${text("일지", "Journal")}</span>`
+          : ""}
+      </button>
+    `;
+  }
+
+  const remaining = (7 - (firstWeekday + totalDays) % 7) % 7;
+
+  for (let i = 0; i < remaining; i++) {
+    cells += '<div class="day blank" aria-hidden="true"></div>';
+  }
+
+  const sessions = data.sessions.filter(s => s.date === selectedDate);
+  const journal = data.journals.find(j => j.date === selectedDate) || {};
+
+  return `
+    <section class="card">
+      <div class="toolbar">
+        <div>
+          <div class="eyebrow">MONTHLY SCHEDULE</div>
+          <h2 style="margin:10px 0">${title}</h2>
+        </div>
+        <div class="actions">
+          <button class="secondary" id="previousMonth"
+            aria-label="${text("이전 달", "Previous month")}">‹</button>
+          <button class="secondary" id="goToday">
+            ${text("오늘", "Today")}
+          </button>
+          <button class="secondary" id="nextMonth"
+            aria-label="${text("다음 달", "Next month")}">›</button>
+        </div>
+      </div>
+
+      <p class="muted">
+        ${text(
+          "날짜를 누르면 아래에서 훈련과 일지를 작성할 수 있습니다.",
+          "Select a date to manage training and write a journal below."
+        )}
+      </p>
+
+      <div class="calendar-scroll">
+        <div class="week">
+          ${text(
+            "일,월,화,수,목,금,토",
+            "Sun,Mon,Tue,Wed,Thu,Fri,Sat"
+          ).split(",").map(day => `<span>${day}</span>`).join("")}
+        </div>
+        <div class="calendar">${cells}</div>
+      </div>
+
+      <p class="small">
+        ${text(
+          "연두색 원: 오늘 · 테두리: 선택 날짜 · ✎: 저장된 일지",
+          "Lime circle: today · Border: selected day · ✎: saved journal"
+        )}
+      </p>
+    </section>
+
+    <div class="grid">
+      <section class="card">
+        <div class="eyebrow">DAILY TRAINING</div>
+        <h2 style="margin-top:12px">${selectedDate}</h2>
+
+        ${sessions.map(s => `
+          <div class="row">
+            <div>
+              <strong>${escapeHTML(s.name)}</strong>
+              <p class="small">
+                ${Number(s.minutes) || 0} min · RPE ${Number(s.rpe) || 0}
+              </p>
+            </div>
+            <div class="actions">
+              <button class="secondary" data-toggle="${escapeHTML(s.id)}">
+                ${s.done
+                  ? text("완료 ✓", "Done ✓")
+                  : text("완료 처리", "Mark done")}
+              </button>
+              ${deleteButton("sessions", s.id)}
+            </div>
+          </div>
+        `).join("") || noRecords()}
+
+        <h3 style="margin-top:24px">
+          ${text("훈련 추가", "Add training")}
+        </h3>
+
+        <form id="sessionForm">
+          ${field(text("훈련 이름", "Session name"),
+            "name", "text", "", 'maxlength="100"')}
+          ${field(text("훈련 시간 · 분", "Duration · minutes"),
+            "minutes", "number", 60, 'min="1" max="600"')}
+          ${field(text("운동자각도 RPE · 1~10", "Perceived effort RPE · 1–10"),
+            "rpe", "number", 5, 'min="1" max="10"')}
+          <button>${text("선택한 날짜에 추가", "Add to selected date")}</button>
+        </form>
+      </section>
+
+      <section class="card">
+        <div class="eyebrow">PLAYER JOURNAL</div>
+        <h2 style="margin-top:12px">
+          ${text("훈련 일지", "Training journal")}
+        </h2>
+        <p class="small">${selectedDate}</p>
+
+        <form id="journalForm">
+          <label>
+            ${text("컨디션", "Condition")}
+            <select name="mood">
+              ${[
+                ["great", "좋음", "Great"],
+                ["normal", "보통", "Okay"],
+                ["tired", "피곤함", "Tired"]
+              ].map(([value, ko, en]) => `
+                <option value="${value}"
+                  ${journal.mood === value ? "selected" : ""}>
+                  ${text(ko, en)}
+                </option>
+              `).join("")}
+            </select>
+          </label>
+
+          ${field(text("오늘의 목표", "Daily goal"),
+            "goal", "text", journal.goal || "", 'maxlength="200"')}
+
+          <label>
+            ${text("훈련 내용 · 느낀 점", "Training & reflections")}
+            <textarea name="body" maxlength="10000"
+              required>${escapeHTML(journal.body || "")}</textarea>
+          </label>
+
+          <label>
+            ${text("다음 훈련에서 개선할 점", "Next session focus")}
+            <textarea name="next" maxlength="2000">${
+              escapeHTML(journal.next || "")
+            }</textarea>
+          </label>
+
+          <div class="actions">
+            <button>${text("일지 저장", "Save journal")}</button>
+            ${journal.date ? `
+              <button type="button" class="danger" id="deleteJournal">
+                ${text("일지 삭제", "Delete journal")}
+              </button>
+            ` : ""}
+          </div>
+          <p class="small">
+            ${text(
+              "작성 후 저장 버튼을 눌러 주세요.",
+              "Press Save after writing."
+            )}
+          </p>
+        </form>
+      </section>
+    </div>
+  `;
+}
+
+/* 경기 기록 */
+function matchesView() {
+  return `
+    <div class="grid">
+      <form id="matchForm" class="card">
+        <h2>${text("경기 추가", "Add match")}</h2>
+        ${field(text("날짜", "Date"), "date", "date", selectedDate)}
+        ${field(text("상대 팀", "Opponent"), "opponent", "text",
+          "", 'maxlength="100"')}
+        ${field(text("출전 시간 · 분", "Minutes played"), "minutes",
+          "number", 90, 'min="0" max="200"')}
+        ${field(text("득점", "Goals"), "goals", "number",
+          0, 'min="0" max="99"')}
+        ${field(text("도움", "Assists"), "assists", "number",
+          0, 'min="0" max="99"')}
+        <button>${text("저장", "Save")}</button>
+      </form>
+
+      <div class="card">
+        <h2>${text("경기 히스토리", "Match history")}</h2>
+        ${[...data.matches].reverse().map(m => `
+          <div class="row">
+            <div>
+              <strong>vs ${escapeHTML(m.opponent)}</strong>
+              <p class="small">
+                ${escapeHTML(m.date)} · ${Number(m.minutes) || 0} min
+                · ${Number(m.goals) || 0} G / ${Number(m.assists) || 0} A
+              </p>
+            </div>
+            ${deleteButton("matches", m.id)}
+          </div>
+        `).join("") || noRecords()}
+      </div>
+    </div>
+  `;
+}
+
+/* 회복 */
+function recoveryView() {
+  return `
+    <div class="notice">
+      ${text(
+        "통증이나 심한 피로가 있으면 무리하지 말고 코치·의료 전문가와 상담하세요. 부상 위험을 판정하는 기능은 아닙니다.",
+        "Consult a coach or healthcare professional for pain or severe fatigue. This tool does not assess injury risk."
+      )}
+    </div>
+
+    <div class="grid">
+      <form id="recoveryForm" class="card">
+        <h2>${text("회복 기록", "Recovery log")}</h2>
+        ${field(text("날짜", "Date"), "date", "date", selectedDate)}
+        ${field(text("수면 시간", "Sleep hours"), "sleep",
+          "number", 8, 'min="0" max="24" step="0.5"')}
+        ${field(text("피로 · 0~10", "Fatigue · 0–10"), "fatigue",
+          "number", 3, 'min="0" max="10"')}
+        ${field(text("통증 · 0~10", "Pain · 0–10"), "pain",
+          "number", 0, 'min="0" max="10"')}
+        <button>${text("저장", "Save")}</button>
+      </form>
+
+      <div class="card">
+        <h2>${text("회복 히스토리", "Recovery history")}</h2>
+        ${[...data.recovery].reverse().map(r => `
+          <div class="row">
+            <div>
+              <strong>${escapeHTML(r.date)}</strong>
+              <p class="small">
+                ${text("수면", "Sleep")} ${Number(r.sleep) || 0}h ·
+                ${text("피로", "Fatigue")} ${Number(r.fatigue) || 0}/10 ·
+                ${text("통증", "Pain")} ${Number(r.pain) || 0}/10
+              </p>
+            </div>
+            ${deleteButton("recovery", r.id)}
+          </div>
+        `).join("") || noRecords()}
+      </div>
+    </div>
+  `;
+}
+
+/* 프로그램 */
+const programs = [
+  {
+    ko: "볼 컨트롤 & 주변 확인",
+    en: "Ball control & scanning",
+    minutes: 25, rpe: 4,
+    koBody: "워밍업 5분 → 볼 터치 8분 → 패스 전 주변 확인 7분 → 정리운동 5분",
+    enBody: "Warm-up 5 min → ball touches 8 min → scan before passing 7 min → cool-down 5 min"
+  },
+  {
+    ko: "패스 & 선택 반응",
+    en: "Passing & choice responses",
+    minutes: 30, rpe: 5,
+    koBody: "워밍업 5분 → 양발 패스 10분 → 파트너 신호에 따른 방향 선택 10분 → 정리운동 5분",
+    enBody: "Warm-up 5 min → passing 10 min → direction choices from partner cues 10 min → cool-down 5 min"
+  },
+  {
+    ko: "가벼운 회복",
+    en: "Gentle recovery",
+    minutes: 20, rpe: 2,
+    koBody: "편안한 걷기 10분 → 통증 없는 가동성 운동 5분 → 편안한 휴식 5분",
+    enBody: "Comfortable walking 10 min → pain-free mobility 5 min → rest 5 min"
+  }
+];
+
+function programsView() {
+  return `
+    <div class="notice">
+      ${text(
+        "일반적인 예시입니다. 연령·경험·몸 상태에 맞게 코치와 조정하고, 통증이 생기면 중단하세요.",
+        "General examples. Adjust with a coach for age, experience and condition. Stop if pain occurs."
+      )}
+    </div>
+
+    ${programs.map((p, index) => `
+      <div class="card">
+        <span class="eyebrow">${p.minutes} MIN · RPE ${p.rpe}</span>
+        <h2 style="margin-top:15px">${text(p.ko, p.en)}</h2>
+        <p class="muted">${text(p.koBody, p.enBody)}</p>
+        <button data-program="${index}">
+          ${text("오늘 일정에 추가", "Add to today")}
+        </button>
+      </div>
+    `).join("")}
+  `;
+}
+
+/* 성장 요약 */
+function growthView() {
+  const rows = [];
+
+  for (let i = 3; i >= 0; i--) {
+    const end = new Date();
+    end.setDate(end.getDate() - i * 7);
+
+    const start = new Date(end);
+    start.setDate(start.getDate() - 6);
+
+    const from = localDate(start);
+    const to = localDate(end);
+
+    const sessions = data.sessions.filter(s =>
+      s.done && s.date >= from && s.date <= to
+    );
+
+    rows.push({
+      from, to,
+      count: sessions.length,
+      minutes: sessions.reduce((a, s) => a + (Number(s.minutes) || 0), 0),
+      load: sessions.reduce((a, s) =>
+        a + (Number(s.minutes) || 0) * (Number(s.rpe) || 0), 0)
+    });
+  }
+
+  return `
+    <div class="card">
+      <h2>${text("최근 4주 훈련", "Last four weeks")}</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th>${text("기간", "Period")}</th>
+            <th>${text("완료 수", "Sessions")}</th>
+            <th>${text("시간 · 분", "Minutes")}</th>
+            <th>${text("주관적 부하 · AU", "Subjective load · AU")}</th>
+          </tr></thead>
+          <tbody>
+            ${rows.map(r => `
+              <tr>
+                <td>${r.from} — ${r.to}</td>
+                <td>${r.count}</td>
+                <td>${r.minutes}</td>
+                <td>${r.load}</td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      </div>
+      <p class="muted">
+        ${text(
+          "부하 = 완료 훈련 시간 × 입력한 RPE의 합. 기록된 훈련량의 요약이며 실력 향상이나 부상 위험을 판정하지 않습니다.",
+          "Load = sum of completed training minutes × entered RPE. Describes recorded volume, not skill improvement or injury risk."
+        )}
+      </p>
+    </div>
+  `;
+}
+
+/* 반응 연습 */
+function brainView() {
+  return `
+    <div class="card">
+      <h2>${text("시각 반응 연습", "Visual reaction practice")}</h2>
+      <p class="muted">
+        ${text(
+          "시작 후 패널이 연두색으로 바뀌면 클릭하세요.",
+          "Start, then click when the panel turns lime."
+        )}
+      </p>
+      <button id="reaction" class="secondary">
+        ${text("시작", "Start")}
+      </button>
+      <p id="reactionResult" class="muted" aria-live="polite"></p>
+      <div class="notice">
+        ${text(
+          "브라우저·화면·입력 장치 지연이 포함됩니다. 뇌 기능 검사나 경기력 평가가 아니며 경기력 향상을 보장하지 않습니다.",
+          "Includes browser, screen and input latency. Not a brain-function or performance assessment; transfer to football is not guaranteed."
+        )}
+      </div>
+      ${data.reactions.slice(-5).reverse().map(r => `
+        <div class="row">
+          <span class="small">${escapeHTML(r.date)}</span>
+          <strong>${Number(r.ms) || 0} ms</strong>
+        </div>
+      `).join("")}
+    </div>
+  `;
+}
+
+/* 수동 영상 리뷰 */
+function videoView() {
+  return `
+    <div class="card">
+      <h2>${text("영상 불러오기", "Open video")}</h2>
+      <label>
+        ${text("내 기기의 영상", "Video on your device")}
+        <input type="file" id="videoFile" accept="video/*">
+      </label>
+      <video id="player" controls playsinline></video>
+      <label>
+        ${text("현재 장면 메모", "Current scene note")}
+        <textarea id="videoNote" maxlength="1000"></textarea>
+      </label>
+      <button id="addTag">${text("장면 태그 저장", "Save scene tag")}</button>
+      <div class="notice">
+        ${text(
+          "영상은 업로드되지 않습니다. 재접속 시 다시 선택하세요. 파일명·시간·메모만 저장하는 수동 리뷰 도구입니다.",
+          "Video is not uploaded. Re-select it after returning. Manual review stores only filename, timestamp and notes."
+        )}
+      </div>
+      <div id="tagList">${tagListHTML()}</div>
+    </div>
+  `;
+}
+
+function tagListHTML() {
+  return data.tags.map(tag => `
+    <div class="row">
+      <div>
+        <strong>${escapeHTML(tag.note)}</strong>
+        <p class="small">
+          ${escapeHTML(tag.file)} · ${Math.floor(Number(tag.time) || 0)}s
+        </p>
+      </div>
+      <button class="secondary" data-seek="${escapeHTML(tag.id)}">
+        ${text("장면 이동", "Seek")}
+      </button>
+    </div>
+  `).join("") || noRecords();
+}
+
+/* 이벤트 */
+function bindEvents() {
+  document.querySelectorAll("[data-page]").forEach(button => {
+    button.onclick = () => {
+      if (!allowNavigation()) return;
+      currentPage = button.dataset.page;
+      render();
+    };
+  });
+
+  document.querySelectorAll("[data-delete]").forEach(button => {
+    button.onclick = () => {
+      if (!allowNavigation()) return;
+      if (!confirm(text("이 기록을 삭제할까요?", "Delete this record?"))) return;
+
+      const collection = button.dataset.delete;
+      data[collection] = data[collection].filter(
+        r => String(r.id) !== button.dataset.id
+      );
+
+      save();
+      render();
+    };
+  });
+
+  document.querySelectorAll("[data-toggle]").forEach(button => {
+    button.onclick = () => {
+      if (!allowNavigation()) return;
+      const session = data.sessions.find(
+        s => String(s.id) === button.dataset.toggle
+      );
+
+      if (!session) return;
+      session.done = !session.done;
+      save();
+      render();
+    };
+  });
+
+  if (currentPage === "schedule") bindCalendar();
+
+  for (const [formID, collection, numbers] of [
+    ["matchForm", "matches", ["minutes", "goals", "assists"]],
+    ["recoveryForm", "recovery", ["sleep", "fatigue", "pain"]]
+  ]) {
+    const form = $(formID);
+    if (!form) continue;
+
+    form.onsubmit = event => {
+      event.preventDefault();
+      const entry = Object.fromEntries(new FormData(form));
+
+      if (entry.opponent) {
+        entry.opponent = entry.opponent.trim();
+        if (!entry.opponent) return;
+      }
+
+      numbers.forEach(key => { entry[key] = Number(entry[key]); });
+      entry.id = makeID();
+
+      if (collection === "recovery") {
+        const exists = data.recovery.some(r => r.date === entry.date);
+        if (exists && !confirm(text(
+          "같은 날짜의 회복 기록을 교체할까요?",
+          "Replace the check-in for this date?"
+        ))) return;
+        data.recovery = data.recovery.filter(r => r.date !== entry.date);
+      }
+
+      data[collection].push(entry);
+      const ok = save();
+      render();
+      if (ok) notify(text("저장했습니다.", "Saved."));
+    };
+  }
+
+  document.querySelectorAll("[data-program]").forEach(button => {
+    button.onclick = () => {
+      const p = programs[Number(button.dataset.program)];
+      data.sessions.push({
+        id: makeID(),
+        name: text(p.ko, p.en),
+        date: localDate(new Date()),
+        minutes: p.minutes,
+        rpe: p.rpe,
+        done: false
+      });
+      if (save()) notify(text("오늘 일정에 추가했습니다.", "Added to today."));
+    };
+  });
+
+  if ($("reaction")) bindReaction();
+  if ($("videoFile")) bindVideo();
+}
+
+function bindCalendar() {
+  function moveMonth(offset) {
+    if (!allowNavigation()) return;
+    monthDate = new Date(
+      monthDate.getFullYear(),
+      monthDate.getMonth() + offset,
+      1
+    );
+    render();
+  }
+
+  $("previousMonth").onclick = () => moveMonth(-1);
+  $("nextMonth").onclick = () => moveMonth(1);
+
+  $("goToday").onclick = () => {
+    if (!allowNavigation()) return;
+    monthDate = new Date();
+    monthDate.setDate(1);
+    selectedDate = localDate(new Date());
+    render();
+  };
+
+  document.querySelectorAll("[data-date]").forEach(button => {
+    button.onclick = () => {
+      if (!allowNavigation()) return;
+      selectedDate = button.dataset.date;
+      render();
+    };
+  });
+
+  $("sessionForm").onsubmit = event => {
+    event.preventDefault();
+    if (!allowNavigation()) return;
+
+    const form = event.target;
+    const entry = Object.fromEntries(new FormData(form));
+    const name = entry.name.trim();
+    if (!name) return;
+
+    data.sessions.push({
+      id: makeID(),
+      date: selectedDate,
+      name,
+      minutes: Number(entry.minutes),
+      rpe: Number(entry.rpe),
+      done: false
+    });
+
+    save();
+    render();
+  };
+
+  $("journalForm").addEventListener("input", () => {
+    journalDirty = true;
+  });
+
+  $("journalForm").onsubmit = event => {
+    event.preventDefault();
+
+    const entry = Object.fromEntries(new FormData(event.target));
+    entry.body = entry.body.trim();
+    if (!entry.body) return;
+
+    entry.date = selectedDate;
+    entry.updatedAt = new Date().toISOString();
+
+    data.journals = data.journals.filter(j => j.date !== selectedDate);
+    data.journals.push(entry);
+
+    const ok = save();
+    render();
+    if (ok) notify(text("일지를 저장했습니다.", "Journal saved."));
+  };
+
+  if ($("deleteJournal")) {
+    $("deleteJournal").onclick = () => {
+      if (!confirm(text("일지를 삭제할까요?", "Delete journal?"))) return;
+
+      data.journals = data.journals.filter(j => j.date !== selectedDate);
+      save();
+      render();
+    };
+  }
+}
+
+function bindReaction() {
+  $("reaction").onclick = () => {
+    const button = $("reaction");
+
+    if (reactionState === "idle") {
+      reactionState = "waiting";
+      button.className = "secondary";
+      button.textContent = text("기다리세요…", "Wait…");
+
+      reactionTimer = setTimeout(() => {
+        reactionState = "ready";
+        reactionStart = performance.now();
+        button.className = "";
+        button.textContent = text("지금 클릭!", "Click now!");
+      }, 1500 + Math.random() * 3000);
+
+    } else if (reactionState === "waiting") {
+      clearTimeout(reactionTimer);
+      reactionState = "idle";
+      button.textContent = text("너무 빨라요! 다시 시작", "Too soon! Restart");
+
+    } else {
+      const ms = Math.round(performance.now() - reactionStart);
+      data.reactions.push({ date: new Date().toISOString(), ms });
+      save();
+      render();
+      $("reactionResult").textContent = `${ms} ms`;
+    }
+  };
+}
+
+function bindVideo() {
+  $("videoFile").onchange = event => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    if (videoURL) URL.revokeObjectURL(videoURL);
+    videoURL = URL.createObjectURL(file);
+
+    $("player").src = videoURL;
+    $("player").dataset.filename = file.name;
+  };
+
+  $("addTag").onclick = () => {
+    const player = $("player");
+    const note = $("videoNote").value.trim();
+
+    if (!player.dataset.filename || player.readyState < 1 || !note) {
+      notify(text(
+        "영상을 선택하고 메모를 입력하세요.",
+        "Select a video and enter a note."
+      ));
+      return;
+    }
+
+    data.tags.push({
+      id: makeID(),
+      file: player.dataset.filename,
+      time: player.currentTime,
+      note
+    });
+
+    save();
+    $("videoNote").value = "";
+    $("tagList").innerHTML = tagListHTML();
+    bindSeek();
+  };
+
+  bindSeek();
+}
+
+function bindSeek() {
+  document.querySelectorAll("[data-seek]").forEach(button => {
+    button.onclick = () => {
+      const tag = data.tags.find(t => String(t.id) === button.dataset.seek);
+      const player = $("player");
+
+      if (!tag || player.dataset.filename !== tag.file || player.readyState < 1) {
+        notify(text(
+          "태그와 같은 영상 파일을 먼저 선택하세요. 파일명으로만 비교합니다.",
+          "Select the matching video first. Matching uses filename only."
+        ));
+        return;
+      }
+
+      player.currentTime = Number(tag.time) || 0;
+    };
+  });
+}
+
+/* 상단 버튼 */
+$("language").onclick = () => {
+  if (!allowNavigation()) return;
+  language = language === "ko" ? "en" : "ko";
+  render();
+};
+
+$("backup").onclick = () => {
+  const blob = new Blob(
+    [JSON.stringify(data, null, 2)],
+    { type: "application/json" }
+  );
+
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `touchline-backup-${localDate(new Date())}.json`;
+  link.click();
+
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+};
+
+window.addEventListener("beforeunload", event => {
+  if (journalDirty) {
+    event.preventDefault();
+    event.returnValue = "";
+  }
+});
+
+/* 최초 실행 */
+try {
+  render();
+} catch (error) {
+  console.error(error);
+  $("content").textContent =
+    "화면을 불러오지 못했습니다. 코드가 빠짐없이 붙여 넣어졌는지 확인해 주세요. / Unable to load the page.";
+}
+</script>
+</body>
+</html>
