@@ -3,16 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TOUCHLINE | Player Performance</title>
+
+  <title>TOUCHLINE | 축구 선수 훈련 관리</title>
 
   <style>
+    /* ======================================
+       기본 디자인
+    ====================================== */
+
     :root {
       --bg: #0c1118;
+      --sidebar: #101721;
       --panel: #151e29;
+      --input: #0f1721;
       --line: #2b3848;
       --text: #eef3f8;
       --muted: #b1bfce;
       --accent: #c9f36b;
+      --danger: #ffd8df;
     }
 
     * {
@@ -23,7 +31,12 @@
       margin: 0;
       background: var(--bg);
       color: var(--text);
-      font: 15px system-ui, "Apple SD Gothic Neo", sans-serif;
+      font-family:
+        system-ui,
+        "Apple SD Gothic Neo",
+        "Malgun Gothic",
+        sans-serif;
+      font-size: 14px;
     }
 
     button,
@@ -34,44 +47,119 @@
     }
 
     button {
-      cursor: pointer;
-      background: var(--accent);
+      padding: 11px 15px;
       border: 0;
       border-radius: 7px;
-      padding: 11px 16px;
+      background: var(--accent);
       color: #15200b;
       font-weight: 700;
+      cursor: pointer;
     }
 
-    button.secondary {
+    button:hover {
+      filter: brightness(1.06);
+    }
+
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible,
+    textarea:focus-visible,
+    summary:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+    }
+
+    .secondary {
       background: #263445;
       color: var(--text);
     }
 
-    button.danger {
+    .danger {
       background: #472a33;
-      color: #ffd8df;
+      color: var(--danger);
     }
 
-    button:focus-visible,
-    a:focus-visible {
-      outline: 3px solid #fff;
-      outline-offset: 3px;
+    input,
+    select,
+    textarea {
+      width: 100%;
+      min-width: 0;
+      padding: 11px;
+      border: 1px solid #405167;
+      border-radius: 7px;
+      background: var(--input);
+      color: var(--text);
     }
+
+    textarea {
+      min-height: 100px;
+      line-height: 1.7;
+      resize: vertical;
+    }
+
+    input[type="file"] {
+      font-size: 12px;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      overflow-wrap: anywhere;
+    }
+
+    h1 {
+      margin: 10px 0;
+      font-size: clamp(28px, 4vw, 42px);
+      letter-spacing: -1.5px;
+    }
+
+    h2 {
+      margin: 0 0 18px;
+      font-size: 20px;
+    }
+
+    h3 {
+      margin: 0 0 12px;
+      font-size: 16px;
+    }
+
+    .muted {
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    .tiny {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    .eyebrow {
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 2px;
+    }
+
+    /* ======================================
+       사이드바 / 상단
+    ====================================== */
 
     aside {
       position: fixed;
       inset: 0 auto 0 0;
-      width: 238px;
-      background: #101721;
+      width: 230px;
+      padding: 30px 18px;
       border-right: 1px solid var(--line);
-      padding: 30px 20px;
+      background: var(--sidebar);
       display: flex;
       flex-direction: column;
+      z-index: 5;
     }
 
     .brand {
-      font-size: 23px;
+      font-size: 25px;
       font-weight: 900;
       letter-spacing: -1px;
     }
@@ -80,33 +168,25 @@
       color: var(--accent);
     }
 
-    .eyebrow {
-      color: var(--accent);
-      font-size: 11px;
-      letter-spacing: 2px;
-      font-weight: 700;
-    }
-
-    .sub {
+    .brand-sub {
+      margin-top: 8px;
       color: var(--muted);
-      line-height: 1.7;
-    }
-
-    .brand + .sub {
-      font-size: 11px;
+      font-size: 10px;
+      letter-spacing: 1px;
     }
 
     nav {
       display: grid;
       gap: 7px;
-      margin-top: 40px;
+      margin-top: 38px;
     }
 
     nav button {
-      text-align: left;
+      padding: 14px 12px;
       background: transparent;
       color: var(--muted);
-      padding: 13px;
+      text-align: left;
+      white-space: nowrap;
     }
 
     nav button.active {
@@ -114,79 +194,99 @@
       color: var(--accent);
     }
 
-    .asidefoot {
-      margin-top: auto;
+    .nav-number {
+      margin-right: 13px;
+      opacity: .5;
       font-size: 11px;
+    }
+
+    .sidebar-bottom {
+      margin-top: auto;
       color: var(--muted);
+      font-size: 10px;
+      line-height: 2;
     }
 
     main {
-      margin-left: 238px;
-      padding: 28px 40px;
-      max-width: 1600px;
+      max-width: 1800px;
+      margin-left: 230px;
+      padding: 28px 36px;
     }
 
     header {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      border-bottom: 1px solid var(--line);
+      align-items: center;
+      gap: 16px;
       padding-bottom: 22px;
-      gap: 12px;
+      border-bottom: 1px solid var(--line);
     }
 
     .actions {
       display: flex;
+      align-items: center;
       gap: 8px;
       flex-wrap: wrap;
     }
 
-    h1 {
-      font-size: clamp(26px, 4vw, 42px);
-      margin: 12px 0;
-      letter-spacing: -1.4px;
-    }
-
-    h2 {
-      font-size: 19px;
-      margin: 0 0 18px;
-    }
-
-    h3 {
-      margin: 0 0 12px;
-      font-size: 16px;
-    }
-
     .hero {
-      padding: 34px 0 24px;
+      padding: 30px 0 22px;
+    }
+
+    footer {
+      margin-top: 32px;
+      padding: 20px 0;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.8;
+    }
+
+    /* ======================================
+       공통 카드 / 폼
+    ====================================== */
+
+    .card {
+      min-width: 0;
+      padding: 23px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel);
     }
 
     .grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 18px;
+      gap: 20px;
+      align-items: start;
     }
 
     .stats {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 14px;
       margin-bottom: 22px;
     }
 
-    .card {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 13px;
-      padding: 23px;
-      min-width: 0;
-    }
-
-    .num {
+    .stat-number {
+      margin: 12px 0 6px;
       font-size: 34px;
       font-weight: 800;
       letter-spacing: -1px;
-      margin: 14px 0 6px;
+    }
+
+    .stat-unit {
+      margin-left: 5px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 16px;
+      color: var(--muted);
+      font-size: 13px;
     }
 
     .tag {
@@ -196,30 +296,7 @@
       background: #263927;
       color: var(--accent);
       font-size: 11px;
-    }
-
-    .field {
-      display: grid;
-      gap: 7px;
-      margin-bottom: 16px;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    input,
-    select,
-    textarea {
-      width: 100%;
-      background: #0f1721;
-      color: var(--text);
-      border: 1px solid #405167;
-      border-radius: 7px;
-      padding: 11px;
-      min-width: 0;
-    }
-
-    textarea {
-      min-height: 80px;
+      font-weight: 700;
     }
 
     .row {
@@ -232,61 +309,33 @@
     }
 
     .row:last-child {
-      border: 0;
+      border-bottom: 0;
     }
 
-    .row .actions {
-      flex-shrink: 0;
+    .row-title {
+      margin-bottom: 5px;
+      font-weight: 700;
+      overflow-wrap: anywhere;
     }
 
-    .tiny {
+    .notice {
+      margin: 18px 0;
+      padding: 13px 16px;
+      border-left: 3px solid var(--accent);
+      background: #19251f;
+      color: #d8e7d4;
       font-size: 12px;
-      color: var(--muted);
+      line-height: 1.8;
     }
 
     .empty {
       padding: 22px 0;
       color: var(--muted);
-      line-height: 1.7;
+      line-height: 1.8;
     }
 
-    video {
-      width: 100%;
-      max-height: 460px;
-      background: #080c11;
-      border-radius: 8px;
-    }
-
-    .reaction {
-      width: 100%;
-      min-height: 150px;
-      background: #263445;
-      color: white;
-      font-size: 22px;
-      margin: 15px 0;
-    }
-
-    .reaction.ready {
-      background: var(--accent);
-      color: #13220b;
-    }
-
-    .notice {
-      border-left: 3px solid var(--accent);
-      padding: 12px 16px;
-      background: #19251f;
-      color: #d8e7d4;
-      font-size: 13px;
-      line-height: 1.7;
-      margin: 16px 0;
-    }
-
-    footer {
-      margin-top: 35px;
-      padding: 18px 0;
-      color: var(--muted);
-      font-size: 12px;
-      border-top: 1px solid var(--line);
+    .table-scroll {
+      overflow-x: auto;
     }
 
     table {
@@ -297,51 +346,226 @@
 
     th,
     td {
-      padding: 13px 10px;
-      text-align: left;
+      padding: 14px 10px;
       border-bottom: 1px solid var(--line);
+      text-align: left;
+      white-space: nowrap;
     }
 
     th {
       color: var(--muted);
+      font-weight: 500;
     }
 
-    .tablewrap {
-      overflow: auto;
+    /* ======================================
+       월간 스케줄 표
+    ====================================== */
+
+    .calendar-card {
+      margin-bottom: 22px;
+      padding: 26px;
+      background: var(--panel);
+    }
+
+    .calendar-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .calendar-heading {
+      margin: 8px 0 0;
+      font-size: 27px;
+      letter-spacing: -1px;
+    }
+
+    .calendar-scroll {
+      overflow-x: auto;
+    }
+
+    .calendar-week,
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      min-width: 680px;
+    }
+
+    .calendar-week > div {
+      padding: 15px 5px;
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    .calendar-grid {
+      border-top: 1px solid var(--line);
+      border-left: 1px solid var(--line);
+    }
+
+    .calendar-cell {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 6px;
+      min-width: 0;
+      min-height: 155px;
+      padding: 8px;
+      border: 0;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      border-radius: 0;
+      background: var(--panel);
+      color: var(--text);
+      font-weight: 400;
+      text-align: left;
+    }
+
+    button.calendar-cell:hover {
+      background: #1c2937;
+      filter: none;
+    }
+
+    .calendar-cell.blank {
+      background: var(--bg);
+    }
+
+    .calendar-cell.selected {
+      box-shadow: inset 0 0 0 2px var(--accent);
+    }
+
+    .day-number {
+      display: grid;
+      place-items: center;
+      align-self: flex-end;
+      width: 30px;
+      height: 30px;
+      flex-shrink: 0;
+      font-size: 17px;
+      font-weight: 600;
+    }
+
+    .day-number.today {
+      border-radius: 50%;
+      background: var(--accent);
+      color: #15200b;
+      font-weight: 900;
+    }
+
+    .calendar-event {
+      display: block;
+      overflow: hidden;
+      padding: 7px 6px;
+      border: 1px solid #35485e;
+      border-radius: 6px;
+      background: #213044;
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 1.4;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .calendar-event.completed {
+      border-color: #3b5336;
+      background: #263927;
+      color: var(--accent);
+    }
+
+    .journal-mark {
+      padding: 3px 5px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .calendar-legend {
+      margin: 14px 0 0;
+    }
+
+    .daily-heading {
+      margin: 10px 0 20px;
+    }
+
+    summary {
+      color: var(--accent);
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    details {
+      margin-top: 18px;
+    }
+
+    details form {
+      margin-top: 20px;
+    }
+
+    /* ======================================
+       영상 / 반응 훈련
+    ====================================== */
+
+    video {
+      display: block;
+      width: 100%;
+      max-height: 440px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      background: #080c11;
+    }
+
+    .reaction-button {
+      width: 100%;
+      min-height: 170px;
+      margin: 16px 0;
+      background: #263445;
+      color: var(--text);
+      font-size: 23px;
+    }
+
+    .reaction-button.ready {
+      background: var(--accent);
+      color: #15200b;
     }
 
     .toast {
       position: fixed;
-      bottom: 24px;
-      right: 24px;
+      right: 22px;
+      bottom: 22px;
+      z-index: 20;
+      max-width: calc(100vw - 44px);
+      padding: 14px 20px;
+      border-radius: 8px;
       background: var(--accent);
       color: #15200b;
-      padding: 14px 24px;
-      border-radius: 9px;
-      z-index: 10;
+      font-weight: 700;
+      box-shadow: 0 10px 30px #0005;
     }
 
-    .sr {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-    }
+    /* ======================================
+       모바일
+    ====================================== */
 
-    @media (max-width: 1000px) {
+    @media (max-width: 1100px) {
       aside {
-        width: 190px;
-        padding: 25px 12px;
+        width: 195px;
       }
 
       main {
-        margin-left: 190px;
-        padding: 22px;
+        margin-left: 195px;
+        padding: 24px;
       }
 
       .stats {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 850px) {
+      .grid {
+        grid-template-columns: 1fr;
       }
     }
 
@@ -349,158 +573,64 @@
       aside {
         position: static;
         width: auto;
-        padding: 18px;
+        padding: 20px 16px;
       }
 
       nav {
         display: flex;
-        overflow: auto;
-        margin-top: 18px;
+        overflow-x: auto;
+        margin-top: 20px;
       }
 
       nav button {
-        white-space: nowrap;
+        flex-shrink: 0;
       }
 
-      .asidefoot {
+      .sidebar-bottom {
         display: none;
       }
 
       main {
-        margin: 0;
-        padding: 18px;
-      }
-
-      .grid {
-        grid-template-columns: 1fr;
-      }
-
-      .card {
+        margin-left: 0;
         padding: 18px;
       }
 
       header {
         align-items: flex-start;
+        flex-wrap: wrap;
       }
 
-      .actions {
-        gap: 6px;
+      .card,
+      .calendar-card {
+        padding: 18px;
       }
 
-      button {
-        padding: 10px 12px;
-      }
-
-      .hero {
-        padding-top: 24px;
+      .calendar-cell {
+        min-height: 135px;
       }
 
       .row {
         flex-wrap: wrap;
       }
-    }/* 달력 색상: 기존 웹사이트의 다크 테마와 통일 */
 
-.calendar-card {
-  background: var(--panel);
-  color: var(--text);
-  border-color: var(--line);
-}
-
-.calendar-card .eyebrow {
-  color: var(--accent);
-}
-
-.calendar-card .tiny {
-  color: var(--muted);
-}
-
-/* 이전 달 · 오늘 · 다음 달 버튼 */
-.calendar-card .secondary {
-  background: #263445;
-  color: var(--text);
-  border-color: var(--line);
-}
-
-/* 요일 */
-.cal-week span,
-.cal-week span:first-child {
-  color: var(--muted);
-}
-
-/* 달력 구분선 */
-.cal-grid {
-  border-color: var(--line);
-}
-
-/* 날짜 칸: 주말도 같은 배경 적용 */
-.cal-cell,
-.cal-cell:nth-child(7n + 1),
-.cal-cell:nth-child(7n) {
-  background: var(--panel);
-  color: var(--text);
-  border-color: var(--line);
-}
-
-/* 마우스를 올린 날짜 */
-.cal-cell:hover {
-  background: #1e2b39;
-}
-
-/* 날짜가 없는 빈칸 */
-.cal-blank {
-  background: var(--bg) !important;
-}
-
-/* 선택한 날짜: 연두색 테두리 */
-.cal-selected {
-  box-shadow: inset 0 0 0 2px var(--accent);
-}
-
-/* 오늘 날짜: 연두색 원 */
-.cal-today {
-  background: var(--accent);
-  color: #15200b;
-}
-
-/* 훈련 일정 카드 */
-.cal-event {
-  background: #213044;
-  color: var(--text);
-  border-color: #35485e;
-  box-shadow: none;
-}
-
-/* 완료한 훈련 */
-.cal-done {
-  background: #263927;
-  color: var(--accent);
-  border-color: #3b5336;
-}
-
-/* 일지가 있는 날짜의 표시 */
-.cal-journal {
-  background: #263445;
-  color: var(--muted);
-}
-
-.cal-more {
-  color: var(--muted);
-}
-
+      .stat-number {
+        font-size: 29px;
+      }
+    }
   </style>
 </head>
 
 <body>
   <aside>
     <div class="brand">TOUCH<span>LINE</span></div>
-    <div class="sub">PLAYER PERFORMANCE SYSTEM</div>
+    <div class="brand-sub">PLAYER PERFORMANCE SYSTEM</div>
 
-    <nav id="nav" aria-label="Main navigation"></nav>
+    <nav id="navigation" aria-label="메인 메뉴"></nav>
 
-    <div class="asidefoot">
-      PERSONAL WORKSPACE
-      <br><br>
-      LOCAL DATA · NO CLOUD SYNC
+    <div class="sidebar-bottom">
+      PERSONAL WORKSPACE<br>
+      TRAIN · RECOVER · DEVELOP<br>
+      LOCAL STORAGE · NO CLOUD SYNC
     </div>
   </aside>
 
@@ -508,239 +638,70 @@
     <header>
       <div>
         <div class="eyebrow">PERFORMANCE LAB</div>
-        <div class="tiny" id="today"></div>
+        <div class="tiny" id="currentDate"></div>
       </div>
 
       <div class="actions">
-        <button class="secondary" id="export"></button>
+        <button id="exportButton" class="secondary"></button>
+        <button id="importButton" class="secondary"></button>
+        <button id="languageButton" class="secondary">EN</button>
 
-        <label
-          style="
-            cursor: pointer;
-            padding: 10px;
-            background: #263445;
-            border-radius: 7px;
-          "
+        <input
+          id="importFile"
+          type="file"
+          accept=".json,application/json"
+          hidden
         >
-          <span id="importText"></span>
-          <input
-            type="file"
-            id="import"
-            accept="application/json,.json"
-            class="sr"
-          >
-        </label>
-
-        <button id="lang" class="secondary">EN</button>
       </div>
     </header>
 
-    <div class="hero">
-      <div class="eyebrow" id="sectionTag"></div>
-      <h1 id="title"></h1>
-      <p class="sub" id="subtitle"></p>
-    </div>
+    <section class="hero">
+      <div class="eyebrow" id="sectionLabel"></div>
+      <h1 id="pageTitle"></h1>
+      <p class="muted" id="pageDescription"></p>
+    </section>
 
     <div id="content"></div>
+
     <footer id="footer"></footer>
   </main>
 
-  <div id="status" role="status" aria-live="polite"></div>
+  <div id="notification" role="status" aria-live="polite"></div>
 
   <script>
     "use strict";
 
-    /* ---------------------------------
-       기본 설정
-    --------------------------------- */
+    /* ======================================
+       기본 설정 / 저장
+    ====================================== */
 
+    const STORAGE_KEY = "touchline-v1";
     const $ = id => document.getElementById(id);
 
-    const tr = (ko, en) => lang === "ko" ? ko : en;
+    let language = "ko";
+    let currentPage = "overview";
+    let storageAvailable = true;
+    let notificationTimer = null;
 
-    const KEY = "touchline-v1";
+    let journalDirty = false;
 
-    let lang = "ko";
-    let page = "overview";
-
-    let timer = null;
-    let readyAt = 0;
-    let phase = "idle";
+    let reactionTimer = null;
+    let reactionPhase = "idle";
+    let reactionStarted = 0;
 
     let videoURL = null;
-    let storageOK = true;
+    let videoFilename = "";
+    let videoPosition = 0;
 
-    const blank = () => ({
-      version: 1,
-      sessions: [],
-      matches: [],
-      recovery: [],
-      tags: [],
-      reactions: []
-    });
+    const now = new Date();
 
-    let db = blank();
+    let calendarYear = now.getFullYear();
+    let calendarMonth = now.getMonth();
+    let selectedDate = localDate(now);
 
-    /* ---------------------------------
-       백업 데이터 검증
-    --------------------------------- */
-
-    function valid(x) {
-      return (
-        x &&
-        x.version === 1 &&
-
-        [
-          "sessions",
-          "matches",
-          "recovery",
-          "tags",
-          "reactions"
-        ].every(key => Array.isArray(x[key])) &&
-
-        x.sessions.every(r =>
-          r &&
-          typeof r.id === "string" &&
-          typeof r.name === "string" &&
-          typeof r.date === "string" &&
-          Number.isFinite(r.minutes) &&
-          r.minutes >= 0 &&
-          r.minutes <= 600 &&
-          Number.isFinite(r.rpe) &&
-          r.rpe >= 1 &&
-          r.rpe <= 10 &&
-          typeof r.done === "boolean"
-        ) &&
-
-        x.matches.every(r =>
-          r &&
-          typeof r.id === "string" &&
-          typeof r.opponent === "string" &&
-          typeof r.date === "string" &&
-          ["minutes", "goals", "assists"].every(key =>
-            Number.isFinite(r[key]) &&
-            r[key] >= 0 &&
-            r[key] <= 999
-          )
-        ) &&
-
-        x.recovery.every(r =>
-          r &&
-          typeof r.id === "string" &&
-          typeof r.date === "string" &&
-          Number.isFinite(r.sleep) &&
-          r.sleep >= 0 &&
-          r.sleep <= 24 &&
-          ["fatigue", "pain"].every(key =>
-            Number.isFinite(r[key]) &&
-            r[key] >= 0 &&
-            r[key] <= 10
-          )
-        ) &&
-
-        x.tags.every(r =>
-          r &&
-          typeof r.id === "string" &&
-          typeof r.file === "string" &&
-          typeof r.note === "string" &&
-          Number.isFinite(r.time) &&
-          r.time >= 0
-        ) &&
-
-        x.reactions.every(r =>
-          r &&
-          typeof r.date === "string" &&
-          Number.isFinite(r.ms) &&
-          r.ms >= 0
-        )
-      );
-    }
-
-    /* ---------------------------------
-       기존 기록 불러오기
-    --------------------------------- */
-
-    try {
-      const raw = localStorage.getItem(KEY);
-
-      if (raw) {
-        const parsed = JSON.parse(raw);
-
-        if (valid(parsed)) {
-          db = parsed;
-        }
-      }
-
-      lang = (
-        localStorage.getItem(KEY + "-lang") === "en"
-          ? "en"
-          : "ko"
-      );
-    } catch (error) {
-      storageOK = false;
-    }
-
-    /* ---------------------------------
-       공통 유틸리티
-    --------------------------------- */
-
-    function save() {
-      try {
-        localStorage.setItem(KEY, JSON.stringify(db));
-        storageOK = true;
-        return true;
-      } catch (error) {
-        storageOK = false;
-
-        toast(tr(
-          "브라우저 저장 실패: JSON으로 백업하세요.",
-          "Storage failed: export a JSON backup."
-        ));
-
-        return false;
-      }
-    }
-
-    function toast(text) {
-      $("status").className = "toast";
-      $("status").textContent = text;
-
-      setTimeout(() => {
-        $("status").className = "";
-        $("status").textContent = "";
-      }, 3500);
-    }
-
-    const esc = value => String(value).replace(
-      /[&<>"']/g,
-      character => ({
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#39;"
-      }[character])
-    );
-
-    const uid = () => (
-      crypto.randomUUID
-        ? crypto.randomUUID()
-        : Date.now() + "-" + Math.random().toString(36).slice(2)
-    );
-
-    function date() {
-      const d = new Date();
-
-      return [
-        d.getFullYear(),
-        String(d.getMonth() + 1).padStart(2, "0"),
-        String(d.getDate()).padStart(2, "0")
-      ].join("-");
-    }
-
-    const names = {
+    const pageNames = {
       overview: ["대시보드", "Overview"],
-      schedule: ["훈련 일정", "Training schedule"],
+      schedule: ["훈련 일정 · 일지", "Schedule & journal"],
       matches: ["경기 기록", "Match records"],
       recovery: ["회복 관리", "Recovery"],
       programs: ["훈련 프로그램", "Programs"],
@@ -749,928 +710,1159 @@
       video: ["영상 분석", "Video review"]
     };
 
-    const sum = (array, key) => array.reduce(
-      (total, row) => total + row[key],
-      0
-    );
-
-    const done = () => db.sessions.filter(
-      session => session.done
-    );
-
-    function card(label, value, unit = "") {
-      return `
-        <div class="card">
-          <div class="tiny">${label}</div>
-
-          <div class="num">
-            ${value}
-            <span style="font-size:14px;color:var(--muted)">
-              ${unit}
-            </span>
-          </div>
-
-          <span class="tiny">
-            ${tr(
-              "내가 입력한 기록 기준",
-              "Based on your entries"
-            )}
-          </span>
-        </div>
-      `;
+    function translate(ko, en) {
+      return language === "ko" ? ko : en;
     }
 
-    function field(label, name, type = "text", extra = "") {
+    function localDate(d = new Date()) {
+      return [
+        d.getFullYear(),
+        String(d.getMonth() + 1).padStart(2, "0"),
+        String(d.getDate()).padStart(2, "0")
+      ].join("-");
+    }
+
+    function escapeHTML(value) {
+      return String(value ?? "").replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      }[char]));
+    }
+
+    function uniqueID() {
+      return globalThis.crypto?.randomUUID
+        ? crypto.randomUUID()
+        : Date.now() + "-" + Math.random().toString(36).slice(2);
+    }
+
+    function emptyDatabase() {
+      return {
+        version: 1,
+        sessions: [],
+        matches: [],
+        recovery: [],
+        journals: [],
+        tags: [],
+        reactions: []
+      };
+    }
+
+    function isNumber(value, min, max) {
+      return (
+        Number.isFinite(value) &&
+        value >= min &&
+        value <= max
+      );
+    }
+
+    function isDate(value) {
+      if (
+        typeof value !== "string" ||
+        !/^\d{4}-\d{2}-\d{2}$/.test(value)
+      ) {
+        return false;
+      }
+
+      const parsed = new Date(value + "T12:00:00");
+
+      return (
+        !Number.isNaN(parsed.getTime()) &&
+        localDate(parsed) === value
+      );
+    }
+
+    function validDatabase(data) {
+      if (!data || data.version !== 1) return false;
+
+      const collections = [
+        "sessions",
+        "matches",
+        "recovery",
+        "tags",
+        "reactions"
+      ];
+
+      if (!collections.every(key => Array.isArray(data[key]))) {
+        return false;
+      }
+
+      if (!data.sessions.every(item =>
+        item &&
+        typeof item.id === "string" &&
+        typeof item.name === "string" &&
+        isDate(item.date) &&
+        isNumber(item.minutes, 0, 600) &&
+        isNumber(item.rpe, 1, 10) &&
+        typeof item.done === "boolean"
+      )) return false;
+
+      if (!data.matches.every(item =>
+        item &&
+        typeof item.id === "string" &&
+        typeof item.opponent === "string" &&
+        isDate(item.date) &&
+        ["minutes", "goals", "assists"].every(
+          key => isNumber(item[key], 0, 999)
+        )
+      )) return false;
+
+      if (!data.recovery.every(item =>
+        item &&
+        typeof item.id === "string" &&
+        isDate(item.date) &&
+        isNumber(item.sleep, 0, 24) &&
+        isNumber(item.fatigue, 0, 10) &&
+        isNumber(item.pain, 0, 10)
+      )) return false;
+
+      if (!data.tags.every(item =>
+        item &&
+        typeof item.id === "string" &&
+        typeof item.file === "string" &&
+        typeof item.note === "string" &&
+        isNumber(item.time, 0, Number.MAX_SAFE_INTEGER)
+      )) return false;
+
+      if (!data.reactions.every(item =>
+        item &&
+        typeof item.date === "string" &&
+        isNumber(item.ms, 0, Number.MAX_SAFE_INTEGER)
+      )) return false;
+
+      if (
+        data.journals !== undefined &&
+        (
+          !Array.isArray(data.journals) ||
+          !data.journals.every(item =>
+            item &&
+            isDate(item.date) &&
+            typeof item.goal === "string" &&
+            typeof item.body === "string" &&
+            typeof item.next === "string" &&
+            ["great", "normal", "tired"].includes(item.mood)
+          )
+        )
+      ) return false;
+
+      return true;
+    }
+
+    let database = emptyDatabase();
+
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+
+      if (saved) {
+        const parsed = JSON.parse(saved);
+
+        if (validDatabase(parsed)) {
+          database = {
+            ...parsed,
+            journals: parsed.journals || []
+          };
+        } else {
+          storageAvailable = false;
+        }
+      }
+
+      language = (
+        localStorage.getItem(STORAGE_KEY + "-lang") === "en"
+          ? "en"
+          : "ko"
+      );
+    } catch (error) {
+      storageAvailable = false;
+    }
+
+    function notify(message) {
+      clearTimeout(notificationTimer);
+
+      $("notification").className = "toast";
+      $("notification").textContent = message;
+
+      notificationTimer = setTimeout(() => {
+        $("notification").className = "";
+        $("notification").textContent = "";
+      }, 3500);
+    }
+
+    function persist() {
+      try {
+        localStorage.setItem(
+          STORAGE_KEY,
+          JSON.stringify(database)
+        );
+
+        storageAvailable = true;
+        return true;
+      } catch (error) {
+        storageAvailable = false;
+
+        notify(translate(
+          "저장하지 못했습니다. 백업 내보내기로 기록을 보관하세요.",
+          "Storage failed. Export a backup to keep your records."
+        ));
+
+        return false;
+      }
+    }
+
+    function confirmLeaving() {
+      return (
+        !journalDirty ||
+        confirm(translate(
+          "저장하지 않은 일지가 있습니다. 저장하지 않고 이동할까요?",
+          "You have unsaved journal changes. Leave without saving?"
+        ))
+      );
+    }
+
+    /* ======================================
+       공통 UI
+    ====================================== */
+
+    function field(label, name, type = "text", attributes = "") {
       return `
         <label class="field">
           ${label}
-
           <input
             name="${name}"
             type="${type}"
-            ${extra}
+            ${attributes}
             required
           >
         </label>
       `;
     }
 
-    function del(kind, id) {
-      return `
-        <button
-          class="danger"
-          data-del="${kind}"
-          data-id="${esc(id)}"
-        >
-          ${tr("삭제", "Delete")}
-        </button>
-      `;
-    }
-
-    function empty() {
+    function emptyMessage() {
       return `
         <div class="empty">
-          ${tr(
-            "아직 기록이 없습니다. 첫 기록을 추가해 주세요.",
+          ${translate(
+            "아직 기록이 없습니다. 첫 기록을 추가해 보세요.",
             "No records yet. Add your first entry."
           )}
         </div>
       `;
     }
 
-    /* ---------------------------------
-       전체 화면 렌더링
-    --------------------------------- */
+    function statistic(label, value, unit = "") {
+      return `
+        <div class="card">
+          <div class="tiny">${label}</div>
+
+          <div class="stat-number">
+            ${value}
+            <span class="stat-unit">${unit}</span>
+          </div>
+
+          <div class="tiny">
+            ${translate(
+              "직접 입력한 기록 기준",
+              "Based on your entries"
+            )}
+          </div>
+        </div>
+      `;
+    }
+
+    function deleteButton(collection, id) {
+      return `
+        <button
+          type="button"
+          class="danger"
+          data-delete="${collection}"
+          data-id="${escapeHTML(id)}"
+        >
+          ${translate("삭제", "Delete")}
+        </button>
+      `;
+    }
+
+    function total(rows, key) {
+      return rows.reduce((sum, row) => sum + row[key], 0);
+    }
+
+    function completedSessions() {
+      return database.sessions.filter(session => session.done);
+    }
+
+    function sessionRow(session) {
+      return `
+        <div class="row">
+          <div>
+            <div class="row-title">
+              ${escapeHTML(session.name)}
+            </div>
+
+            <div class="tiny">
+              ${escapeHTML(session.date)}
+              · ${session.minutes} min
+              · RPE ${session.rpe}
+            </div>
+          </div>
+
+          <div class="actions">
+            <button
+              type="button"
+              class="secondary"
+              data-complete="${escapeHTML(session.id)}"
+            >
+              ${
+                session.done
+                  ? translate("완료 취소", "Undo")
+                  : translate("완료 처리", "Mark done")
+              }
+            </button>
+
+            ${deleteButton("sessions", session.id)}
+          </div>
+        </div>
+      `;
+    }
+
+    function sessionForm(day) {
+      return `
+        <form id="sessionForm">
+          ${field(
+            translate("훈련 이름", "Session name"),
+            "name",
+            "text",
+            'maxlength="100"'
+          )}
+
+          ${field(
+            translate("날짜", "Date"),
+            "date",
+            "date",
+            `value="${day}"`
+          )}
+
+          ${field(
+            translate("훈련 시간 (분)", "Duration (minutes)"),
+            "minutes",
+            "number",
+            'min="1" max="600" step="1" value="60"'
+          )}
+
+          ${field(
+            translate(
+              "운동자각도 RPE (1–10)",
+              "Perceived exertion RPE (1–10)"
+            ),
+            "rpe",
+            "number",
+            'min="1" max="10" step="1" value="5"'
+          )}
+
+          <button type="submit">
+            ${translate("일정 추가", "Add session")}
+          </button>
+
+          <p class="tiny">
+            ${translate(
+              "실제 시간·강도가 계획과 달랐다면 기존 항목을 삭제하고 실제 값으로 다시 입력하세요.",
+              "If actual duration or effort differs, delete the entry and re-enter the actual values."
+            )}
+          </p>
+        </form>
+      `;
+    }
+
+    /* ======================================
+       전체 화면
+    ====================================== */
 
     function render() {
-      clearTimeout(timer);
-      phase = "idle";
+      clearTimeout(reactionTimer);
+      reactionPhase = "idle";
+      journalDirty = false;
 
-      document.documentElement.lang = lang;
+      const previousPlayer = $("videoPlayer");
 
-      $("lang").textContent = (
-        lang === "ko" ? "EN" : "한국어"
-      );
+      if (previousPlayer) {
+        videoPosition = previousPlayer.currentTime || 0;
+      }
 
-      $("export").textContent = tr(
-        "백업 내보내기",
-        "Export backup"
-      );
+      document.documentElement.lang = language;
 
-      $("importText").textContent = tr(
-        "가져오기",
-        "Import"
-      );
+      $("currentDate").textContent =
+        new Date().toLocaleDateString(
+          language === "ko" ? "ko-KR" : "en-GB",
+          {
+            year: "numeric",
+            month: "long",
+            day: "numeric"
+          }
+        );
 
-      $("today").textContent = new Date().toLocaleDateString(
-        lang === "ko" ? "ko-KR" : "en-GB",
-        {
-          year: "numeric",
-          month: "long",
-          day: "numeric"
-        }
-      );
+      $("languageButton").textContent =
+        language === "ko" ? "EN" : "한국어";
 
-      $("nav").innerHTML = Object.entries(names).map(
-        ([key, labels], index) => `
+      $("exportButton").textContent =
+        translate("백업 내보내기", "Export backup");
+
+      $("importButton").textContent =
+        translate("백업 가져오기", "Import backup");
+
+      $("navigation").innerHTML =
+        Object.entries(pageNames).map(([key, labels], index) => `
           <button
+            type="button"
             data-page="${key}"
-            class="${key === page ? "active" : ""}"
-            ${key === page ? 'aria-current="page"' : ""}
+            class="${currentPage === key ? "active" : ""}"
+            ${currentPage === key ? 'aria-current="page"' : ""}
           >
-            <span style="opacity:.5;margin-right:12px">
-              0${index + 1}
-            </span>
-
-            ${labels[lang === "ko" ? 0 : 1]}
+            <span class="nav-number">0${index + 1}</span>
+            ${labels[language === "ko" ? 0 : 1]}
           </button>
-        `
-      ).join("");
+        `).join("");
 
-      $("title").textContent = names[page][
-        lang === "ko" ? 0 : 1
-      ];
+      $("pageTitle").textContent =
+        pageNames[currentPage][language === "ko" ? 0 : 1];
 
-      $("sectionTag").textContent = (
-        "PLAYER DEVELOPMENT / " + page.toUpperCase()
-      );
+      $("sectionLabel").textContent =
+        "PLAYER DEVELOPMENT / " + currentPage.toUpperCase();
 
-      $("subtitle").textContent = tr(
+      $("pageDescription").textContent = translate(
         "훈련부터 회복까지, 나의 경기력을 체계적으로 관리하세요.",
         "Plan your training. Track your recovery. Build your game."
       );
 
-      $("footer").textContent = tr(
-        "개인용 도구 · 현재 기기의 브라우저에만 저장됩니다. 정기적으로 백업하세요. 의료 진단·자동 AI 분석을 제공하지 않습니다.",
-        "Personal tool · Stored in this browser only. Export backups regularly. No medical diagnosis or automated AI analysis."
+      $("footer").textContent = translate(
+        "개인용 선수 관리 도구 · 기록은 현재 브라우저에 저장됩니다. 정기적으로 백업하세요. 의료 진단 및 자동 AI 영상 분석은 제공하지 않습니다.",
+        "Personal player management tool · Records stay in this browser. Export backups regularly. No medical diagnosis or automated AI video analysis."
       );
 
       const screens = {
-        overview,
-        schedule,
-        matches,
-        recovery,
-        programs,
-        growth,
-        brain,
-        video
+        overview: overviewScreen,
+        schedule: scheduleScreen,
+        matches: matchesScreen,
+        recovery: recoveryScreen,
+        programs: programsScreen,
+        growth: growthScreen,
+        brain: brainScreen,
+        video: videoScreen
       };
 
-      const warning = !storageOK
-        ? `
+      const warning = storageAvailable
+        ? ""
+        : `
           <div class="notice">
-            ${tr(
-              "브라우저 저장을 사용할 수 없습니다. 백업을 내보내 주세요.",
-              "Browser storage unavailable. Please export a backup."
+            ${translate(
+              "브라우저 저장을 사용할 수 없거나 기존 데이터 확인에 실패했습니다. 필요한 기록을 백업해 주세요.",
+              "Browser storage is unavailable or existing data could not be validated. Back up your records."
             )}
           </div>
-        `
-        : "";
+        `;
 
-      $("content").innerHTML = warning + screens[page]();
+      $("content").innerHTML = warning + screens[currentPage]();
 
-      bind();
+      bindEvents();
     }
 
-    /* ---------------------------------
+    /* ======================================
        1. 대시보드
-    --------------------------------- */
+    ====================================== */
 
-    function overview() {
-      const completed = done();
+    function overviewScreen() {
+      const completed = completedSessions();
 
-      const latest = [...db.recovery].sort(
+      const latestRecovery = [...database.recovery].sort(
         (a, b) => b.date.localeCompare(a.date)
       )[0];
 
-      const upcoming = db.sessions
-        .filter(session => !session.done)
-        .sort((a, b) => a.date.localeCompare(b.date));
+      const upcoming = database.sessions
+        .filter(item => !item.done && item.date >= localDate())
+        .sort((a, b) => a.date.localeCompare(b.date))
+        .slice(0, 5);
 
       return `
         <div class="stats">
-          ${card(
-            tr("완료한 훈련", "Completed sessions"),
+          ${statistic(
+            translate("완료한 훈련", "Completed sessions"),
             completed.length
           )}
 
-          ${card(
-            tr("누적 훈련 시간", "Training time"),
-            sum(completed, "minutes"),
-            tr("분", "min")
+          ${statistic(
+            translate("누적 훈련 시간", "Training time"),
+            total(completed, "minutes"),
+            translate("분", "min")
           )}
 
-          ${card(
-            tr("경기 출전", "Matches played"),
-            db.matches.length
+          ${statistic(
+            translate("경기 기록 수", "Matches logged"),
+            database.matches.length
           )}
 
-          ${card(
-            tr("최근 수면", "Latest sleep"),
-            latest ? latest.sleep : "—",
-            tr("시간", "h")
+          ${statistic(
+            translate("최근 수면", "Latest sleep"),
+            latestRecovery ? latestRecovery.sleep : "—",
+            translate("시간", "h")
           )}
         </div>
 
         <div class="grid">
-          <div class="card">
-            <h2>
-              ${tr("다가오는 훈련", "Upcoming sessions")}
-            </h2>
+          <section class="card">
+            <h2>${translate("다가오는 훈련", "Upcoming sessions")}</h2>
 
             ${
-              upcoming.slice(0, 4).map(session => `
+              upcoming.map(session => `
                 <div class="row">
                   <div>
-                    <strong>${esc(session.name)}</strong>
+                    <div class="row-title">
+                      ${escapeHTML(session.name)}
+                    </div>
 
                     <div class="tiny">
-                      ${esc(session.date)}
+                      ${session.date}
                       · ${session.minutes} min
                       · RPE ${session.rpe}
                     </div>
                   </div>
 
                   <span class="tag">
-                    ${tr("예정", "PLANNED")}
+                    ${translate("예정", "Planned")}
                   </span>
                 </div>
-              `).join("") || empty()
+              `).join("") || emptyMessage()
             }
 
             <button
+              type="button"
               class="secondary"
               data-page="schedule"
             >
-              ${tr("일정 관리 →", "Manage schedule →")}
+              ${translate("달력에서 확인 →", "Open calendar →")}
             </button>
-          </div>
+          </section>
 
-          <div class="card">
-            <span class="tag">
-              TRAIN · RECOVER · REPEAT
-            </span>
+          <section class="card">
+            <span class="tag">TRAIN · RECOVER · DEVELOP</span>
 
-            <h2 style="margin-top:24px">
-              ${tr("오늘의 체크인", "Daily check-in")}
+            <h2 style="margin-top:22px">
+              ${translate(
+                "기록이 쌓이면 훈련이 보입니다.",
+                "Make your training visible."
+              )}
             </h2>
 
-            <p class="sub">
-              ${tr(
-                "수면과 피로, 통증을 기록하고 훈련 전 자신의 상태를 확인하세요. 기록의 일관성이 성장 분석의 출발점입니다.",
-                "Log sleep, fatigue and pain before training. Consistent entries are the starting point for understanding progress."
+            <p class="muted">
+              ${translate(
+                "달력에 훈련을 계획하고, 훈련 후 일지와 몸 상태를 기록하세요. 입력한 기록을 바탕으로 훈련 시간과 주관적 부하를 확인할 수 있습니다.",
+                "Plan sessions in the calendar, then log your reflections and recovery. Review training time and subjective load from your own entries."
               )}
             </p>
 
-            <button data-page="recovery">
-              ${tr("회복 기록하기", "Log recovery")}
-            </button>
+            <div class="actions">
+              <button type="button" data-page="schedule">
+                ${translate("일정 · 일지 작성", "Schedule & journal")}
+              </button>
 
-            <div class="notice">
-              ${tr(
-                "실제 기록이 없으므로 임의의 성과 수치를 표시하지 않습니다.",
-                "No invented performance metrics: your dashboard starts with your own data."
-              )}
+              <button
+                type="button"
+                class="secondary"
+                data-page="recovery"
+              >
+                ${translate("회복 체크", "Recovery check-in")}
+              </button>
             </div>
-          </div>
+          </section>
         </div>
       `;
     }
 
-    /* ---------------------------------
-       2. 훈련 일정
-    --------------------------------- */
+    /* ======================================
+       2. 월간 스케줄 / 훈련 일지
+    ====================================== */
 
-function schedule() {
-  const sessions = [...db.sessions].sort((a, b) => {
-    return (
-      a.date.localeCompare(b.date) ||
-      a.name.localeCompare(b.name)
-    );
-  });
+    function scheduleScreen() {
+      const firstWeekday =
+        new Date(calendarYear, calendarMonth, 1).getDay();
 
-  const completedCount = sessions.filter(
-    session => session.done
-  ).length;
+      const daysInMonth =
+        new Date(calendarYear, calendarMonth + 1, 0).getDate();
 
-  const plannedCount = sessions.length - completedCount;
+      const monthTitle =
+        new Date(calendarYear, calendarMonth, 1)
+          .toLocaleDateString(
+            language === "ko" ? "ko-KR" : "en-GB",
+            { year: "numeric", month: "long" }
+          );
 
-  const totalMinutes = sessions.reduce(
-    (total, session) => total + session.minutes,
-    0
-  );
+      const weekdays = translate(
+        "일,월,화,수,목,금,토",
+        "Sun,Mon,Tue,Wed,Thu,Fri,Sat"
+      ).split(",");
 
-  return `
-    <!-- 일정 요약 -->
-    <div class="stats">
-      ${card(
-        tr("전체 일정", "Total sessions"),
-        sessions.length
-      )}
+      let cells = "";
 
-      ${card(
-        tr("예정 훈련", "Planned sessions"),
-        plannedCount
-      )}
-
-      ${card(
-        tr("완료 훈련", "Completed sessions"),
-        completedCount
-      )}
-
-      ${card(
-        tr("전체 계획·기록 시간", "Total scheduled minutes"),
-        totalMinutes,
-        tr("분", "min")
-      )}
-    </div>
-
-    <!-- 스케줄 표 -->
-    <div class="card" style="margin-bottom:20px">
-      <div
-        style="
-          display:flex;
-          align-items:center;
-          justify-content:space-between;
-          gap:12px;
-          flex-wrap:wrap;
-          margin-bottom:18px;
-        "
-      >
-        <h2 style="margin:0">
-          ${tr("훈련 스케줄 표", "Training schedule")}
-        </h2>
-
-        <span class="tag">
-          ${tr("날짜순 정렬", "SORTED BY DATE")}
-        </span>
-      </div>
-
-      ${
-        sessions.length
-          ? `
-            <div class="tablewrap">
-              <table style="min-width:680px">
-                <caption class="sr">
-                  ${tr(
-                    "등록한 훈련 일정과 완료 상태",
-                    "Saved training sessions and completion status"
-                  )}
-                </caption>
-
-                <thead>
-                  <tr>
-                    <th scope="col">
-                      ${tr("날짜", "Date")}
-                    </th>
-
-                    <th scope="col">
-                      ${tr("요일", "Day")}
-                    </th>
-
-                    <th scope="col">
-                      ${tr("훈련 내용", "Session")}
-                    </th>
-
-                    <th scope="col">
-                      ${tr("시간", "Duration")}
-                    </th>
-
-                    <th scope="col">
-                      ${tr("강도", "Intensity")}
-                    </th>
-
-                    <th scope="col">
-                      ${tr("상태", "Status")}
-                    </th>
-
-                    <th scope="col">
-                      ${tr("관리", "Actions")}
-                    </th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  ${sessions.map(session => {
-                    const sessionDate = new Date(
-                      session.date + "T12:00:00"
-                    );
-
-                    const weekday = Number.isNaN(
-                      sessionDate.getTime()
-                    )
-                      ? "—"
-                      : sessionDate.toLocaleDateString(
-                          lang === "ko" ? "ko-KR" : "en-GB",
-                          { weekday: "short" }
-                        );
-
-                    const isToday = session.date === date();
-
-                    return `
-                      <tr
-                        style="${
-                          isToday
-                            ? "background:rgba(201,243,107,0.07)"
-                            : ""
-                        }"
-                      >
-                        <td style="white-space:nowrap">
-                          <strong>
-                            ${esc(session.date)}
-                          </strong>
-
-                          ${
-                            isToday
-                              ? `
-                                <span
-                                  class="tag"
-                                  style="margin-left:6px"
-                                >
-                                  ${tr("오늘", "TODAY")}
-                                </span>
-                              `
-                              : ""
-                          }
-                        </td>
-
-                        <td style="white-space:nowrap">
-                          ${esc(weekday)}
-                        </td>
-
-                        <td style="overflow-wrap:anywhere">
-                          ${esc(session.name)}
-                        </td>
-
-                        <td style="white-space:nowrap">
-                          ${session.minutes}
-                          ${tr("분", "min")}
-                        </td>
-
-                        <td style="white-space:nowrap">
-                          RPE ${session.rpe}
-                        </td>
-
-                        <td style="white-space:nowrap">
-                          <span
-                            class="tag"
-                            style="${
-                              session.done
-                                ? ""
-                                : "background:#263445;color:#d5dfeb"
-                            }"
-                          >
-                            ${
-                              session.done
-                                ? tr("완료 ✓", "Done ✓")
-                                : tr("예정", "Planned")
-                            }
-                          </span>
-                        </td>
-
-                        <td>
-                          <div
-                            class="actions"
-                            style="flex-wrap:nowrap"
-                          >
-                            <button
-                              class="secondary"
-                              style="white-space:nowrap"
-                              data-toggle="${esc(session.id)}"
-                              aria-label="${esc(
-                                session.name + " " +
-                                (
-                                  session.done
-                                    ? tr("완료 취소", "Mark incomplete")
-                                    : tr("완료 처리", "Mark done")
-                                )
-                              )}"
-                            >
-                              ${
-                                session.done
-                                  ? tr("완료 취소", "Undo")
-                                  : tr("완료 처리", "Mark done")
-                              }
-                            </button>
-
-                            ${del("sessions", session.id)}
-                          </div>
-                        </td>
-                      </tr>
-                    `;
-                  }).join("")}
-                </tbody>
-              </table>
-            </div>
-
-            <p class="tiny" style="margin-bottom:0">
-              ${tr(
-                "오늘 일정은 연두색으로 강조됩니다. 모바일에서는 표를 좌우로 밀어서 확인하세요.",
-                "Today's sessions are highlighted. Swipe the table horizontally on mobile."
-              )}
-            </p>
-          `
-          : `
-            <div class="empty">
-              ${tr(
-                "아직 등록된 일정이 없습니다. 아래에서 첫 훈련을 추가해 보세요.",
-                "No sessions yet. Add your first training session below."
-              )}
-            </div>
-          `
+      for (let index = 0; index < firstWeekday; index++) {
+        cells += `
+          <div
+            class="calendar-cell blank"
+            aria-hidden="true"
+          ></div>
+        `;
       }
-    </div>
 
-    <!-- 새 일정 입력 -->
-    <div class="grid">
-      <form id="sessionForm" class="card">
-        <h2>
-          ${tr("새 훈련 일정 추가", "Add a training session")}
-        </h2>
+      for (let day = 1; day <= daysInMonth; day++) {
+        const dayKey = localDate(
+          new Date(calendarYear, calendarMonth, day)
+        );
 
-        ${field(
-          tr("훈련 이름", "Session name"),
-          "name",
-          "text",
-          'maxlength="100" placeholder="' +
-          tr(
-            "예: 패스 훈련, 개인 기술, 팀 훈련",
-            "e.g. Passing, individual skills, team training"
-          ) +
-          '"'
-        )}
+        const sessions = database.sessions.filter(
+          item => item.date === dayKey
+        );
 
-        ${field(
-          tr("훈련 날짜", "Training date"),
-          "date",
-          "date",
-          `value="${date()}"`
-        )}
+        const hasJournal = database.journals.some(
+          item => item.date === dayKey
+        );
 
-        ${field(
-          tr("훈련 시간 (분)", "Duration (minutes)"),
-          "minutes",
-          "number",
-          'min="1" max="600" value="60"'
-        )}
+        cells += `
+          <button
+            type="button"
+            class="calendar-cell ${
+              selectedDate === dayKey ? "selected" : ""
+            }"
+            data-date="${dayKey}"
+            aria-pressed="${selectedDate === dayKey}"
+            aria-label="${dayKey}, ${sessions.length} ${
+              translate("훈련", "sessions")
+            }"
+          >
+            <span class="day-number ${
+              dayKey === localDate() ? "today" : ""
+            }">
+              ${day}
+            </span>
 
-        ${field(
-          tr(
-            "예상 또는 실제 운동자각도 RPE (1–10)",
-            "Expected or actual perceived exertion RPE (1–10)"
-          ),
-          "rpe",
-          "number",
-          'min="1" max="10" value="5"'
-        )}
+            ${sessions.slice(0, 3).map(session => `
+              <span
+                class="calendar-event ${
+                  session.done ? "completed" : ""
+                }"
+                title="${escapeHTML(session.name)}"
+              >
+                ${session.done ? "✓ " : ""}
+                ${escapeHTML(session.name)}
+              </span>
+            `).join("")}
 
-        <p class="tiny">
-          ${tr(
-            "실제 훈련 시간이나 강도가 계획과 달라지면 해당 항목을 삭제하고 실제 기록으로 다시 입력하세요.",
-            "If actual duration or intensity differs, delete the entry and re-enter the actual values."
-          )}
-        </p>
+            ${
+              sessions.length > 3
+                ? `
+                  <span class="tiny">
+                    +${sessions.length - 3}
+                  </span>
+                `
+                : ""
+            }
 
-        <button type="submit">
-          ${tr("스케줄에 추가", "Add to schedule")}
-        </button>
-      </form>
+            ${
+              hasJournal
+                ? `
+                  <span class="journal-mark">
+                    ✎ ${translate("일지", "Journal")}
+                  </span>
+                `
+                : ""
+            }
+          </button>
+        `;
+      }
 
-      <div class="card">
-        <span class="tag">SCHEDULE GUIDE</span>
+      const trailingCells =
+        (7 - ((firstWeekday + daysInMonth) % 7)) % 7;
 
-        <h2 style="margin-top:20px">
-          ${tr("스케줄 사용 방법", "How to use your schedule")}
-        </h2>
+      for (let index = 0; index < trailingCells; index++) {
+        cells += `
+          <div
+            class="calendar-cell blank"
+            aria-hidden="true"
+          ></div>
+        `;
+      }
 
-        <div class="row">
-          <div>
-            <strong>
-              ${tr("01 · 일정 등록", "01 · Plan")}
-            </strong>
+      const dailySessions = database.sessions.filter(
+        item => item.date === selectedDate
+      );
 
-            <p class="sub">
-              ${tr(
-                "훈련 이름, 날짜, 시간과 강도를 입력하세요.",
-                "Enter the session name, date, duration and intensity."
-              )}
-            </p>
+      const journal = database.journals.find(
+        item => item.date === selectedDate
+      );
+
+      const moods = [
+        ["great", "좋음", "Great"],
+        ["normal", "보통", "Okay"],
+        ["tired", "피곤함", "Tired"]
+      ];
+
+      return `
+        <section class="card calendar-card">
+          <div class="calendar-toolbar">
+            <div>
+              <div class="eyebrow">MONTHLY SCHEDULE</div>
+              <h2 class="calendar-heading">${monthTitle}</h2>
+            </div>
+
+            <div class="actions">
+              <button
+                type="button"
+                id="previousMonth"
+                class="secondary"
+                aria-label="${translate("이전 달", "Previous month")}"
+              >‹</button>
+
+              <button
+                type="button"
+                id="todayButton"
+                class="secondary"
+              >
+                ${translate("오늘", "Today")}
+              </button>
+
+              <button
+                type="button"
+                id="nextMonth"
+                class="secondary"
+                aria-label="${translate("다음 달", "Next month")}"
+              >›</button>
+            </div>
           </div>
-        </div>
 
-        <div class="row">
-          <div>
-            <strong>
-              ${tr("02 · 훈련 완료", "02 · Complete")}
-            </strong>
+          <p class="tiny">
+            ${translate(
+              "날짜를 누르면 아래에서 훈련 일정과 일지를 관리할 수 있습니다.",
+              "Select a date to manage sessions and your journal below."
+            )}
+          </p>
 
-            <p class="sub">
-              ${tr(
-                "훈련을 마친 뒤 표에서 '완료 처리'를 누르세요.",
-                "After training, press 'Mark done' in the table."
-              )}
-            </p>
+          <div class="calendar-scroll">
+            <div class="calendar-week" aria-hidden="true">
+              ${weekdays.map(day => `<div>${day}</div>`).join("")}
+            </div>
+
+            <div class="calendar-grid">
+              ${cells}
+            </div>
           </div>
+
+          <p class="tiny calendar-legend">
+            ${translate(
+              "연두색 원: 오늘 · 연두색 테두리: 선택한 날짜 · ✓: 완료한 훈련 · ✎: 일지 있음",
+              "Lime circle: today · Lime border: selected date · ✓: completed · ✎: journal saved"
+            )}
+          </p>
+        </section>
+
+        <div class="grid">
+          <section class="card">
+            <div class="eyebrow">DAILY PLAN</div>
+
+            <h2 class="daily-heading">${selectedDate}</h2>
+
+            ${
+              dailySessions.map(sessionRow).join("") ||
+              emptyMessage()
+            }
+
+            <details ${dailySessions.length === 0 ? "open" : ""}>
+              <summary>
+                + ${translate(
+                  "선택한 날짜에 훈련 추가",
+                  "Add a session for this date"
+                )}
+              </summary>
+
+              ${sessionForm(selectedDate)}
+            </details>
+          </section>
+
+          <section class="card">
+            <div class="eyebrow">PLAYER JOURNAL</div>
+
+            <h2 class="daily-heading">
+              ${translate("훈련 일지", "Training journal")}
+            </h2>
+
+            <form id="journalForm">
+              <label class="field">
+                ${translate("오늘의 컨디션", "How did you feel?")}
+
+                <select name="mood">
+                  ${moods.map(([value, ko, en]) => `
+                    <option
+                      value="${value}"
+                      ${
+                        (journal?.mood || "normal") === value
+                          ? "selected"
+                          : ""
+                      }
+                    >
+                      ${translate(ko, en)}
+                    </option>
+                  `).join("")}
+                </select>
+              </label>
+
+              <label class="field">
+                ${translate("오늘의 목표", "Daily goal")}
+
+                <input
+                  name="goal"
+                  maxlength="200"
+                  value="${escapeHTML(journal?.goal || "")}"
+                  placeholder="${translate(
+                    "예: 패스 전 주변 확인하기",
+                    "Example: scan before passing"
+                  )}"
+                >
+              </label>
+
+              <label class="field">
+                ${translate(
+                  "훈련 내용 · 느낀 점",
+                  "Training notes & reflections"
+                )}
+
+                <textarea
+                  name="body"
+                  rows="7"
+                  maxlength="10000"
+                  placeholder="${translate(
+                    "잘된 점, 어려웠던 점, 몸 상태를 자유롭게 적어 주세요.",
+                    "Write what went well, challenges and how your body felt."
+                  )}"
+                  required
+                >${escapeHTML(journal?.body || "")}</textarea>
+              </label>
+
+              <label class="field">
+                ${translate(
+                  "다음 훈련에서 개선할 점",
+                  "Focus for next session"
+                )}
+
+                <textarea
+                  name="next"
+                  rows="3"
+                  maxlength="2000"
+                >${escapeHTML(journal?.next || "")}</textarea>
+              </label>
+
+              <div class="actions">
+                <button type="submit">
+                  ${translate("일지 저장", "Save journal")}
+                </button>
+
+                ${
+                  journal
+                    ? `
+                      <button
+                        type="button"
+                        id="deleteJournal"
+                        class="danger"
+                      >
+                        ${translate("일지 삭제", "Delete journal")}
+                      </button>
+                    `
+                    : ""
+                }
+              </div>
+
+              <p class="tiny">
+                ${
+                  journal
+                    ? translate(
+                        "저장된 일지입니다. 수정한 뒤 다시 저장해 주세요.",
+                        "Saved journal. Save again after editing."
+                      )
+                    : translate(
+                        "작성한 내용은 '일지 저장'을 눌러야 저장됩니다.",
+                        "Press 'Save journal' to keep your writing."
+                      )
+                }
+              </p>
+            </form>
+          </section>
         </div>
+      `;
+    }
 
-        <div class="row">
-          <div>
-            <strong>
-              ${tr("03 · 성장 분석 확인", "03 · Review")}
-            </strong>
-
-            <p class="sub">
-              ${tr(
-                "완료한 훈련은 성장 분석의 훈련 시간과 부하 요약에 반영됩니다.",
-                "Completed sessions contribute to training time and load summaries in Progress."
-              )}
-            </p>
-          </div>
-        </div>
-
-        <div class="notice">
-          ${tr(
-            "훈련과 회복을 함께 계획하세요. 통증이나 심한 피로가 있다면 코치 또는 의료 전문가와 상담하세요.",
-            "Plan recovery alongside training. Consult a coach or healthcare professional if you experience pain or severe fatigue."
-          )}
-        </div>
-      </div>
-    </div>
-  `;
-}
-
+    /* ======================================
        3. 경기 기록
-    --------------------------------- */
+    ====================================== */
 
-    function matches() {
+    function matchesScreen() {
+      const rows = [...database.matches].sort(
+        (a, b) => b.date.localeCompare(a.date)
+      );
+
       return `
         <div class="grid">
           <form id="matchForm" class="card">
-            <h2>${tr("경기 기록 추가", "Log a match")}</h2>
+            <h2>${translate("경기 기록 추가", "Log a match")}</h2>
 
             ${field(
-              tr("상대 팀", "Opponent"),
+              translate("상대 팀", "Opponent"),
               "opponent",
               "text",
               'maxlength="100"'
             )}
 
             ${field(
-              tr("경기 날짜", "Match date"),
+              translate("경기 날짜", "Match date"),
               "date",
               "date",
-              `value="${date()}"`
+              `value="${localDate()}"`
             )}
 
             ${field(
-              tr("출전 시간 (분)", "Minutes played"),
+              translate("출전 시간 (분)", "Minutes played"),
               "minutes",
               "number",
-              'min="0" max="200" value="90"'
+              'min="0" max="200" step="1" value="90"'
             )}
 
             ${field(
-              tr("득점", "Goals"),
+              translate("득점", "Goals"),
               "goals",
               "number",
-              'min="0" max="99" value="0"'
+              'min="0" max="99" step="1" value="0"'
             )}
 
             ${field(
-              tr("도움", "Assists"),
+              translate("도움", "Assists"),
               "assists",
               "number",
-              'min="0" max="99" value="0"'
+              'min="0" max="99" step="1" value="0"'
             )}
 
-            <button>
-              ${tr("경기 저장", "Save match")}
+            <button type="submit">
+              ${translate("경기 저장", "Save match")}
             </button>
           </form>
 
-          <div class="card">
-            <h2>${tr("경기 히스토리", "Match history")}</h2>
+          <section class="card">
+            <h2>${translate("경기 히스토리", "Match history")}</h2>
 
-            ${
-              [...db.matches]
-                .sort((a, b) => b.date.localeCompare(a.date))
-                .map(match => `
-                  <div class="row">
-                    <div>
-                      <strong>
-                        vs ${esc(match.opponent)}
-                      </strong>
-
-                      <div class="tiny">
-                        ${esc(match.date)}
-                        · ${match.minutes} min
-                        · ${match.goals} G
-                        / ${match.assists} A
-                      </div>
-                    </div>
-
-                    ${del("matches", match.id)}
+            ${rows.map(match => `
+              <div class="row">
+                <div>
+                  <div class="row-title">
+                    vs ${escapeHTML(match.opponent)}
                   </div>
-                `).join("") || empty()
-            }
-          </div>
+
+                  <div class="tiny">
+                    ${match.date}
+                    · ${match.minutes} min
+                    · ${match.goals} G
+                    / ${match.assists} A
+                  </div>
+                </div>
+
+                ${deleteButton("matches", match.id)}
+              </div>
+            `).join("") || emptyMessage()}
+          </section>
         </div>
       `;
     }
 
-    /* ---------------------------------
+    /* ======================================
        4. 회복 관리
-    --------------------------------- */
+    ====================================== */
 
-    function recovery() {
-      const latest = [...db.recovery].sort(
+    function recoveryScreen() {
+      const rows = [...database.recovery].sort(
         (a, b) => b.date.localeCompare(a.date)
-      )[0];
+      );
 
       return `
         <div class="grid">
           <form id="recoveryForm" class="card">
             <h2>
-              ${tr("오늘의 회복 체크", "Recovery check-in")}
+              ${translate("오늘의 회복 체크", "Recovery check-in")}
             </h2>
 
             ${field(
-              tr("날짜", "Date"),
+              translate("날짜", "Date"),
               "date",
               "date",
-              `value="${date()}"`
+              `value="${localDate()}"`
             )}
 
             ${field(
-              tr("수면 시간", "Sleep hours"),
+              translate("수면 시간", "Sleep hours"),
               "sleep",
               "number",
               'min="0" max="24" step="0.5" value="8"'
             )}
 
             ${field(
-              tr(
+              translate(
                 "피로도 (0=없음, 10=매우 심함)",
                 "Fatigue (0=none, 10=extreme)"
               ),
               "fatigue",
               "number",
-              'min="0" max="10" value="3"'
+              'min="0" max="10" step="1" value="3"'
             )}
 
             ${field(
-              tr(
+              translate(
                 "통증 (0=없음, 10=매우 심함)",
                 "Pain (0=none, 10=extreme)"
               ),
               "pain",
               "number",
-              'min="0" max="10" value="0"'
+              'min="0" max="10" step="1" value="0"'
             )}
 
-            <button>
-              ${tr("회복 기록 저장", "Save check-in")}
+            <button type="submit">
+              ${translate("회복 기록 저장", "Save check-in")}
             </button>
           </form>
 
-          <div class="card">
-            <h2>
-              ${tr("회복 기록", "Recovery history")}
-            </h2>
+          <section class="card">
+            <h2>${translate("회복 기록", "Recovery history")}</h2>
 
             <div class="notice">
-              ${tr(
-                "통증이나 심한 피로가 있으면 훈련을 강행하지 말고 코치·의료 전문가와 상담하세요. 이 화면은 기록 도구이며 부상 위험을 예측하지 않습니다.",
-                "If you have pain or severe fatigue, do not push through training; consult a coach or healthcare professional. This log does not predict injury risk."
+              ${translate(
+                "통증이나 심한 피로가 있다면 훈련을 강행하지 말고 코치 또는 의료 전문가와 상담하세요. 이 기능은 기록 도구이며 부상 위험을 진단하지 않습니다.",
+                "Do not push through pain or severe fatigue. Consult a coach or healthcare professional. This log does not diagnose injury risk."
               )}
             </div>
 
-            ${
-              latest
-                ? `
-                  <p class="sub">
-                    ${tr("최근 기록", "Latest")}:
-                    ${esc(latest.date)}
-                  </p>
-                `
-                : ""
-            }
+            ${rows.map(record => `
+              <div class="row">
+                <div>
+                  <div class="row-title">${record.date}</div>
 
-            ${
-              [...db.recovery]
-                .sort((a, b) => b.date.localeCompare(a.date))
-                .map(record => `
-                  <div class="row">
-                    <div>
-                      ${esc(record.date)}
-
-                      <div class="tiny">
-                        ${tr("수면", "Sleep")}
-                        ${record.sleep}h
-                        · ${tr("피로", "Fatigue")}
-                        ${record.fatigue}/10
-                        · ${tr("통증", "Pain")}
-                        ${record.pain}/10
-                      </div>
-                    </div>
-
-                    ${del("recovery", record.id)}
+                  <div class="tiny">
+                    ${translate("수면", "Sleep")} ${record.sleep}h
+                    · ${translate("피로", "Fatigue")}
+                    ${record.fatigue}/10
+                    · ${translate("통증", "Pain")}
+                    ${record.pain}/10
                   </div>
-                `).join("") || empty()
-            }
-          </div>
+                </div>
+
+                ${deleteButton("recovery", record.id)}
+              </div>
+            `).join("") || emptyMessage()}
+          </section>
         </div>
       `;
     }
 
-    /* ---------------------------------
+    /* ======================================
        5. 훈련 프로그램
-    --------------------------------- */
+    ====================================== */
 
-    const plans = [
+    const trainingPlans = [
       {
         ko: "볼 컨트롤 & 스캐닝",
         en: "Ball control & scanning",
         minutes: 25,
         rpe: 4,
-
-        k: "가벼운 워밍업 5분 → 볼 터치 8분 → 패스 전 어깨 너머 확인 7분 → 정리운동 5분",
-
-        e: "Easy warm-up 5 min → ball touches 8 min → shoulder checks before passing 7 min → cool-down 5 min"
+        descriptionKO:
+          "워밍업 5분 → 볼 터치 8분 → 패스 전 주변 확인 7분 → 정리운동 5분",
+        descriptionEN:
+          "Warm-up 5 min → ball touches 8 min → scan before passing 7 min → cool-down 5 min"
       },
       {
         ko: "패스 & 판단",
         en: "Passing & decisions",
         minutes: 30,
         rpe: 5,
-
-        k: "워밍업 5분 → 양발 패스 10분 → 파트너의 색상 신호에 따라 패스 방향 선택 10분 → 정리운동 5분",
-
-        e: "Warm-up 5 min → two-foot passing 10 min → choose passing direction from partner colour cues 10 min → cool-down 5 min"
+        descriptionKO:
+          "워밍업 5분 → 양발 패스 10분 → 파트너 신호에 맞춰 패스 방향 선택 10분 → 정리운동 5분",
+        descriptionEN:
+          "Warm-up 5 min → two-foot passing 10 min → passing choices from partner cues 10 min → cool-down 5 min"
       },
       {
         ko: "가벼운 회복 루틴",
-        en: "Gentle recovery routine",
+        en: "Gentle recovery",
         minutes: 20,
         rpe: 2,
-
-        k: "편안한 걷기 10분 → 통증 없는 범위의 가동성 운동 5분 → 편안한 호흡과 휴식 5분",
-
-        e: "Comfortable walking 10 min → pain-free mobility 5 min → comfortable breathing and rest 5 min"
+        descriptionKO:
+          "편안한 걷기 10분 → 통증 없는 범위의 가동성 운동 5분 → 편안한 호흡과 휴식 5분",
+        descriptionEN:
+          "Comfortable walking 10 min → pain-free mobility 5 min → comfortable breathing and rest 5 min"
       }
     ];
 
-    function programs() {
+    function programsScreen() {
       return `
         <div class="notice">
-          ${tr(
-            "일반적인 예시 프로그램입니다. 연령·훈련 경험·현재 몸 상태에 맞춰 코치와 강도 및 시간을 조정하세요. 통증이 생기면 중단하세요.",
-            "These are general examples. Adjust duration and intensity with a coach for your age, experience and current condition. Stop if pain occurs."
+          ${translate(
+            "일반적인 예시입니다. 연령, 경험, 몸 상태에 맞춰 코치와 시간·강도를 조정하세요. 통증이 발생하면 중단하세요.",
+            "General examples only. Adjust time and intensity with a coach for your age, experience and condition. Stop if pain occurs."
           )}
         </div>
 
         <div class="grid">
-          ${plans.map((plan, index) => `
-            <div class="card">
+          ${trainingPlans.map((plan, index) => `
+            <section class="card">
               <span class="tag">
                 ${plan.minutes} MIN · RPE ${plan.rpe}
               </span>
 
               <h2 style="margin-top:20px">
-                ${tr(plan.ko, plan.en)}
+                ${translate(plan.ko, plan.en)}
               </h2>
 
-              <p class="sub">
-                ${tr(plan.k, plan.e)}
+              <p class="muted">
+                ${translate(
+                  plan.descriptionKO,
+                  plan.descriptionEN
+                )}
               </p>
 
-              <button data-plan="${index}">
-                ${tr("오늘 일정에 추가", "Add to today")}
+              <button type="button" data-plan="${index}">
+                ${translate("오늘 일정에 추가", "Add to today")}
               </button>
-            </div>
+            </section>
           `).join("")}
         </div>
       `;
     }
 
-    /* ---------------------------------
+    /* ======================================
        6. 성장 분석
-    --------------------------------- */
+    ====================================== */
 
-    function growth() {
-      const completed = done();
-      const weeks = [];
+    function growthScreen() {
+      const completed = completedSessions();
+      const periods = [];
 
       for (let index = 3; index >= 0; index--) {
         const end = new Date();
-
-        end.setHours(0, 0, 0, 0);
+        end.setHours(12, 0, 0, 0);
         end.setDate(end.getDate() - index * 7);
 
         const start = new Date(end);
         start.setDate(start.getDate() - 6);
 
-        const format = d => [
-          d.getFullYear(),
-          String(d.getMonth() + 1).padStart(2, "0"),
-          String(d.getDate()).padStart(2, "0")
-        ].join("-");
+        const from = localDate(start);
+        const to = localDate(end);
 
-        const from = format(start);
-        const to = format(end);
-
-        const rows = completed.filter(
-          record => record.date >= from && record.date <= to
+        const records = completed.filter(
+          item => item.date >= from && item.date <= to
         );
 
-        weeks.push({
+        periods.push({
           from,
           to,
-          count: rows.length,
-          minutes: sum(rows, "minutes"),
-
-          load: rows.reduce(
-            (total, row) => total + row.minutes * row.rpe,
+          count: records.length,
+          minutes: total(records, "minutes"),
+          load: records.reduce(
+            (sum, item) => sum + item.minutes * item.rpe,
             0
           )
         });
@@ -1678,56 +1870,55 @@ function schedule() {
 
       return `
         <div class="stats">
-          ${card(
-            tr("완료 훈련", "Completed"),
+          ${statistic(
+            translate("완료 훈련", "Completed sessions"),
             completed.length
           )}
 
-          ${card(
-            tr("누적 훈련", "Total training"),
-            sum(completed, "minutes"),
+          ${statistic(
+            translate("누적 훈련", "Total training"),
+            total(completed, "minutes"),
             "min"
           )}
 
-          ${card(
-            tr("누적 득점", "Total goals"),
-            sum(db.matches, "goals")
+          ${statistic(
+            translate("누적 득점", "Total goals"),
+            total(database.matches, "goals")
           )}
 
-          ${card(
-            tr("누적 도움", "Total assists"),
-            sum(db.matches, "assists")
+          ${statistic(
+            translate("누적 도움", "Total assists"),
+            total(database.matches, "assists")
           )}
         </div>
 
-        <div class="card">
-          <h2>
-            ${tr("최근 4주 훈련 요약", "Last four weeks")}
-          </h2>
+        <section class="card">
+          <h2>${translate("최근 4주 훈련 요약", "Last four weeks")}</h2>
 
-          <div class="tablewrap">
+          <div class="table-scroll">
             <table>
               <thead>
                 <tr>
-                  <th>${tr("기간", "Period")}</th>
-                  <th>${tr("완료 수", "Sessions")}</th>
-                  <th>${tr("시간(분)", "Minutes")}</th>
-                  <th>
-                    ${tr(
-                      "주관적 부하(AU)",
-                      "Subjective load (AU)"
-                    )}
+                  <th scope="col">${translate("기간", "Period")}</th>
+                  <th scope="col">
+                    ${translate("완료 수", "Sessions")}
+                  </th>
+                  <th scope="col">
+                    ${translate("시간(분)", "Minutes")}
+                  </th>
+                  <th scope="col">
+                    ${translate("주관적 부하(AU)", "Subjective load (AU)")}
                   </th>
                 </tr>
               </thead>
 
               <tbody>
-                ${weeks.map(week => `
+                ${periods.map(period => `
                   <tr>
-                    <td>${week.from} — ${week.to}</td>
-                    <td>${week.count}</td>
-                    <td>${week.minutes}</td>
-                    <td>${week.load}</td>
+                    <td>${period.from} — ${period.to}</td>
+                    <td>${period.count}</td>
+                    <td>${period.minutes}</td>
+                    <td>${period.load}</td>
                   </tr>
                 `).join("")}
               </tbody>
@@ -1735,296 +1926,245 @@ function schedule() {
           </div>
 
           <div class="notice">
-            ${tr(
-              "부하 = 완료한 각 훈련의 시간(분) × 입력 RPE의 합입니다. 각 행은 오늘을 끝으로 나눈 7일 구간입니다. 이 요약은 훈련량을 설명할 뿐, 실력 향상이나 부상 위험을 판정하지 않습니다.",
-              "Load = sum of completed session minutes × entered RPE. Rows are rolling seven-day windows ending today. These summaries describe recorded volume, not skill improvement or injury risk."
+            ${translate(
+              "부하 = 완료 훈련 시간(분) × 입력 RPE의 합입니다. 각 행은 오늘을 기준으로 나눈 7일 구간입니다. 훈련량 요약이며 실력 향상이나 부상 위험을 판정하지 않습니다.",
+              "Load = sum of completed session minutes × entered RPE. Each row is a rolling seven-day window ending today. This describes volume, not skill improvement or injury risk."
             )}
           </div>
-        </div>
+        </section>
       `;
     }
 
-    /* ---------------------------------
-       7. 인지·반응 훈련
-    --------------------------------- */
+    /* ======================================
+       7. 인지 / 반응 훈련
+    ====================================== */
 
-    function brain() {
+    function brainScreen() {
       return `
         <div class="grid">
-          <div class="card">
-            <span class="tag">REACTION LAB</span>
+          <section class="card">
+            <div class="eyebrow">REACTION LAB</div>
 
-            <h2 style="margin-top:20px">
-              ${tr(
-                "시각 반응 연습",
-                "Visual reaction practice"
-              )}
+            <h2 style="margin-top:14px">
+              ${translate("시각 반응 연습", "Visual reaction practice")}
             </h2>
 
-            <p class="sub">
-              ${tr(
-                "시작을 누른 뒤 초록색으로 바뀔 때 클릭하세요. 초록색 전 클릭하면 기록되지 않습니다.",
-                "Press start, then tap when the panel turns green. Early taps are not recorded."
+            <p class="muted">
+              ${translate(
+                "시작을 누르고 기다리세요. 버튼이 연두색으로 바뀌면 클릭하세요.",
+                "Press Start and wait. Tap when the button turns lime."
               )}
             </p>
 
-            <button id="reaction" class="reaction">
-              ${tr("시작", "Start")}
+            <button
+              type="button"
+              id="reactionButton"
+              class="reaction-button"
+            >
+              ${translate("시작", "Start")}
             </button>
 
-            <div
-              id="reactionResult"
-              aria-live="polite"
-              class="sub"
-            ></div>
+            <p id="reactionResult" class="muted" aria-live="polite"></p>
 
             <div class="notice">
-              ${tr(
-                "브라우저·화면·입력 장치 지연이 포함되는 연습용 측정입니다. 뇌 기능 검사나 축구 실력 평가가 아니며 축구 경기력 향상을 보장하지 않습니다.",
-                "Practice measurement includes browser, display and input latency. Not a brain-function test or football assessment; performance transfer is not guaranteed."
+              ${translate(
+                "화면·브라우저·입력 장치 지연이 포함된 연습용 측정입니다. 뇌 기능 검사나 축구 실력 평가가 아니며 경기력 향상을 보장하지 않습니다.",
+                "Practice timing includes display, browser and input latency. This is not a brain-function test or football assessment and does not guarantee performance improvement."
               )}
             </div>
-          </div>
+          </section>
 
-          <div class="card">
-            <h2>
-              ${tr(
-                "인지 훈련 설계",
-                "Cognitive practice design"
-              )}
-            </h2>
+          <section class="card">
+            <h2>${translate("인지 훈련 아이디어", "Cognitive practice ideas")}</h2>
 
-            <p class="sub">
-              ${tr(
-                "주의 전환·시각 탐색·선택 반응을 축구 동작과 함께 연습합니다. 패스 전 주변 확인, 파트너 신호에 따른 방향 선택처럼 실제 상황과 연결해 보세요. 난도는 코치와 조정하세요.",
-                "Practise attention switching, visual search and choice responses alongside football actions. Try scanning before a pass and selecting a direction from partner cues. Adjust difficulty with a coach."
+            <p class="muted">
+              ${translate(
+                "패스 전 주변 확인, 파트너의 신호에 따른 방향 선택 등 시각 탐색과 선택 반응을 실제 축구 동작에 연결해 연습하세요. 난도와 강도는 코치와 조정하세요.",
+                "Connect visual search and choice responses to football actions: scan before passing and choose directions from partner cues. Adjust difficulty and intensity with a coach."
               )}
             </p>
 
-            <h3>
-              ${tr("최근 반응 기록", "Recent reaction times")}
-            </h3>
+            <h3>${translate("최근 반응 기록", "Recent reaction times")}</h3>
 
             ${
-              db.reactions.slice(-8).reverse().map(record => `
+              database.reactions.slice(-8).reverse().map(record => `
                 <div class="row">
                   <span class="tiny">
-                    ${esc(record.date)}
+                    ${escapeHTML(
+                      new Date(record.date).toLocaleString(
+                        language === "ko" ? "ko-KR" : "en-GB"
+                      )
+                    )}
                   </span>
 
                   <strong>${record.ms} ms</strong>
                 </div>
-              `).join("") || empty()
+              `).join("") || emptyMessage()
             }
-          </div>
+          </section>
         </div>
       `;
     }
 
-    /* ---------------------------------
+    /* ======================================
        8. 영상 리뷰
-    --------------------------------- */
+    ====================================== */
 
-    function video() {
+    function videoScreen() {
       return `
         <div class="grid">
-          <div class="card">
-            <h2>
-              ${tr("내 영상 불러오기", "Open your video")}
-            </h2>
+          <section class="card">
+            <h2>${translate("내 영상 불러오기", "Open your video")}</h2>
 
             <label class="field">
-              ${tr("기기 내 영상 파일", "Local video file")}
+              ${translate("기기 내 영상 파일", "Local video file")}
 
-              <input
-                type="file"
-                id="videoFile"
-                accept="video/*"
-              >
+              <input id="videoFile" type="file" accept="video/*">
             </label>
 
-            <video
-              id="player"
-              controls
-              playsinline
-            ></video>
-
-            <p class="tiny">
-              ${tr(
-                "영상은 서버로 업로드되지 않으며 새로고침 후 다시 선택해야 합니다. MP4 등 브라우저 지원 형식을 사용하세요.",
-                "Video stays on your device and must be selected again after refresh. Use a browser-supported format such as MP4."
-              )}
+            <p class="tiny" id="videoFilename">
+              ${escapeHTML(videoFilename)}
             </p>
 
+            <video id="videoPlayer" controls playsinline></video>
+
             <label class="field">
-              ${tr(
-                "현재 장면 메모",
-                "Note for current frame"
-              )}
+              ${translate("현재 장면 메모", "Note for current scene")}
 
               <textarea
                 id="videoNote"
                 maxlength="1000"
-                placeholder="${tr(
-                  "예: 패스 전 주변 확인",
+                placeholder="${translate(
+                  "예: 공 받기 전 주변 확인",
                   "Example: scan before receiving"
                 )}"
               ></textarea>
             </label>
 
-            <button id="tagVideo">
-              ${tr(
-                "현재 시점 태그 저장",
-                "Tag current time"
-              )}
+            <button type="button" id="saveVideoTag">
+              ${translate("현재 시점 태그 저장", "Tag current time")}
             </button>
 
             <div class="notice">
-              ${tr(
-                "수동 영상 리뷰 도구입니다. 선수 추적·자세 인식·자동 AI 분석은 제공하지 않습니다. 파일명과 시간, 메모만 저장됩니다.",
-                "Manual review tool. No tracking, pose estimation or automated AI analysis. Only filename, timestamp and notes are saved."
+              ${translate(
+                "수동 영상 리뷰 기능입니다. 선수 추적·자세 인식·자동 AI 분석은 제공하지 않습니다. 영상은 업로드되지 않으며 파일명·시간·메모만 저장됩니다. 새로고침 후 영상은 다시 선택해야 합니다.",
+                "Manual review only: no tracking, pose recognition or automated AI analysis. Video is not uploaded. Only filename, time and notes are saved. Select your video again after refresh."
               )}
             </div>
-          </div>
+          </section>
 
-          <div class="card">
-            <h2>${tr("장면 태그", "Scene tags")}</h2>
+          <section class="card">
+            <h2>${translate("장면 태그", "Scene tags")}</h2>
 
             ${
-              db.tags.map(tag => `
+              database.tags.map(tag => `
                 <div class="row">
                   <div>
-                    <strong>${esc(tag.note)}</strong>
+                    <div class="row-title">
+                      ${escapeHTML(tag.note)}
+                    </div>
 
                     <div class="tiny">
-                      ${esc(tag.file)}
-                      ·
-                      ${Math.floor(tag.time / 60)}:${
-                        String(
-                          Math.floor(tag.time % 60)
-                        ).padStart(2, "0")
+                      ${escapeHTML(tag.file)}
+                      · ${Math.floor(tag.time / 60)}:${
+                        String(Math.floor(tag.time % 60)).padStart(2, "0")
                       }
                     </div>
                   </div>
 
                   <div class="actions">
                     <button
+                      type="button"
                       class="secondary"
-                      data-seek="${esc(tag.id)}"
+                      data-seek="${escapeHTML(tag.id)}"
                     >
-                      ${tr("이동", "Seek")}
+                      ${translate("이동", "Seek")}
                     </button>
 
-                    ${del("tags", tag.id)}
+                    ${deleteButton("tags", tag.id)}
                   </div>
                 </div>
-              `).join("") || empty()
+              `).join("") || emptyMessage()
             }
-          </div>
+          </section>
         </div>
       `;
     }
 
-    /* ---------------------------------
-       이벤트 연결
-    --------------------------------- */
+    /* ======================================
+       화면 이벤트
+    ====================================== */
 
-    function bind() {
+    function bindEvents() {
       // 메뉴 이동
-      document.querySelectorAll("[data-page]").forEach(
-        button => {
-          button.onclick = () => {
-            page = button.dataset.page;
-            render();
-            window.scrollTo(0, 0);
-          };
-        }
-      );
+      document.querySelectorAll("[data-page]").forEach(button => {
+        button.onclick = () => {
+          if (!confirmLeaving()) return;
+
+          currentPage = button.dataset.page;
+          render();
+          window.scrollTo(0, 0);
+        };
+      });
 
       // 기록 삭제
-      document.querySelectorAll("[data-del]").forEach(
-        button => {
-          button.onclick = () => {
-            const accepted = confirm(tr(
-              "이 기록을 삭제할까요?",
-              "Delete this entry?"
-            ));
+      document.querySelectorAll("[data-delete]").forEach(button => {
+        button.onclick = () => {
+          if (!confirmLeaving()) return;
 
-            if (!accepted) return;
+          if (!confirm(translate(
+            "이 기록을 삭제할까요?",
+            "Delete this entry?"
+          ))) return;
 
-            const collection = button.dataset.del;
+          const collection = button.dataset.delete;
 
-            db[collection] = db[collection].filter(
-              record => record.id !== button.dataset.id
-            );
+          database[collection] = database[collection].filter(
+            item => item.id !== button.dataset.id
+          );
 
-            save();
-            render();
-          };
-        }
-      );
+          persist();
+          render();
+        };
+      });
 
-      // 훈련 완료 상태 변경
-      document.querySelectorAll("[data-toggle]").forEach(
-        button => {
-          button.onclick = () => {
-            const session = db.sessions.find(
-              item => item.id === button.dataset.toggle
-            );
+      // 훈련 완료 / 취소
+      document.querySelectorAll("[data-complete]").forEach(button => {
+        button.onclick = () => {
+          if (!confirmLeaving()) return;
 
-            session.done = !session.done;
+          const session = database.sessions.find(
+            item => item.id === button.dataset.complete
+          );
 
-            save();
-            render();
-          };
-        }
-      );
+          if (!session) return;
 
-      // 프로그램을 오늘 일정에 추가
-      document.querySelectorAll("[data-plan]").forEach(
-        button => {
-          button.onclick = () => {
-            const plan = plans[Number(button.dataset.plan)];
+          session.done = !session.done;
 
-            db.sessions.push({
-              id: uid(),
-              date: date(),
-              name: tr(plan.ko, plan.en),
-              minutes: plan.minutes,
-              rpe: plan.rpe,
-              done: false
-            });
+          persist();
+          render();
+        };
+      });
 
-            save();
+      bindRecordForms();
+      bindCalendar();
+      bindPrograms();
+      bindReaction();
+      bindVideo();
+    }
 
-            toast(tr(
-              "오늘 일정에 추가했습니다.",
-              "Added to today's schedule."
-            ));
-          };
-        }
-      );
+    /* ======================================
+       훈련 / 경기 / 회복 입력
+    ====================================== */
 
-      // 기록 입력 폼
-      const forms = [
-        [
-          "sessionForm",
-          "sessions",
-          ["minutes", "rpe"]
-        ],
-        [
-          "matchForm",
-          "matches",
-          ["minutes", "goals", "assists"]
-        ],
-        [
-          "recoveryForm",
-          "recovery",
-          ["sleep", "fatigue", "pain"]
-        ]
+    function bindRecordForms() {
+      const definitions = [
+        ["sessionForm", "sessions", ["minutes", "rpe"]],
+        ["matchForm", "matches", ["minutes", "goals", "assists"]],
+        ["recoveryForm", "recovery", ["sleep", "fatigue", "pain"]]
       ];
 
-      forms.forEach(([id, collection, numeric]) => {
+      definitions.forEach(([id, collection, numericFields]) => {
         const form = $(id);
 
         if (!form) return;
@@ -2032,300 +2172,479 @@ function schedule() {
         form.onsubmit = event => {
           event.preventDefault();
 
-          const data = Object.fromEntries(
-            new FormData(event.target)
-          );
+          if (!confirmLeaving()) return;
 
-          for (const key of numeric) {
-            data[key] = Number(data[key]);
-          }
+          const entry = Object.fromEntries(new FormData(form));
 
-          data.id = uid();
-
-          if (collection === "sessions") {
-            data.name = data.name.trim();
-            data.done = false;
-
-            if (!data.name) return;
-          }
-
-          if (collection === "matches") {
-            data.opponent = data.opponent.trim();
-
-            if (!data.opponent) return;
-          }
-
-          if (collection === "recovery") {
-            const existing = db.recovery.find(
-              record => record.date === data.date
-            );
-
-            if (existing) {
-              const accepted = confirm(tr(
-                "같은 날짜의 회복 기록을 바꿀까요?",
-                "Replace the check-in for this date?"
-              ));
-
-              if (!accepted) return;
-
-              db.recovery = db.recovery.filter(
-                record => record.date !== data.date
-              );
-            }
-          }
-
-          db[collection].push(data);
-
-          save();
-          render();
-
-          toast(tr(
-            "기록을 추가했습니다.",
-            "Entry added."
-          ));
-        };
-      });
-
-      // 반응 연습
-      if ($("reaction")) {
-        $("reaction").onclick = () => {
-          const button = $("reaction");
-
-          if (phase === "idle") {
-            phase = "waiting";
-
-            button.classList.remove("ready");
-            button.textContent = tr("기다리세요…", "Wait…");
-
-            timer = setTimeout(() => {
-              phase = "ready";
-              readyAt = performance.now();
-
-              button.classList.add("ready");
-              button.textContent = tr("지금 클릭!", "Tap now!");
-            }, 1500 + Math.random() * 3000);
-
-          } else if (phase === "waiting") {
-            clearTimeout(timer);
-            phase = "idle";
-
-            button.textContent = tr(
-              "너무 빨라요! 다시 시작",
-              "Too soon! Restart"
-            );
-
-          } else {
-            const milliseconds = Math.round(
-              performance.now() - readyAt
-            );
-
-            db.reactions.push({
-              date: new Date().toISOString(),
-              ms: milliseconds
-            });
-
-            save();
-            render();
-
-            $("reactionResult").textContent = (
-              milliseconds + " ms"
-            );
-          }
-        };
-      }
-
-      // 영상 불러오기 및 태그
-      if ($("videoFile")) {
-        if (videoURL) {
-          URL.revokeObjectURL(videoURL);
-          videoURL = null;
-        }
-
-        $("videoFile").onchange = event => {
-          const file = event.target.files[0];
-
-          if (!file) return;
-
-          if (videoURL) {
-            URL.revokeObjectURL(videoURL);
-          }
-
-          videoURL = URL.createObjectURL(file);
-
-          $("player").src = videoURL;
-          $("player").dataset.file = file.name;
-        };
-
-        $("tagVideo").onclick = () => {
-          const player = $("player");
-          const note = $("videoNote").value.trim();
-
-          if (
-            !player.dataset.file ||
-            !note ||
-            player.readyState < 1
-          ) {
-            toast(tr(
-              "영상을 불러온 뒤 메모를 입력하세요.",
-              "Load a video and enter a note."
+          if (!isDate(entry.date)) {
+            notify(translate(
+              "올바른 날짜를 입력하세요.",
+              "Enter a valid date."
             ));
-
             return;
           }
 
-          db.tags.push({
-            id: uid(),
-            file: player.dataset.file,
-            time: player.currentTime,
-            note
-          });
+          for (const key of numericFields) {
+            entry[key] = Number(entry[key]);
+          }
 
-          save();
+          entry.id = uniqueID();
 
-          // 태그 목록을 갱신하면서 현재 영상 유지
-          const currentTime = player.currentTime;
-          const filename = player.dataset.file;
-          const currentURL = videoURL;
+          if (collection === "sessions") {
+            entry.name = entry.name.trim();
+            entry.done = false;
 
-          videoURL = null;
+            if (!entry.name) return;
+          }
+
+          if (collection === "matches") {
+            entry.opponent = entry.opponent.trim();
+
+            if (!entry.opponent) return;
+          }
+
+          if (collection === "recovery") {
+            const exists = database.recovery.some(
+              item => item.date === entry.date
+            );
+
+            if (
+              exists &&
+              !confirm(translate(
+                "같은 날짜의 회복 기록을 교체할까요?",
+                "Replace the recovery entry for this date?"
+              ))
+            ) return;
+
+            database.recovery = database.recovery.filter(
+              item => item.date !== entry.date
+            );
+          }
+
+          database[collection].push(entry);
+
+          const saved = persist();
 
           render();
 
-          videoURL = currentURL;
-
-          $("player").src = currentURL;
-          $("player").dataset.file = filename;
-
-          $("player").addEventListener(
-            "loadedmetadata",
-            () => {
-              $("player").currentTime = currentTime;
-            },
-            { once: true }
-          );
-        };
-
-        document.querySelectorAll("[data-seek]").forEach(
-          button => {
-            button.onclick = () => {
-              const tag = db.tags.find(
-                item => item.id === button.dataset.seek
-              );
-
-              const player = $("player");
-
-              if (
-                player.dataset.file !== tag.file ||
-                player.readyState < 1
-              ) {
-                toast(tr(
-                  "해당 파일을 먼저 선택하세요. 파일명만 비교하므로 같은 이름의 파일에 주의하세요.",
-                  "Select the matching file first. Matching uses filename only."
-                ));
-
-                return;
-              }
-
-              player.currentTime = tag.time;
-            };
+          if (saved) {
+            notify(translate("저장했습니다.", "Saved."));
           }
+        };
+      });
+    }
+
+    /* ======================================
+       달력 / 일지 이벤트
+    ====================================== */
+
+    function bindCalendar() {
+      if (currentPage !== "schedule") return;
+
+      function changeMonth(offset) {
+        if (!confirmLeaving()) return;
+
+        const target = new Date(
+          calendarYear,
+          calendarMonth + offset,
+          1
         );
+
+        calendarYear = target.getFullYear();
+        calendarMonth = target.getMonth();
+
+        render();
+      }
+
+      $("previousMonth").onclick = () => changeMonth(-1);
+      $("nextMonth").onclick = () => changeMonth(1);
+
+      $("todayButton").onclick = () => {
+        if (!confirmLeaving()) return;
+
+        const today = new Date();
+
+        calendarYear = today.getFullYear();
+        calendarMonth = today.getMonth();
+        selectedDate = localDate(today);
+
+        render();
+      };
+
+      document.querySelectorAll("[data-date]").forEach(button => {
+        button.onclick = () => {
+          if (!confirmLeaving()) return;
+
+          selectedDate = button.dataset.date;
+          render();
+        };
+      });
+
+      const form = $("journalForm");
+
+      form.addEventListener("input", () => {
+        journalDirty = true;
+      });
+
+      form.addEventListener("change", () => {
+        journalDirty = true;
+      });
+
+      form.onsubmit = event => {
+        event.preventDefault();
+
+        const entry = Object.fromEntries(new FormData(form));
+
+        entry.body = entry.body.trim();
+
+        if (!entry.body) {
+          notify(translate(
+            "훈련 내용이나 느낀 점을 입력해 주세요.",
+            "Please enter your training notes."
+          ));
+          return;
+        }
+
+        entry.date = selectedDate;
+        entry.updatedAt = new Date().toISOString();
+
+        database.journals = database.journals.filter(
+          item => item.date !== selectedDate
+        );
+
+        database.journals.push(entry);
+
+        const saved = persist();
+
+        if (saved) {
+          journalDirty = false;
+          render();
+
+          notify(translate(
+            "훈련 일지를 저장했습니다.",
+            "Training journal saved."
+          ));
+        }
+      };
+
+      if ($("deleteJournal")) {
+        $("deleteJournal").onclick = () => {
+          if (!confirm(translate(
+            "이 날짜의 일지를 삭제할까요?",
+            "Delete this date's journal?"
+          ))) return;
+
+          database.journals = database.journals.filter(
+            item => item.date !== selectedDate
+          );
+
+          persist();
+          journalDirty = false;
+          render();
+        };
       }
     }
 
-    /* ---------------------------------
-       언어 전환
-    --------------------------------- */
+    /* ======================================
+       프로그램 이벤트
+    ====================================== */
 
-    $("lang").onclick = () => {
-      lang = lang === "ko" ? "en" : "ko";
+    function bindPrograms() {
+      document.querySelectorAll("[data-plan]").forEach(button => {
+        button.onclick = () => {
+          const plan = trainingPlans[Number(button.dataset.plan)];
+
+          database.sessions.push({
+            id: uniqueID(),
+            date: localDate(),
+            name: translate(plan.ko, plan.en),
+            minutes: plan.minutes,
+            rpe: plan.rpe,
+            done: false
+          });
+
+          if (persist()) {
+            notify(translate(
+              "오늘 일정에 추가했습니다.",
+              "Added to today's schedule."
+            ));
+          }
+        };
+      });
+    }
+
+    /* ======================================
+       반응 연습 이벤트
+    ====================================== */
+
+    function bindReaction() {
+      const button = $("reactionButton");
+
+      if (!button) return;
+
+      button.onclick = () => {
+        if (reactionPhase === "idle") {
+          reactionPhase = "waiting";
+
+          button.classList.remove("ready");
+          button.textContent = translate("기다리세요…", "Wait…");
+
+          reactionTimer = setTimeout(() => {
+            reactionPhase = "ready";
+            reactionStarted = performance.now();
+
+            button.classList.add("ready");
+            button.textContent = translate("지금 클릭!", "Tap now!");
+          }, 1500 + Math.random() * 3000);
+
+          return;
+        }
+
+        if (reactionPhase === "waiting") {
+          clearTimeout(reactionTimer);
+          reactionPhase = "idle";
+
+          button.textContent = translate(
+            "너무 빨라요! 다시 시작",
+            "Too soon! Restart"
+          );
+
+          return;
+        }
+
+        const milliseconds = Math.round(
+          performance.now() - reactionStarted
+        );
+
+        database.reactions.push({
+          date: new Date().toISOString(),
+          ms: milliseconds
+        });
+
+        persist();
+        render();
+
+        $("reactionResult").textContent = milliseconds + " ms";
+      };
+    }
+
+    /* ======================================
+       영상 이벤트
+    ====================================== */
+
+    function bindVideo() {
+      const player = $("videoPlayer");
+
+      if (!player) return;
+
+      if (videoURL) {
+        player.src = videoURL;
+
+        player.addEventListener("loadedmetadata", () => {
+          if (Number.isFinite(player.duration)) {
+            player.currentTime = Math.min(
+              videoPosition,
+              player.duration
+            );
+          }
+        }, { once: true });
+      }
+
+      player.addEventListener("error", () => {
+        notify(translate(
+          "이 영상 형식을 재생할 수 없습니다. 브라우저에서 지원하는 파일을 선택하세요.",
+          "This video cannot be played. Choose a browser-supported format."
+        ));
+      });
+
+      $("videoFile").onchange = event => {
+        const file = event.target.files[0];
+
+        if (!file) return;
+
+        if (videoURL) {
+          URL.revokeObjectURL(videoURL);
+        }
+
+        videoURL = URL.createObjectURL(file);
+        videoFilename = file.name;
+        videoPosition = 0;
+
+        player.src = videoURL;
+        $("videoFilename").textContent = videoFilename;
+      };
+
+      $("saveVideoTag").onclick = () => {
+        const note = $("videoNote").value.trim();
+
+        if (!videoFilename || player.readyState < 1 || !note) {
+          notify(translate(
+            "영상을 불러온 뒤 메모를 입력하세요.",
+            "Load a video and enter a note."
+          ));
+          return;
+        }
+
+        database.tags.push({
+          id: uniqueID(),
+          file: videoFilename,
+          time: player.currentTime,
+          note
+        });
+
+        persist();
+        render();
+      };
+
+      document.querySelectorAll("[data-seek]").forEach(button => {
+        button.onclick = () => {
+          const tag = database.tags.find(
+            item => item.id === button.dataset.seek
+          );
+
+          if (
+            !tag ||
+            videoFilename !== tag.file ||
+            player.readyState < 1
+          ) {
+            notify(translate(
+              "해당 영상 파일을 먼저 선택하세요. 파일명만 비교하므로 같은 이름의 다른 영상에 주의하세요.",
+              "Select the matching video first. Matching uses filenames only."
+            ));
+            return;
+          }
+
+          player.currentTime = Math.min(
+            tag.time,
+            Number.isFinite(player.duration)
+              ? player.duration
+              : tag.time
+          );
+        };
+      });
+    }
+
+    /* ======================================
+       언어 전환
+    ====================================== */
+
+    $("languageButton").onclick = () => {
+      if (!confirmLeaving()) return;
+
+      language = language === "ko" ? "en" : "ko";
 
       try {
-        localStorage.setItem(KEY + "-lang", lang);
+        localStorage.setItem(
+          STORAGE_KEY + "-lang",
+          language
+        );
       } catch (error) {
-        // 언어는 저장 실패 시에도 현재 화면에 적용
+        // 저장되지 않아도 현재 화면의 언어는 변경됩니다.
       }
 
       render();
     };
 
-    /* ---------------------------------
-       JSON 백업 내보내기
-    --------------------------------- */
+    /* ======================================
+       백업 내보내기
+    ====================================== */
 
-    $("export").onclick = () => {
+    $("exportButton").onclick = () => {
       const blob = new Blob(
-        [JSON.stringify(db, null, 2)],
+        [JSON.stringify(database, null, 2)],
         { type: "application/json" }
       );
 
       const url = URL.createObjectURL(blob);
-      const anchor = document.createElement("a");
+      const link = document.createElement("a");
 
-      anchor.href = url;
-      anchor.download = `touchline-backup-${date()}.json`;
-      anchor.click();
+      link.href = url;
+      link.download = `touchline-backup-${localDate()}.json`;
 
-      setTimeout(() => {
-        URL.revokeObjectURL(url);
-      }, 1000);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+
+      if (journalDirty) {
+        notify(translate(
+          "백업에는 저장한 기록만 포함됩니다. 작성 중인 일지는 별도로 저장해 주세요.",
+          "Backup includes saved entries only. Save your current journal separately."
+        ));
+      }
     };
 
-    /* ---------------------------------
-       JSON 백업 가져오기
-    --------------------------------- */
+    /* ======================================
+       백업 가져오기
+    ====================================== */
 
-    $("import").onchange = async event => {
+    $("importButton").onclick = () => {
+      if (!confirmLeaving()) return;
+
+      $("importFile").click();
+    };
+
+    $("importFile").onchange = async event => {
       const file = event.target.files[0];
 
       if (!file) return;
 
       try {
-        if (file.size > 5000000) {
-          throw new Error("Backup too large");
+        if (file.size > 5_000_000) {
+          throw new Error("File too large");
         }
 
         const imported = JSON.parse(await file.text());
 
-        if (!valid(imported)) {
+        if (!validDatabase(imported)) {
           throw new Error("Invalid backup");
         }
 
-        const accepted = confirm(tr(
-          "현재 기록 전체를 백업 파일로 교체할까요? 먼저 내보내기로 기존 기록을 보관하세요.",
+        const confirmed = confirm(translate(
+          "현재 기록 전체를 백업 파일로 교체할까요? 먼저 기존 기록을 내보내 두세요.",
           "Replace ALL current records with this backup? Export your existing records first."
         ));
 
-        if (!accepted) return;
+        if (!confirmed) return;
 
-        db = imported;
+        database = {
+          ...imported,
+          journals: imported.journals || []
+        };
 
-        save();
+        const saved = persist();
+
         render();
 
-        toast(tr(
-          "백업을 가져왔습니다.",
-          "Backup imported."
-        ));
-
+        if (saved) {
+          notify(translate(
+            "백업을 가져왔습니다.",
+            "Backup imported."
+          ));
+        }
       } catch (error) {
-        toast(tr(
-          "올바른 TOUCHLINE 백업 JSON이 아닙니다.",
-          "Invalid TOUCHLINE backup JSON."
+        notify(translate(
+          "올바른 TOUCHLINE 백업 파일이 아닙니다. JSON 파일을 확인하세요.",
+          "Invalid TOUCHLINE backup. Please check the JSON file."
         ));
-
       } finally {
         event.target.value = "";
       }
     };
 
-    window.addEventListener("beforeunload", () => {
-      if (videoURL) {
-        URL.revokeObjectURL(videoURL);
+    /* ======================================
+       작성 중인 일지 보호
+    ====================================== */
+
+    window.addEventListener("beforeunload", event => {
+      if (journalDirty) {
+        event.preventDefault();
+        event.returnValue = "";
       }
     });
 
-    // 첫 화면 표시
+    // 첫 화면
     render();
   </script>
 </body>
