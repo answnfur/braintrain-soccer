@@ -318,6 +318,24 @@ footer {
   .stats { grid-template-columns:1fr;gap:0; }
   .card { padding:16px; }
 }
+
+/* Compact training video cards */
+.training-video-grid {
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:12px;
+  align-items:start;
+  margin-bottom:18px;
+}
+.training-video-grid > .card {min-width:0;padding:12px;margin:0;}
+.training-video-grid h2 {font-size:17px;margin:8px 0 10px;}
+.training-video-grid .eyebrow {font-size:9px;letter-spacing:1px;}
+.training-video-grid video {display:block;width:100%;aspect-ratio:16/9;object-fit:contain;background:#000;border-radius:8px;}
+.training-video-grid .small {font-size:11px;overflow-wrap:anywhere;}
+@media(max-width:650px) {
+  .training-video-grid {grid-template-columns:repeat(4,minmax(170px,1fr));overflow-x:auto;padding-bottom:10px;}
+}
+
 </style>
 </head>
 
@@ -1442,26 +1460,27 @@ const plans = [
 
 function programsView() {
   return `
-    <section class="card">
-      <div class="eyebrow">FEATURED TRAINING VIDEO</div>
-      <h2 style="margin-top:12px">
-        ${tr("예시 훈련 영상","Training demonstration")}
-      </h2>
+    <div class="training-video-grid">
+    ${[
+      {id:"dribble", ko:"드리블", en:"Dribbling", file:"training-example.mp4"},
+      {id:"shoot", ko:"슈팅", en:"Shooting", file:"shooting-example.mp4"},
+      {id:"pass", ko:"패스", en:"Passing", file:"passing-example.mp4"},
+      {id:"reaction", ko:"반응", en:"Reaction", file:"reaction-example.mp4"}
+    ].map(video => `
+      <section class="card">
+        <div class="eyebrow">TRAINING VIDEO</div>
+        <h2 style="margin-top:12px">${tr(video.ko,video.en)}</h2>
+        <video controls playsinline preload="metadata" data-training-video="${video.id}" style="width:100%;height:auto">
+          <source src="./${video.file}" type="video/mp4">
+          ${tr("이 브라우저에서는 영상을 재생할 수 없습니다.","Your browser does not support this video.")}
+        </video>
+        <p class="small" id="videoStatus-${video.id}" aria-live="polite">
+          ${tr("연결 파일: ","Video file: ")}${video.file}
+        </p>
+      </section>
+    `).join("")}
 
-      <video id="exampleVideo" controls playsinline preload="metadata">
-        <source src="./training-example.mp4" type="video/mp4">
-
-
-
-      </video>
-
-      <p class="small" id="exampleStatus">
-        ${tr(
-          "저장소에서 index.html과 같은 위치에 training-example.mp4를 업로드하면 표시됩니다.",
-          "Upload training-example.mp4 beside index.html in your repository."
-        )}
-      </p>
-    </section>
+    </div>
 
     <div class="notice">
       ${tr(
@@ -1484,12 +1503,16 @@ function programsView() {
 }
 
 function bindPrograms() {
-  $("exampleVideo").addEventListener("error",() => {
-    $("exampleStatus").textContent = tr(
-      "예시 영상이 없거나 재생할 수 없습니다. 파일명·경로·영상 형식을 확인하세요.",
-      "Example video unavailable. Check filename, path and video format."
-    );
-  },true);
+  document.querySelectorAll("[data-training-video]").forEach(video => {
+    const status = document.getElementById("videoStatus-" + video.dataset.trainingVideo);
+    video.addEventListener("error", () => {
+      status.textContent = tr(
+        "영상이 없거나 재생할 수 없습니다. 표시된 파일명과 같은 MP4 영상을 index.html과 같은 폴더에 업로드하세요.",
+        "Video unavailable. Upload a compatible MP4 with the specified filename beside index.html."
+      );
+    }, true);
+    video.addEventListener("loadedmetadata", () => { status.textContent = ""; });
+  });
 
   document.querySelectorAll("[data-plan]").forEach(button => {
     button.onclick = () => {
