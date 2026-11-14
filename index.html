@@ -336,6 +336,17 @@ footer {
   .training-video-grid {grid-template-columns:repeat(4,minmax(170px,1fr));overflow-x:auto;padding-bottom:10px;}
 }
 
+
+/* Two-column training cards: four plans occupy a 2 x 2 grid. */
+.training-plan-grid {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:16px 0;align-items:stretch;}
+.training-plan-grid > .card {min-width:0;margin:0;}
+.training-plan-grid > article {min-width:0;padding:16px !important;border:1px solid var(--line);border-radius:12px;overflow-wrap:anywhere;}
+.training-plan-grid h2,.training-plan-grid h3,.training-plan-grid p {overflow-wrap:anywhere;}
+@media(max-width:480px) {.training-plan-grid {gap:8px;} .training-plan-grid > .card,.training-plan-grid > article {padding:10px !important;} .training-plan-grid button {max-width:100%;white-space:normal;}}
+
+
+.training-plus {display:inline-flex;align-items:center;justify-content:center;flex:0 0 38px;width:38px;height:38px;padding:0;font-size:27px;line-height:1;border-radius:50%;}
+#customPlanPanel[hidden] {display:none !important;}
 </style>
 </head>
 
@@ -402,6 +413,7 @@ currentMonth.setDate(1);
 const emptyData = () => ({
   version:1,
   sessions:[],
+  customPlans:[],
   matches:[],
   recovery:[],
   journals:[],
@@ -457,7 +469,7 @@ function normalize(source) {
 
   for(const key of [
     "sessions","matches","recovery",
-    "journals","gratitude","tags","reactions"
+    "journals","gratitude","tags","reactions","customPlans"
   ]) {
     if(Array.isArray(source[key])) {
       result[key] = source[key].filter(
@@ -1489,6 +1501,36 @@ function programsView() {
       )}
     </div>
 
+    <section class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+        <h2>${tr("내가 만든 훈련","My training plans")}</h2>
+        <button type="button" class="training-plus" id="openCustomPlan" aria-expanded="false" aria-controls="customPlanPanel" aria-label="${tr("내 훈련 만들기","Create my training")}" title="${tr("내 훈련 만들기","Create my training")}">+</button>
+      </div>
+      <div id="customPlanPanel" hidden style="margin:16px 0;padding:16px;border:1px solid var(--line);border-radius:12px">
+      <form id="customPlanForm" style="position:relative">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px">
+          <h2 style="margin:0">${tr("내 훈련 만들기","Create my training")}</h2>
+          <button type="submit" class="training-plus" aria-label="${tr("훈련 추가","Add training")}" title="${tr("훈련 추가","Add training")}">+</button>
+        </div>
+        <label>${tr("훈련 이름","Training name")}<input name="name" required maxlength="100"></label>
+        <label>${tr("훈련 시간 (분)","Duration (minutes)")}<input name="minutes" type="number" min="1" max="600" value="20" required></label>
+        <label>${tr("강도 (RPE 1–10)","Intensity (RPE 1–10)")}<input name="rpe" type="number" min="1" max="10" value="5" required></label>
+        <label>${tr("훈련 방법","Instructions")}<textarea name="body" rows="3" maxlength="5000" required></textarea></label>
+        <button type="button" class="secondary" id="cancelCustomPlan">${tr("취소","Cancel")}</button>
+      </form>
+      </div>
+      ${db.customPlans.length ? `<div class="training-plan-grid">${db.customPlans.map(plan => `
+        <article style="padding:14px 0;border-bottom:1px solid var(--line)">
+          <h3>${esc(plan.name)}</h3>
+          <p class="small">${esc(plan.minutes)} MIN · RPE ${esc(plan.rpe)}</p>
+          <p style="white-space:pre-wrap;overflow-wrap:anywhere">${esc(plan.body)}</p>
+          <button type="button" data-custom-add="${esc(plan.id)}">${tr("오늘 일정에 추가","Add to today")}</button>
+          <button type="button" class="danger" data-custom-delete="${esc(plan.id)}">${tr("삭제","Delete")}</button>
+        </article>
+      `).join("")}</div>` : `<p class="muted">${tr("아직 만든 훈련이 없습니다. 오른쪽 위 +를 눌러 첫 훈련을 만들어 보세요.","No custom plans yet. Use + above to create your first plan.")}</p>`}
+    </section>
+
+    <div class="training-plan-grid">
     ${plans.map((plan,index) => `
       <section class="card">
         <div class="eyebrow">${plan.minutes} MIN · RPE ${plan.rpe}</div>
@@ -1499,10 +1541,51 @@ function programsView() {
         </button>
       </section>
     `).join("")}
+    </div>
   `;
 }
 
 function bindPrograms() {
+  const customPanel = $("customPlanPanel");
+  const openCustomButton = $("openCustomPlan");
+  const setCustomPanel = open => {
+    customPanel.hidden = !open;
+    openCustomButton.setAttribute("aria-expanded",String(open));
+    if(open) $("customPlanForm").elements.namedItem("name").focus();
+    else openCustomButton.focus();
+  };
+  openCustomButton.onclick = () => setCustomPanel(customPanel.hidden);
+  $("cancelCustomPlan").onclick = () => setCustomPanel(false);
+  $("customPlanForm").onsubmit = event => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    if(!form.reportValidity()) return;
+    const data = new FormData(form);
+    const name = String(data.get("name") || "").trim();
+    const body = String(data.get("body") || "").trim();
+    const minutes = Number(data.get("minutes"));
+    const rpe = Number(data.get("rpe"));
+    if(!name || !body || !Number.isInteger(minutes) || minutes < 1 || minutes > 600 || !Number.isInteger(rpe) || rpe < 1 || rpe > 10) {
+      notify(tr("이름·방법과 시간·강도를 확인하세요.","Check the name, instructions, duration and intensity.")); return;
+    }
+    db.customPlans.push({id:uid(),name,body,minutes,rpe});
+    if(save()) { render(); notify(tr("내 훈련을 저장했습니다.","Training saved.")); }
+  };
+  document.querySelectorAll("[data-custom-add]").forEach(button => {
+    button.onclick = () => {
+      const plan = db.customPlans.find(item => item.id === button.dataset.customAdd);
+      if(!plan) return;
+      db.sessions.push({id:uid(),date:dayKey(new Date()),name:plan.name,minutes:plan.minutes,rpe:plan.rpe,done:false});
+      if(save()) notify(tr("오늘 일정에 추가했습니다.","Added to today."));
+    };
+  });
+  document.querySelectorAll("[data-custom-delete]").forEach(button => {
+    button.onclick = () => {
+      if(!confirm(tr("이 훈련을 삭제할까요? 이미 추가한 일정은 유지됩니다.","Delete this training plan? Existing sessions will remain."))) return;
+      db.customPlans = db.customPlans.filter(item => item.id !== button.dataset.customDelete);
+      if(save()) { render(); notify(tr("훈련을 삭제했습니다.","Training deleted.")); }
+    };
+  });
   document.querySelectorAll("[data-training-video]").forEach(video => {
     const status = document.getElementById("videoStatus-" + video.dataset.trainingVideo);
     video.addEventListener("error", () => {
