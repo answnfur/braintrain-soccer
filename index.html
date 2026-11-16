@@ -352,6 +352,19 @@ footer {
 .writing-toggle > summary::marker {color:var(--accent);}
 .writing-toggle[open] > summary {margin-bottom:12px;}
 .writing-toggle > summary:focus-visible {outline:2px solid var(--accent);outline-offset:4px;}
+
+/* Clean, readable training descriptions */
+.training-video-grid {align-items:start;}
+.training-video-grid > .card {padding:16px;border-radius:16px;}
+.training-video-grid h2 {margin:0 0 12px !important;font-size:18px;}
+.training-video-grid .writing-toggle {margin-top:14px;border-top:1px solid var(--line);padding-top:12px;}
+.training-video-grid .writing-toggle > summary {cursor:pointer;font-weight:600;padding:4px 0;}
+.training-description-content {padding-top:14px;overflow-wrap:anywhere;}
+.training-description-content h3 {margin:0 0 12px;font-size:14px;line-height:1.6;color:var(--accent);}
+.training-description-content p,.training-description-empty {font-size:13px;line-height:1.85;margin:0 0 12px;word-break:keep-all;overflow-wrap:anywhere;}
+.training-description-content p:last-child {margin-bottom:0;}
+.video-file-status:empty {display:none;}
+
 </style>
 </head>
 
@@ -1482,6 +1495,18 @@ const plans = [
   }
 ];
 
+const fixedVideoDescriptions = {"shoot": "차등 훈련: 공의 위치, 접근 각도, 도움닫기 속도 등 슈팅 조건에 의도적인 변화를 부여하여 다양한 움직임을 탐색하는 훈련입니다. 정형화된 동작을 반복하기보다, 변화하는 조건 속에서 목표를 달성할 수 있는 움직임 전략을 스스로 찾아가도록 합니다. 이를 통해 실제 경기의 불확실성에 대응하는 적응력과 유연한 슈팅 조절 능력을 기를 수 있습니다.", "dribble": "이중과제 훈련: 드리블이나 패스와 같은 운동 과제를 수행하면서, 색상·숫자·방향 신호를 판단하는 인지 과제를 동시에 수행하는 훈련입니다. 예를 들어 드리블 중 제시되는 색상에 따라 이동 방향을 바꾸거나, 동료의 신호에 맞춰 패스 대상을 선택합니다. 이를 통해 공을 다루면서도 주변 정보를 파악하고 신속하게 판단하는 능력을 기르며, 실제 경기에서 요구되는 주의 배분과 상황 대응을 연습할 수 있습니다.", "pass": "무작위·가변성 훈련(Variable Training): 같은 위치에서 정해진 패스를 반복하기보다, 패스의 방향·거리·속도와 동료의 움직임에 변화를 주어 예측하기 어려운 상황에서 연습하는 훈련입니다. 선수는 매 순간 주변 정보를 파악하고, 적절한 패스 대상과 타이밍을 선택하며 동작을 조절해야 합니다. 이러한 과정은 기저핵을 포함한 운동 학습·행동 선택 관련 신경회로를 활용하며, 실제 경기에서 요구되는 유연한 판단과 정교한 패스 조절 능력을 기르는 데 도움이 될 수 있습니다."};
+
+function trainingDescriptionHtml(id) {
+  const text = fixedVideoDescriptions[id];
+  if (!text) return `<p class="training-description-empty">${tr("설명 준비 중입니다.","Description coming soon.")}</p>`;
+  const split = text.indexOf(": ");
+  const title = split >= 0 ? text.slice(0,split) : "";
+  const body = split >= 0 ? text.slice(split+2) : text;
+  const paragraphs = body.match(/[^.!?]+[.!?]+|[^.!?]+$/g) || [body];
+  return `<div class="training-description-content"><h3>${esc(title)}</h3>${paragraphs.map(sentence => `<p>${esc(sentence.trim())}</p>`).join("")}</div>`;
+}
+
 function programsView() {
   return `
     <div class="training-video-grid">
@@ -1492,7 +1517,7 @@ function programsView() {
       {id:"reaction", ko:"반응", en:"Reaction", file:"reaction-example.mp4"}
     ].map(video => `
       <section class="card">
-        <div class="eyebrow">TRAINING VIDEO</div>
+        
         <h2 style="margin-top:12px">${tr(video.ko,video.en)}</h2>
         <video controls playsinline preload="metadata" data-training-video="${video.id}" style="width:100%;height:auto">
           <source src="./${video.file}" type="video/mp4">
@@ -1500,19 +1525,9 @@ function programsView() {
         </video>
         <details id="trainingDescription-${video.id}" class="writing-toggle">
           <summary style="font-size:14px">${tr("훈련 설명","Training description")}</summary>
-          <p style="white-space:pre-wrap;overflow-wrap:anywhere" data-description-text="${video.id}">${esc(db.videoDescriptions[video.id] || tr("아직 작성된 설명이 없습니다.","No description yet."))}</p>
-          <details>
-            <summary style="cursor:pointer">${tr("설명 작성·수정","Write / edit description")}</summary>
-            <form data-description-form="${video.id}">
-              <label>${tr("훈련 설명","Training description")}<textarea name="description" rows="5" maxlength="10000">${esc(db.videoDescriptions[video.id] || "")}</textarea></label>
-              <button type="submit">${tr("설명 저장","Save description")}</button>
-              <p class="small">${tr("이 기기·브라우저에만 저장됩니다. 전체 방문자에게 보이게 하려면 설명을 사이트 코드에 반영해야 합니다.","Saved in this browser only. Publish the description in the site code to share it with all visitors.")}</p>
-            </form>
-          </details>
+          ${trainingDescriptionHtml(video.id)}
         </details>
-        <p class="small" id="videoStatus-${video.id}" aria-live="polite">
-          ${tr("연결 파일: ","Video file: ")}${video.file}
-        </p>
+        <p class="small video-file-status" id="videoStatus-${video.id}" aria-live="polite"></p>
       </section>
     `).join("")}
 
@@ -1570,17 +1585,7 @@ function programsView() {
 }
 
 function bindPrograms() {
-  document.querySelectorAll("[data-description-form]").forEach(form => {
-    form.onsubmit = event => {
-      event.preventDefault();
-      const id = form.dataset.descriptionForm;
-      db.videoDescriptions[id] = form.elements.namedItem("description").value.trim();
-      if(save()) {
-        document.querySelector('[data-description-text="' + id + '"]').textContent = db.videoDescriptions[id] || tr("아직 작성된 설명이 없습니다.","No description yet.");
-        notify(tr("설명을 이 브라우저에 저장했습니다.","Description saved in this browser."));
-      }
-    };
-  });
+
   const customPanel = $("customPlanPanel");
   const openCustomButton = $("openCustomPlan");
   const setCustomPanel = open => {
