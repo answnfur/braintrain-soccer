@@ -419,6 +419,7 @@ const emptyData = () => ({
   version:1,
   sessions:[],
   customPlans:[],
+  videoDescriptions:{},
   matches:[],
   recovery:[],
   journals:[],
@@ -492,6 +493,11 @@ function normalize(source) {
     }
   }
 
+  if(source.videoDescriptions && typeof source.videoDescriptions === "object") {
+    for(const id of ["dribble","shoot","pass","reaction"]) {
+      if(typeof source.videoDescriptions[id] === "string") result.videoDescriptions[id] = source.videoDescriptions[id];
+    }
+  }
   return result;
 }
 
@@ -1480,9 +1486,9 @@ function programsView() {
   return `
     <div class="training-video-grid">
     ${[
-      {id:"dribble", ko:"드리블", en:"Dribbling", file:"training-example.mp4"},
-      {id:"shoot", ko:"슈팅", en:"Shooting", file:"shooting-example.mp4"},
-      {id:"pass", ko:"패스", en:"Passing", file:"passing-example.mp4"},
+      {id:"dribble", ko:"드리블", en:"Dribbling", file:"training-example.mp4?v=2"},
+      {id:"shoot", ko:"슈팅", en:"Shooting", file:"shooting-example.mp4?v=2"},
+      {id:"pass", ko:"패스", en:"Passing", file:"passing-example.mp4?v=2"},
       {id:"reaction", ko:"반응", en:"Reaction", file:"reaction-example.mp4"}
     ].map(video => `
       <section class="card">
@@ -1492,6 +1498,18 @@ function programsView() {
           <source src="./${video.file}" type="video/mp4">
           ${tr("이 브라우저에서는 영상을 재생할 수 없습니다.","Your browser does not support this video.")}
         </video>
+        <details id="trainingDescription-${video.id}" class="writing-toggle">
+          <summary style="font-size:14px">${tr("훈련 설명","Training description")}</summary>
+          <p style="white-space:pre-wrap;overflow-wrap:anywhere" data-description-text="${video.id}">${esc(db.videoDescriptions[video.id] || tr("아직 작성된 설명이 없습니다.","No description yet."))}</p>
+          <details>
+            <summary style="cursor:pointer">${tr("설명 작성·수정","Write / edit description")}</summary>
+            <form data-description-form="${video.id}">
+              <label>${tr("훈련 설명","Training description")}<textarea name="description" rows="5" maxlength="10000">${esc(db.videoDescriptions[video.id] || "")}</textarea></label>
+              <button type="submit">${tr("설명 저장","Save description")}</button>
+              <p class="small">${tr("이 기기·브라우저에만 저장됩니다. 전체 방문자에게 보이게 하려면 설명을 사이트 코드에 반영해야 합니다.","Saved in this browser only. Publish the description in the site code to share it with all visitors.")}</p>
+            </form>
+          </details>
+        </details>
         <p class="small" id="videoStatus-${video.id}" aria-live="polite">
           ${tr("연결 파일: ","Video file: ")}${video.file}
         </p>
@@ -1552,6 +1570,17 @@ function programsView() {
 }
 
 function bindPrograms() {
+  document.querySelectorAll("[data-description-form]").forEach(form => {
+    form.onsubmit = event => {
+      event.preventDefault();
+      const id = form.dataset.descriptionForm;
+      db.videoDescriptions[id] = form.elements.namedItem("description").value.trim();
+      if(save()) {
+        document.querySelector('[data-description-text="' + id + '"]').textContent = db.videoDescriptions[id] || tr("아직 작성된 설명이 없습니다.","No description yet.");
+        notify(tr("설명을 이 브라우저에 저장했습니다.","Description saved in this browser."));
+      }
+    };
+  });
   const customPanel = $("customPlanPanel");
   const openCustomButton = $("openCustomPlan");
   const setCustomPanel = open => {
@@ -1594,6 +1623,11 @@ function bindPrograms() {
   });
   document.querySelectorAll("[data-training-video]").forEach(video => {
     const status = document.getElementById("videoStatus-" + video.dataset.trainingVideo);
+    const openDescription = () => {
+      document.getElementById("trainingDescription-" + video.dataset.trainingVideo).open = true;
+    };
+    video.addEventListener("click",openDescription);
+    video.addEventListener("play",openDescription);
     video.addEventListener("error", () => {
       status.textContent = tr(
         "영상이 없거나 재생할 수 없습니다. 표시된 파일명과 같은 MP4 영상을 index.html과 같은 폴더에 업로드하세요.",
