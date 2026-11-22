@@ -322,7 +322,7 @@ footer {
 /* Compact training video cards */
 .training-video-grid {
   display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
+  grid-template-columns:repeat(3,minmax(0,1fr));
   gap:12px;
   align-items:start;
   margin-bottom:18px;
@@ -333,7 +333,7 @@ footer {
 .training-video-grid video {display:block;width:100%;aspect-ratio:16/9;object-fit:contain;background:#000;border-radius:8px;}
 .training-video-grid .small {font-size:11px;overflow-wrap:anywhere;}
 @media(max-width:650px) {
-  .training-video-grid {grid-template-columns:repeat(4,minmax(170px,1fr));overflow-x:auto;padding-bottom:10px;}
+  .training-video-grid {grid-template-columns:repeat(3,minmax(170px,1fr));overflow-x:auto;padding-bottom:10px;}
 }
 
 
@@ -365,6 +365,90 @@ footer {
 .training-description-content p:last-child {margin-bottom:0;}
 .video-file-status:empty {display:none;}
 
+
+/* TOUCHLINE visual refinement */
+:root {--bg:#0a1116;--panel:#111d24;--line:#2a3b43;--text:#f2f7f6;--muted:#b2c2c8;--accent:#cbf577;}
+body {background:radial-gradient(ellipse at 80% 0%,#18352e 0,transparent 38rem),var(--bg);font-size:15px;}
+aside {background:#0e181e;}
+.brand {display:flex;align-items:center;gap:0;}
+.brand::before {content:"";width:22px;height:15px;flex:none;margin-right:9px;border:1px solid var(--accent);border-radius:3px;background:linear-gradient(90deg,transparent 47%,var(--accent) 47% 53%,transparent 53%);}
+.brand-sub {letter-spacing:.08em;line-height:1.5;}
+nav button {border-radius:9px;border:1px solid transparent;line-height:1.35;}
+nav .active {border-color:#45604a;background:#20392c;}
+main {max-width:1660px;}
+header {padding-bottom:16px;}
+#languageButton {width:auto;min-width:110px;max-width:100%;}
+.page-intro {position:relative;overflow:hidden;margin:24px 0;padding:clamp(18px,3vw,36px);border:1px solid #3b574c;border-radius:20px;background:linear-gradient(105deg,#14251f 35%,#203a31);isolation:isolate;}
+.page-intro::after {content:"";position:absolute;z-index:-1;inset:0;pointer-events:none;background:repeating-linear-gradient(120deg,transparent 0 31px,#c9f36b14 31px 32px);mask-image:linear-gradient(90deg,transparent 35%,#000);}
+.page-intro h1 {margin:0;font-size:clamp(26px,4vw,42px);letter-spacing:-.04em;line-height:1.15;overflow-wrap:anywhere;}
+.page-intro p {margin:9px 0 0;max-width:62ch;}
+.card {border-radius:16px;box-shadow:0 7px 22px #0002;}
+.word-rail {border-top:3px solid var(--accent);}
+.word-rail blockquote {margin:14px 0;padding-left:12px;border-left:2px solid #66874c;line-height:1.6;}
+button:focus-visible,summary:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible {outline:2px solid var(--accent);outline-offset:3px;}
+.training-video-grid {scroll-snap-type:x proximity;scrollbar-color:#52745a #14221f;}
+.training-video-grid > .card {scroll-snap-align:start;}
+.training-video-grid video {border:1px solid var(--line);}
+@media(max-width:750px){.page-intro {margin:16px 0;border-radius:15px;} nav {padding-bottom:6px;} header .actions {gap:6px;}}
+
+
+.page-intro {background:repeating-linear-gradient(90deg,#ffffff04 0 48px,transparent 48px 96px),linear-gradient(105deg,#10241a 20%,#236341);border-color:#518463;min-height:150px;display:flex;flex-direction:column;justify-content:center;}
+.page-intro::after {display:none;}
+.pitch-markings {position:absolute;z-index:-1;right:14px;top:50%;transform:translateY(-50%) rotate(-8deg);width:min(43%,360px);color:#d6ffdc;opacity:.33;pointer-events:none;mask-image:linear-gradient(90deg,transparent,#000 28%);}
+.training-video-grid {counter-reset:drill;}
+.training-video-grid > .card {counter-increment:drill;border-top:2px solid #91bc62;}
+.training-video-grid h2::before {content:counter(drill,decimal-leading-zero);display:inline-block;margin-right:.5em;padding:.18em .4em;border-radius:4px;background:#254332;color:var(--accent);font-size:.65em;vertical-align:middle;font-variant-numeric:tabular-nums;}
+@media(max-width:550px){.pitch-markings {right:-16px;width:62%;opacity:.18;} .page-intro {min-height:116px;}}
+
+/* Restrained performance dashboard */
+:root {--bg:#101618;--panel:#182022;--line:#334043;--text:#edf0ee;--muted:#b4c0bd;--accent:#abc8ae;}
+body {background:var(--bg);}
+aside {background:#131b1d;}
+.brand {font-size:21px;letter-spacing:.045em;font-weight:750;}
+.brand::before {display:none;}
+.brand span {color:inherit;}
+.brand-sub {font-size:9px;letter-spacing:.1em;}
+nav .active {background:#253330;border-color:#3e5149;color:#d1e5d2;}
+button {border-radius:6px;background:var(--accent);color:#15251e;}
+.secondary {background:#273234;color:var(--text);}
+.danger {background:#452b35;color:#ffd5df;}
+.page-intro {background:linear-gradient(110deg,#1a2727,#21352f);border-color:#394b43;border-radius:10px;min-height:132px;}
+.page-intro h1 {font-size:clamp(25px,3.2vw,36px);font-weight:730;letter-spacing:-.025em;}
+.pitch-markings {opacity:.15;transform:translateY(-50%);color:#bed4c2;}
+.card,.training-video-grid > .card {border-radius:9px;box-shadow:none;}
+.training-video-grid > .card,.word-rail {border-top:1px solid var(--line);}
+.training-video-grid h2::before {background:none;color:var(--muted);padding:0 .25em 0 0;font-size:.63em;letter-spacing:.06em;}
+.training-video-grid video {border-radius:5px;}
+@media(max-width:550px){.pitch-markings {opacity:.1;}.page-intro {min-height:112px;}}
+
+/* Matchday editorial */
+:root {--bg:#101417;--panel:#191f22;--line:#30393b;--text:#f5f5f0;--muted:#b6c1bd;--accent:#dfefaa;}
+aside {background:#111719;}
+.brand span {color:var(--accent);}
+nav .active {border-color:#364943;border-left:3px solid var(--accent);background:#1d3028;color:var(--accent);}
+.page-intro {background:linear-gradient(102deg,#10251e 12%,#173c2d 64%,#22523e);border-color:#3d6250;border-left:4px solid var(--accent);min-height:190px;padding:clamp(19px,4vw,42px);}
+.pitch-kicker {display:flex;align-items:center;gap:8px;font-size:10px;font-weight:750;letter-spacing:.15em;color:var(--accent);margin-bottom:14px;}
+.pitch-kicker span {width:18px;height:1px;background:currentColor;flex:none;}
+.page-intro h1 {font-size:clamp(28px,4.3vw,54px);font-weight:850;letter-spacing:-.055em;max-width:90%;}
+.page-intro p {color:#d5e2dc;}
+.pitch-markings {width:min(53%,420px);opacity:.26;right:-20px;transform:translate(0,-50%) rotate(-12deg);}
+.training-video-grid > .card {border-top:2px solid #708873;background:linear-gradient(180deg,#222c2b,var(--panel) 40%);}
+.training-video-grid h2::before {color:var(--accent);font-variant-numeric:tabular-nums;}
+.word-rail {border-top:2px solid #708873;}
+@media(max-width:550px){.page-intro {min-height:148px;}.pitch-markings {width:70%;opacity:.14;}.pitch-kicker {font-size:9px;letter-spacing:.09em;}}
+
+.match-summary h2 {margin-top:8px;}
+.match-kpis {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:0;}
+.match-kpis > div {background:#111b19;border:1px solid var(--line);padding:12px;border-radius:7px;}
+.match-kpis dt {color:var(--muted);font-size:12px;}
+.match-kpis dd {margin:6px 0 0;font-size:clamp(20px,3vw,32px);font-weight:800;color:var(--accent);font-variant-numeric:tabular-nums;}
+#matchReviewPanel {scroll-margin-top:16px;}
+@media(max-width:550px){.match-kpis {grid-template-columns:repeat(2,minmax(0,1fr));}}
+.match-table-scroll {overflow-x:auto;}
+.match-trends table {width:100%;border-collapse:collapse;text-align:left;font-variant-numeric:tabular-nums;}
+.match-trends th,.match-trends td {padding:10px;border-bottom:1px solid var(--line);}
+.match-check {display:flex;align-items:center;gap:8px;}
+.match-check input {width:auto;}
 </style>
 </head>
 
@@ -386,12 +470,16 @@ footer {
       <button class="secondary" id="exportButton">백업</button>
       <button class="secondary" id="importButton">가져오기</button>
       <input type="file" id="backupFile" accept=".json,application/json" hidden>
-      <button class="secondary" id="languageButton">EN</button>
+      <select id="languageButton" aria-label="Language / 언어"><option value="ko">한국어</option><option value="en">English</option><option value="es">Español</option><option value="fr">Français</option><option value="de">Deutsch</option><option value="it">Italiano</option></select>
     </div>
   </header>
 
-  <h1 id="pageTitle">TOUCHLINE</h1>
-  <p id="pageDescription" class="muted"></p>
+  <div class="page-intro">
+    <svg class="pitch-markings" viewBox="0 0 360 200" aria-hidden="true" focusable="false"><g fill="none" stroke="currentColor" stroke-width="2"><rect x="12" y="12" width="336" height="176" rx="2"/><path d="M180 12v176M12 53h54v94H12m336-94h-54v94h54M12 77h20v46H12m336-46h-20v46h20"/><circle cx="180" cy="100" r="31"/><path d="M66 79a28 28 0 0 1 0 42m228-42a28 28 0 0 0 0 42"/></g><circle cx="180" cy="100" r="3" fill="currentColor"/></svg>
+    <div class="pitch-kicker" aria-hidden="true">TOUCHLINE <span></span> PLAYER PERFORMANCE</div>
+    <h1 id="pageTitle">TOUCHLINE</h1>
+    <p id="pageDescription" class="muted"></p>
+  </div>
 
   <div class="layout">
     <div id="content" class="primary"></div>
@@ -603,6 +691,9 @@ const names = {
    화면
 ========================================= */
 
+const shellLocales = {"es": ["Resumen", "Calendario y diario", "Partidos y análisis", "Recuperación", "Programas de entrenamiento", "Progreso", "Análisis de vídeo", "Exportar copia", "Importar", "Registra tu entrenamiento de hoy y elige algo que mejorar para el próximo partido."], "fr": ["Tableau de bord", "Planning et journal", "Matchs et analyse", "Récupération", "Programmes d’entraînement", "Progression", "Analyse vidéo", "Exporter la sauvegarde", "Importer", "Note ton entraînement du jour et choisis un point à améliorer pour le prochain match."], "de": ["Übersicht", "Trainingsplan und Tagebuch", "Spiele und Analyse", "Regeneration", "Trainingsprogramme", "Fortschritt", "Videoanalyse", "Sicherung exportieren", "Importieren", "Halte dein heutiges Training fest und wähle einen Punkt, den du im nächsten Spiel verbessern möchtest."], "it": ["Panoramica", "Calendario e diario", "Partite e analisi", "Recupero", "Programmi di allenamento", "Progressi", "Analisi video", "Esporta backup", "Importa", "Registra l’allenamento di oggi e scegli un aspetto da migliorare nella prossima partita."]};
+const navName = key => shellLocales[lang]?.[Object.keys(names).indexOf(key)] ?? names[key][lang === "ko" ? 0 : 1];
+
 function render() {
   dirty = false;
 
@@ -613,17 +704,17 @@ function render() {
 
   document.documentElement.lang = lang;
 
-  $("languageButton").textContent = lang === "ko" ? "EN" : "한국어";
-  $("exportButton").textContent = tr("백업 내보내기","Export");
-  $("importButton").textContent = tr("가져오기","Import");
+  $("languageButton").value = lang;
+  $("exportButton").textContent = shellLocales[lang]?.[7] ?? tr("백업 내보내기","Export");
+  $("importButton").textContent = shellLocales[lang]?.[8] ?? tr("가져오기","Import");
 
   $("todayLabel").textContent = new Date().toLocaleDateString(
-    lang === "ko" ? "ko-KR" : "en-GB"
+    lang === "en" ? "en-GB" : lang
   );
 
-  $("pageTitle").textContent = names[page][lang === "ko" ? 0 : 1];
+  $("pageTitle").textContent = navName(page);
 
-  $("pageDescription").textContent = tr(
+  $("pageDescription").textContent = shellLocales[lang]?.[9] ?? tr(
     "오늘의 실천을 기록하고, 다음 경기에서 바꿀 한 가지를 찾아보세요.",
     "Record today's work and find one thing to improve next match."
   );
@@ -633,7 +724,7 @@ function render() {
       data-page="${key}"
       class="${key === page ? "active" : ""}"
       ${key === page ? 'aria-current="page"' : ""}
-    >${label[lang === "ko" ? 0 : 1]}</button>
+    >${navName(key)}</button>
   `).join("");
 
   const screens = {
@@ -856,7 +947,7 @@ function scheduleView() {
           <div class="eyebrow">MONTHLY SCHEDULE</div>
           <h2 style="margin:10px 0">
             ${currentMonth.toLocaleDateString(
-              lang === "ko" ? "ko-KR" : "en-GB",
+              lang === "en" ? "en-GB" : lang,
               {year:"numeric",month:"long"}
             )}
           </h2>
@@ -1165,6 +1256,17 @@ const countFields = [
   ["turnovers","볼 소유 상실","Possession losses"]
 ];
 
+const positionChecks = {
+  GK:[["수비 라인에 먼저 콜을 했다","Communicated with the defensive line"],["압박을 읽고 배급 방향을 골랐다","Chose distribution based on pressure"]],
+  DF:[["뒷공간과 상대 움직임을 확인했다","Checked space behind and opponents’ runs"],["커버 여부를 판단했다","Decided when to provide cover"]],
+  MF:[["공을 받기 전에 주변을 확인했다","Scanned before receiving"],["압박을 피해 패스 방향을 골랐다","Selected a passing direction under pressure"]],
+  WG:[["1대1 이후 패스와 슈팅을 판단했다","Chose whether to pass or shoot after a one-on-one"],["수비 뒤 공간으로 움직였다","Made runs behind the defence"]],
+  FW:[["수비 사이에서 받는 타이밍을 맞췄다","Timed runs between defenders"],["슈팅 전에 골키퍼 위치를 확인했다","Checked the goalkeeper’s position before shooting"]]
+};
+function matchRate(review, made, attempted) {
+  const a = review?.[made], b = review?.[attempted];
+  return Number.isInteger(a) && Number.isInteger(b) && b > 0 && a >= 0 && a <= b ? (100*a/b).toFixed(1)+"%" : tr("기록 없음","Not recorded");
+}
 function matchesView() {
   if(!db.matches.some(m => m.id === activeMatch)) {
     activeMatch = db.matches[0]?.id || "";
@@ -1174,7 +1276,24 @@ function matchesView() {
   const review = selected?.review || {};
 
   return `
-    <div class="grid">
+    ${db.matches.length ? `<section class="card match-summary" aria-label="${tr("경기 누적 요약","Match totals")}">
+      <div class="eyebrow">MATCH REPORT</div>
+      <h2>${tr("경기 누적 요약","Match totals")}</h2>
+      <dl class="match-kpis">${[
+        [tr("기록한 경기","Matches logged"),db.matches.length],
+        [tr("총 출전 시간 · 분","Minutes played"),db.matches.reduce((sum,m)=>sum+(Number(m.minutes)||0),0)],
+        [tr("득점","Goals"),db.matches.reduce((sum,m)=>sum+(Number(m.goals)||0),0)],
+        [tr("도움","Assists"),db.matches.reduce((sum,m)=>sum+(Number(m.assists)||0),0)]
+      ].map(([label,value])=>`<div><dt>${label}</dt><dd>${value}</dd></div>`).join("")}</dl>
+    </section>` : ""}
+    ${db.matches.length ? `<section class="card match-trends">
+      <h2>${tr("최근 5경기 지표","Last five matches")}</h2>
+      <div class="match-table-scroll" tabindex="0"><table>
+        <thead><tr><th scope="col">${tr("경기","Match")}</th><th scope="col">${tr("패스 성공률","Pass completion")}</th><th scope="col">${tr("유효 슈팅 비율","Shots on target")}</th></tr></thead>
+        <tbody>${[...db.matches].reverse().sort((a,b)=>String(b.date).localeCompare(String(a.date))).slice(0,5).reverse().map(m=>`<tr><th scope="row">${esc(m.opponent)}<div class="small">${esc(m.date)}</div></th><td>${matchRate(m.review,"passesCompleted","passesAttempted")}</td><td>${matchRate(m.review,"shotsOnTarget","shots")}</td></tr>`).join("")}</tbody>
+      </table></div>
+    </section>` : ""}
+    <div class="grid match-workspace">
       <section class="card">
         <details ${db.matches.length ? "" : "open"}>
           <summary style="cursor:pointer;font-weight:700">
@@ -1200,7 +1319,7 @@ function matchesView() {
       <section class="card">
         <h2>${tr("경기 목록","Match history")}</h2>
 
-        ${[...db.matches].reverse().map(m => `
+        ${[...db.matches].reverse().sort((a,b)=>String(b.date).localeCompare(String(a.date))).map(m => `
           <div class="record">
             <div>
               <strong>vs ${esc(m.opponent)}</strong>
@@ -1209,13 +1328,13 @@ function matchesView() {
                 · ${Number(m.goals) || 0} G / ${Number(m.assists) || 0} A
               </div>
             </div>
-            ${removeButton("matches",m.id)}
+            <div class="actions"><button type="button" class="secondary" data-review-match="${esc(m.id)}">${m.id === activeMatch ? tr("선택된 경기","Selected match") : tr("분석 열기","Open review")}</button>${removeButton("matches",m.id)}</div>
           </div>
         `).join("") || emptyMessage()}
       </section>
     </div>
 
-    <section class="card">
+    <section class="card" id="matchReviewPanel">
       <div class="eyebrow">MATCH REVIEW LAB</div>
       <h2 style="margin-top:12px">
         ${tr("상세 경기 분석","Detailed match analysis")}
@@ -1241,7 +1360,27 @@ function matchesView() {
           </select>
         </label>
 
+        <details class="review-section">
+          <summary>${tr("다음 훈련 일정 만들기","Plan the next training session")}</summary>
+          <form id="matchTrainingForm">
+            ${field(tr("훈련할 개선점","Improvement to train"),"name","text","",'required maxlength="120"')}
+            <div class="grid">
+              ${field(tr("훈련 날짜","Training date"),"date","date",dayKey(new Date()),"required")}
+              ${field(tr("훈련 시간 · 분","Minutes"),"minutes","number",15,'required min="1" max="600"')}
+              ${field(tr("강도 · 1~10","Intensity · 1–10"),"rpe","number",4,'required min="1" max="10"')}
+            </div>
+            <button>${tr("훈련 일정에 추가","Add to training schedule")}</button>
+          </form>
+        </details>
         <form id="reviewForm">
+          <details class="review-section" ${review.position ? "open" : ""}>
+            <summary>${tr("포지션별 체크리스트","Position checklist")}</summary>
+            <label>${tr("포지션","Position")}<select name="position">
+              <option value="">${tr("선택하세요","Choose a position")}</option>
+              ${[["GK","골키퍼","Goalkeeper"],["DF","수비수","Defender"],["MF","미드필더","Midfielder"],["WG","윙어","Winger"],["FW","공격수","Forward"]].map(([id,ko,en])=>`<option value="${id}" ${review.position===id ? "selected" : ""}>${tr(ko,en)}</option>`).join("")}
+            </select></label>
+            ${Object.entries(positionChecks).map(([id,items])=>`<div data-position="${id}" ${review.position===id ? "" : "hidden"}>${items.map(([ko,en],i)=>`<label class="match-check"><input type="checkbox" name="positionCheck" value="${id}-${i}" ${Array.isArray(review.positionChecks) && review.positionChecks.includes(id+"-"+i) ? "checked" : ""}>${tr(ko,en)}</label>`).join("")}</div>`).join("")}
+          </details>
           <details class="review-section">
             <summary>${tr("직접 입력하는 경기 통계","Manual match statistics")}</summary>
             <div class="grid">
@@ -1282,6 +1421,17 @@ function matchesView() {
 }
 
 function bindMatches() {
+  document.querySelectorAll("[data-review-match]").forEach(button => {
+    button.onclick = () => {
+      if(activeMatch !== button.dataset.reviewMatch) {
+        if(!canLeave()) return;
+        activeMatch = button.dataset.reviewMatch;
+        render();
+      }
+      $("matchReviewPanel")?.scrollIntoView({block:"start"});
+      $("matchSelect")?.focus({preventScroll:true});
+    };
+  });
   $("matchForm").onsubmit = event => {
     event.preventDefault();
 
@@ -1303,6 +1453,25 @@ function bindMatches() {
   if(!$("reviewForm")) return;
 
   const form = $("reviewForm");
+  form.elements.namedItem("position").addEventListener("change",event=>{
+    form.querySelectorAll("[data-position]").forEach(group=>group.hidden = group.dataset.position !== event.target.value);
+  });
+  $("matchTrainingForm").onsubmit = event => {
+    event.preventDefault();
+    const values = new FormData(event.currentTarget);
+    const name = String(values.get("name") || "").trim();
+    const date = String(values.get("date") || "");
+    const minutes = Number(values.get("minutes")), rpe = Number(values.get("rpe"));
+    if(!name || !date || !Number.isInteger(minutes) || minutes<1 || minutes>600 || !Number.isInteger(rpe) || rpe<1 || rpe>10) { notify(tr("훈련 입력값을 확인하세요.","Check the training details.")); return; }
+    const session = {id:uid(),date,name,minutes,rpe,done:false,sourceMatchId:activeMatch};
+    const wasDirty = dirty;
+    db.sessions.push(session);
+    if(!save()) {db.sessions.pop();return;}
+    event.currentTarget.reset();
+    dirty = wasDirty;
+    notify(tr("선택한 날짜의 훈련 일정에 추가했습니다.","Added to the training schedule for the selected date."));
+  };
+
 
   function ratios() {
     function rate(success,attempts) {
@@ -1369,6 +1538,11 @@ function bindMatches() {
       }
     }
 
+    const position = values.get("position");
+    if(Object.hasOwn(positionChecks,position)) {
+      review.position = position;
+      review.positionChecks = values.getAll("positionCheck").filter(id=>positionChecks[position].some((_,i)=>id === position+"-"+i));
+    }
     review.updatedAt = new Date().toISOString();
 
     const match = db.matches.find(m => m.id === activeMatch);
@@ -1499,9 +1673,11 @@ const fixedVideoDescriptions = {"shoot": "차등 훈련: 공의 위치, 접근 �
 
 const fixedVideoDescriptionsEn = {"dribble": "Dual-Task Training: This method combines a motor task, such as dribbling or passing, with a cognitive task that involves interpreting colour, number or direction cues. For example, players change direction while dribbling in response to a colour cue, or choose a passing target based on a teammate’s signal. It helps players practise scanning their surroundings and making quick decisions while controlling the ball, developing the attention-sharing and situational responses required in a match.", "shoot": "Differential Training: This method deliberately varies shooting conditions, including ball position, approach angle and run-up speed, to encourage players to explore different movement solutions. Rather than repeating a rigid movement pattern, players learn to find effective ways to reach their target under changing conditions. This can develop adaptability to unpredictable match situations and flexible control of shooting technique.", "pass": "Random and Variable Practice (Variable Training): Rather than repeating predetermined passes from the same position, players practise in unpredictable situations by varying pass direction, distance, speed and teammates’ movements. Players must continually read their surroundings, select an appropriate passing target and timing, and adjust their movements. This process engages neural circuits involved in motor learning and action selection, including the basal ganglia, and may help develop flexible decision-making and precise passing control in matches."};
 
+const videoLocales = {"es": ["Regate", "Tiro", "Pase", "Reacción", "Descripción del ejercicio", "Descripción disponible próximamente.", "Entrenamiento de doble tarea: Combina el regate con una tarea cognitiva, como interpretar señales de color, número o dirección. Por ejemplo, el jugador cambia de dirección según el color indicado. Así practica cómo observar el entorno y decidir con rapidez sin perder el control del balón.", "Entrenamiento diferencial: Se varían intencionalmente la posición del balón, el ángulo de aproximación y la velocidad de la carrera previa. El jugador explora distintas soluciones de movimiento para acertar en condiciones cambiantes y adaptarse mejor a situaciones de partido.", "Práctica aleatoria y variable: Se modifican la dirección, la distancia y la velocidad del pase, así como los movimientos de los compañeros. El jugador observa el entorno, elige a quién pasar y cuándo, y ajusta su técnica. Esta práctica recurre a circuitos del aprendizaje motor y de la selección de acciones, incluidos los ganglios basales."], "fr": ["Dribble", "Tir", "Passe", "Réaction", "Description de l’exercice", "Description à venir.", "Entraînement en double tâche : Le joueur dribble tout en interprétant un signal de couleur, de nombre ou de direction. Il peut, par exemple, changer de direction selon la couleur annoncée. Il apprend ainsi à observer son environnement et à décider rapidement tout en gardant le contrôle du ballon.", "Entraînement différentiel : On fait varier la position du ballon, l’angle d’approche et la vitesse de la prise d’élan. Le joueur explore différentes solutions motrices pour atteindre sa cible malgré ces variations et mieux s’adapter aux situations de match.", "Pratique aléatoire et variable : On varie la direction, la distance et la vitesse de la passe, ainsi que les déplacements des partenaires. Le joueur lit la situation, choisit le destinataire et le moment de la passe, puis ajuste son geste. Cette pratique mobilise des circuits de l’apprentissage moteur et de la sélection des actions, dont les ganglions de la base."], "de": ["Dribbling", "Torschuss", "Pass", "Reaktion", "Übungsbeschreibung", "Beschreibung folgt.", "Doppelaufgabentraining: Beim Dribbeln verarbeitet der Spieler gleichzeitig Farb-, Zahlen- oder Richtungssignale. Zum Beispiel wechselt er je nach Farbsignal die Richtung. So übt er, seine Umgebung wahrzunehmen und schnell zu entscheiden, ohne die Ballkontrolle zu verlieren.", "Differenzielles Training: Ballposition, Anlaufwinkel und Anlaufgeschwindigkeit werden gezielt verändert. Der Spieler erprobt unterschiedliche Bewegungslösungen, um sein Ziel unter wechselnden Bedingungen zu treffen und sich besser an Spielsituationen anzupassen.", "Zufälliges und variables Üben: Passrichtung, Distanz und Tempo sowie die Laufwege der Mitspieler werden variiert. Der Spieler erfasst die Situation, wählt Passempfänger und Zeitpunkt und passt seine Bewegung an. Dabei werden Netzwerke für motorisches Lernen und Handlungsauswahl beansprucht, darunter die Basalganglien."], "it": ["Dribbling", "Tiro", "Passaggio", "Reazione", "Descrizione dell’esercizio", "Descrizione in arrivo.", "Allenamento a doppio compito: Il giocatore conduce la palla mentre interpreta segnali di colore, numero o direzione. Ad esempio, cambia direzione in base al colore indicato. In questo modo si esercita a osservare il campo e a decidere rapidamente senza perdere il controllo della palla.", "Allenamento differenziale: Si variano intenzionalmente la posizione della palla, l’angolo di approccio e la velocità della rincorsa. Il giocatore esplora diverse soluzioni motorie per centrare il bersaglio in condizioni variabili e adattarsi meglio alle situazioni di gara.", "Pratica casuale e variabile: Si modificano direzione, distanza e velocità del passaggio, oltre ai movimenti dei compagni. Il giocatore legge la situazione, sceglie il destinatario e il momento del passaggio e adatta il gesto. Questa pratica coinvolge i circuiti dell’apprendimento motorio e della selezione delle azioni, tra cui i gangli della base."]};
+const videoOrder = ["dribble","shoot","pass","reaction"];
 function trainingDescriptionHtml(id) {
-  const text = lang === "en" ? fixedVideoDescriptionsEn[id] : fixedVideoDescriptions[id];
-  if (!text) return `<p class="training-description-empty">${tr("설명 준비 중입니다.","Description coming soon.")}</p>`;
+  const text = videoLocales[lang] ? videoLocales[lang][6 + videoOrder.indexOf(id)] : lang === "en" ? fixedVideoDescriptionsEn[id] : fixedVideoDescriptions[id];
+  if (!text) return `<p class="training-description-empty">${videoLocales[lang]?.[5] ?? tr("설명 준비 중입니다.","Description coming soon.")}</p>`;
   const split = text.indexOf(": ");
   const title = split >= 0 ? text.slice(0,split) : "";
   const body = split >= 0 ? text.slice(split+2) : text;
@@ -1515,18 +1691,17 @@ function programsView() {
     ${[
       {id:"dribble", ko:"드리블", en:"Dribbling", file:"training-example.mp4?v=2"},
       {id:"shoot", ko:"슈팅", en:"Shooting", file:"shooting-example.mp4?v=2"},
-      {id:"pass", ko:"패스", en:"Passing", file:"passing-example.mp4?v=2"},
-      {id:"reaction", ko:"반응", en:"Reaction", file:"reaction-example.mp4"}
+      {id:"pass", ko:"패스", en:"Passing", file:"passing-example.mp4?v=2"}
     ].map(video => `
       <section class="card">
         
-        <h2 style="margin-top:12px">${tr(video.ko,video.en)}</h2>
+        <h2 style="margin-top:12px">${videoLocales[lang]?.[videoOrder.indexOf(video.id)] ?? tr(video.ko,video.en)}</h2>
         <video controls playsinline preload="metadata" data-training-video="${video.id}" style="width:100%;height:auto">
           <source src="./${video.file}" type="video/mp4">
           ${tr("이 브라우저에서는 영상을 재생할 수 없습니다.","Your browser does not support this video.")}
         </video>
         <details id="trainingDescription-${video.id}" class="writing-toggle">
-          <summary style="font-size:14px">${tr("훈련 설명","Training description")}</summary>
+          <summary style="font-size:14px">${videoLocales[lang]?.[4] ?? tr("훈련 설명","Training description")}</summary>
           ${trainingDescriptionHtml(video.id)}
         </details>
         <p class="small video-file-status" id="videoStatus-${video.id}" aria-live="polite"></p>
@@ -1969,6 +2144,7 @@ function buildVerseList(ko,en) {
     seen.add(key);
 
     result.push({
+      book,chapter,verse,
       koRef:ko[book].name+" "+chapter+":"+verse,
       enRef:en[book].name+" "+chapter+":"+verse,
       ko:korean,
@@ -2012,8 +2188,43 @@ async function loadBible() {
   }
 }
 
+const wordLocales = {
+  es:["es_rvr1960","Versículo del día","Cargando el versículo…","No se pudo cargar el texto de este versículo.","Reintentar","Reina-Valera 1960","Fuente del texto"],
+  fr:["fr_apee","Verset du jour","Chargement du verset…","Impossible de charger le texte de ce verset.","Réessayer","Bible de l’Épée","Source du texte"],
+  de:["de_sch1951","Bibelvers des Tages","Bibelvers wird geladen…","Dieser Bibelvers konnte nicht geladen werden.","Erneut versuchen","Schlachter 1951","Textquelle"],
+  it:["it_irb20","Versetto del giorno","Caricamento del versetto…","Impossibile caricare il testo del versetto.","Riprova","Riveduta 2020","Fonte del testo"]
+};
+const wordBooks = new Map();
+async function showLocalizedWord(verse,today,language) {
+  const [code,,loading,error,retry,edition,source] = wordLocales[language];
+  const target = $("wordContent");
+  const token = Symbol();
+  target.wordToken = token;
+  const current = () => lang === language && target.wordToken === token;
+  target.textContent = loading;
+  try {
+    if(!wordBooks.has(code)) wordBooks.set(code,fetch(BIBLE_BASE+code+".json").then(r=>{
+      if(!r.ok) throw Error("Bible download failed");
+      return r.json();
+    }).catch(e=>{wordBooks.delete(code);throw e;}));
+    const books = await wordBooks.get(code);
+    const book = books[verse.book];
+    const text = book?.chapters?.[verse.chapter-1]?.[verse.verse-1];
+    if(typeof text !== "string" || !text.trim()) throw Error("Verse missing");
+    if(current()) target.innerHTML = `<p class="small">${today}</p><strong class="word-ref">${esc(book.name)} ${verse.chapter}:${verse.verse}</strong><blockquote>${esc(text)}</blockquote><p class="small">${edition}</p><a class="small" href="https://github.com/thiagobodruk/bible/blob/master/json/${code}.json" target="_blank" rel="noopener noreferrer">${source}</a>`;
+  } catch(e) {
+    if(current()) {
+      target.textContent = error + " ";
+      const button = document.createElement("button");
+      button.textContent = retry;
+      button.onclick = renderWord;
+      target.append(button);
+    }
+  }
+}
+
 function renderWord() {
-  $("wordTitle").textContent = tr("오늘의 말씀","Today's scripture");
+  $("wordTitle").textContent = wordLocales[lang]?.[1] ?? tr("오늘의 말씀","Today's scripture");
 
   if(!bibleData) {
     $("wordContent").innerHTML = `
@@ -2053,6 +2264,8 @@ function renderWord() {
     return;
   }
 
+  if(wordLocales[lang]) { showLocalizedWord(verse,today,lang); return; }
+
   $("wordContent").innerHTML = `
     <p class="small">${today}</p>
     <strong class="word-ref">
@@ -2085,7 +2298,7 @@ function checkNewDay() {
 
   lastWordDay = today;
   $("todayLabel").textContent = new Date().toLocaleDateString(
-    lang === "ko" ? "ko-KR" : "en-GB"
+    lang === "en" ? "en-GB" : lang
   );
 
   renderWord();
@@ -2101,9 +2314,9 @@ document.addEventListener("visibilitychange",() => {
    백업 · 언어 전환
 ========================================= */
 
-$("languageButton").onclick = () => {
-  if(!canLeave()) return;
-  lang = lang === "ko" ? "en" : "ko";
+$("languageButton").onchange = event => {
+  if(!canLeave()) { event.target.value = lang; return; }
+  lang = event.target.value;
   render();
 };
 
