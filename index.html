@@ -449,6 +449,57 @@ nav .active {border-color:#364943;border-left:3px solid var(--accent);background
 .match-trends th,.match-trends td {padding:10px;border-bottom:1px solid var(--line);}
 .match-check {display:flex;align-items:center;gap:8px;}
 .match-check input {width:auto;}
+.calendar-day-cell {position:relative;min-width:0;}
+.calendar-day-cell > .day {width:100%;height:100%;}
+.day-journal-add {position:absolute;top:6px;left:6px;width:28px;height:28px;padding:0;display:grid;place-items:center;font-size:18px;line-height:1;}
+@media (hover:hover) and (pointer:fine) {
+  .day-journal-add {opacity:0;pointer-events:none;}
+  .calendar-day-cell:hover .day-journal-add,
+  .calendar-day-cell:focus-within .day-journal-add {opacity:1;pointer-events:auto;}
+}
+.sleep-stat {text-align:center;min-width:0;}
+.sleep-ring {width:124px;aspect-ratio:1;border-radius:50%;margin:12px auto;display:grid;place-items:center;background:conic-gradient(var(--accent) var(--sleep-angle),var(--line) 0);}
+.sleep-ring strong {width:96px;aspect-ratio:1;border-radius:50%;display:grid;place-items:center;background:var(--panel);font-size:22px;}
+.sleep-stat-grid {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;}
+.sleep-ring {width:min(124px,100%);}
+.sleep-ring strong {width:77%;font-size:clamp(14px,4vw,22px);}
+#sleepAlarmForm fieldset {min-width:0;border:1px solid var(--line);border-radius:8px;padding:12px;margin:0;}
+.alarm-time-selects {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;}
+
+.alarm-clock-display {display:flex;align-items:center;justify-content:center;gap:clamp(18px,6vw,48px);flex-wrap:wrap;padding:24px 12px;margin:0 0 18px;border:1px solid var(--line);border-radius:12px;background:radial-gradient(ellipse at 30% 50%,#263232,var(--bg) 75%);}
+.alarm-dial {position:relative;width:152px;aspect-ratio:1;border:2px solid #51605e;border-radius:50%;background:#121819;box-shadow:inset 0 0 0 5px #1e2727,0 8px 20px #0006;}
+.alarm-dial i {position:absolute;left:50%;top:50%;width:1px;height:5px;background:#84918d;transform:rotate(var(--angle)) translateY(-63px);transform-origin:0 0;}
+.alarm-dial i.major {height:9px;width:2px;background:var(--text);}
+.dial-brand {position:absolute;top:27%;width:100%;text-align:center;color:var(--muted);font-size:8px;letter-spacing:.18em;}
+.clock-hand {position:absolute;bottom:50%;left:50%;width:3px;transform-origin:50% 100%;border-radius:3px;background:var(--text);}
+.clock-hand.hour {height:27%;width:4px;transform:translateX(-50%) rotate(var(--hour,0deg));}
+.clock-hand.minute {height:36%;transform:translateX(-50%) rotate(var(--minute,0deg));}
+.clock-hand.second {height:40%;width:1px;background:var(--accent);transform:translateX(-50%) rotate(var(--second,0deg));}
+.clock-pin {position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:8px;height:8px;border-radius:50%;background:var(--accent);}
+#sleepClockTime {display:block;font-size:clamp(26px,5vw,43px);font-weight:750;font-variant-numeric:tabular-nums;letter-spacing:.05em;}
+
+.alarm-picker {text-align:center;}
+.alarm-readout {display:block;font-size:30px;font-weight:750;font-variant-numeric:tabular-nums;margin:4px 0;}
+.alarm-picker-controls {display:flex;justify-content:center;gap:5px;flex-wrap:wrap;margin:8px 0;}
+.alarm-picker button {background:var(--bg);color:var(--text);padding:5px 8px;}
+.alarm-picker button[aria-pressed="true"] {background:var(--accent);color:#171d17;}
+.alarm-picker-face {position:relative;width:200px;height:200px;margin:12px auto;border:1px solid var(--line);border-radius:50%;background:#121819;}
+.alarm-picker-face button {position:absolute;left:50%;top:50%;width:32px;height:32px;padding:0;border-radius:50%;transform:translate(-50%,-50%) rotate(var(--tick)) translateY(-78px) rotate(calc(-1 * var(--tick)));}
+.picker-hand {position:absolute;bottom:50%;left:calc(50% - 1px);width:2px;height:65px;background:var(--accent);transform-origin:50% 100%;pointer-events:none;}
+
+/* Matchday chronograph */
+#sleepAlarmForm fieldset {padding:16px 8px;border-radius:14px;background:linear-gradient(145deg,#212a2a,#151a1d);}
+#sleepAlarmForm legend {padding:0 8px;font-weight:750;}
+.alarm-readout {font:700 clamp(24px,5vw,36px) ui-monospace,monospace;letter-spacing:.07em;color:var(--accent);}
+.alarm-picker-face {width:min(218px,100%);height:auto;aspect-ratio:1;container-type:inline-size;border:1px solid #83918a;background:radial-gradient(circle at 30% 18%,#283331,#121819 68%);box-shadow:0 0 0 3px #151a1b,0 0 0 4px #4c5753,inset 0 0 0 6px #0d1214,0 10px 24px #0007;margin:19px auto;}
+.alarm-picker-face::before {content:"";position:absolute;inset:9px;border-radius:50%;background:repeating-conic-gradient(#a9b8af 0deg .6deg,transparent .6deg 6deg);mask:radial-gradient(farthest-side,transparent calc(100% - 4px),#000 calc(100% - 3px));pointer-events:none;}
+.picker-brand {position:absolute;top:33%;left:0;right:0;color:#b0bdb5;font-size:8px;letter-spacing:.24em;pointer-events:none;}
+.alarm-picker-face button {width:15cqw;height:15cqw;font-size:clamp(10px,6cqw,14px);background:transparent;font-variant-numeric:tabular-nums;transform:translate(-50%,-50%) rotate(var(--tick)) translateY(-37cqw) rotate(calc(-1 * var(--tick)));}
+.alarm-picker-face button:hover {background:#36453c;}
+.alarm-picker-face button[aria-pressed="true"] {background:var(--accent);color:#151b17;box-shadow:0 0 12px #dfeeaa55;}
+.picker-hand {height:32%;width:3px;border-radius:3px;background:linear-gradient(var(--accent),#758660);}
+.alarm-picker-face .clock-pin {border:2px solid #e9f2cd;background:#526049;pointer-events:none;}
+.alarm-picker-controls button {border:1px solid var(--line);border-radius:7px;font-size:12px;}
 </style>
 </head>
 
@@ -681,7 +732,7 @@ const names = {
   overview:["대시보드","Overview"],
   schedule:["훈련 일정 · 일지","Schedule & journal"],
   matches:["경기 기록 · 분석","Matches & analysis"],
-  recovery:["회복 관리","Recovery"],
+  recovery:["수면 시간","Sleep hours"],
   programs:["훈련 프로그램","Programs"],
   growth:["성장 분석","Progress"],
   video:["영상 리뷰","Video review"]
@@ -691,7 +742,7 @@ const names = {
    화면
 ========================================= */
 
-const shellLocales = {"es": ["Resumen", "Calendario y diario", "Partidos y análisis", "Recuperación", "Programas de entrenamiento", "Progreso", "Análisis de vídeo", "Exportar copia", "Importar", "Registra tu entrenamiento de hoy y elige algo que mejorar para el próximo partido."], "fr": ["Tableau de bord", "Planning et journal", "Matchs et analyse", "Récupération", "Programmes d’entraînement", "Progression", "Analyse vidéo", "Exporter la sauvegarde", "Importer", "Note ton entraînement du jour et choisis un point à améliorer pour le prochain match."], "de": ["Übersicht", "Trainingsplan und Tagebuch", "Spiele und Analyse", "Regeneration", "Trainingsprogramme", "Fortschritt", "Videoanalyse", "Sicherung exportieren", "Importieren", "Halte dein heutiges Training fest und wähle einen Punkt, den du im nächsten Spiel verbessern möchtest."], "it": ["Panoramica", "Calendario e diario", "Partite e analisi", "Recupero", "Programmi di allenamento", "Progressi", "Analisi video", "Esporta backup", "Importa", "Registra l’allenamento di oggi e scegli un aspetto da migliorare nella prossima partita."]};
+const shellLocales = {"es": ["Resumen", "Calendario y diario", "Partidos y análisis", "Horas de sueño", "Programas de entrenamiento", "Progreso", "Análisis de vídeo", "Exportar copia", "Importar", "Registra tu entrenamiento de hoy y elige algo que mejorar para el próximo partido."], "fr": ["Tableau de bord", "Planning et journal", "Matchs et analyse", "Durée du sommeil", "Programmes d’entraînement", "Progression", "Analyse vidéo", "Exporter la sauvegarde", "Importer", "Note ton entraînement du jour et choisis un point à améliorer pour le prochain match."], "de": ["Übersicht", "Trainingsplan und Tagebuch", "Spiele und Analyse", "Schlafdauer", "Trainingsprogramme", "Fortschritt", "Videoanalyse", "Sicherung exportieren", "Importieren", "Halte dein heutiges Training fest und wähle einen Punkt, den du im nächsten Spiel verbessern möchtest."], "it": ["Panoramica", "Calendario e diario", "Partite e analisi", "Ore di sonno", "Programmi di allenamento", "Progressi", "Analisi video", "Esporta backup", "Importa", "Registra l’allenamento di oggi e scegli un aspetto da migliorare nella prossima partita."]};
 const navName = key => shellLocales[lang]?.[Object.keys(names).indexOf(key)] ?? names[key][lang === "ko" ? 0 : 1];
 
 function render() {
@@ -901,6 +952,7 @@ function scheduleView() {
     const hasThanks = db.gratitude.some(g => g.date === key);
 
     cells += `
+      <div class="calendar-day-cell">
       <button
         class="day ${key === selectedDay ? "selected" : ""}"
         data-day="${key}"
@@ -926,6 +978,8 @@ function scheduleView() {
         ${hasThanks
           ? `<span class="mark">♡ ${tr("감사","Gratitude")}</span>` : ""}
       </button>
+      <button type="button" class="day-journal-add" data-journal-day="${key}" aria-controls="calendarJournal" aria-label="${key} · ${tr("훈련 일지 열기","Open training journal")}">+</button>
+      </div>
     `;
   }
 
@@ -966,8 +1020,8 @@ function scheduleView() {
 
       <p class="small">
         ${tr(
-          "날짜를 누르면 아래에서 훈련·일지·감사를 작성할 수 있습니다.",
-          "Select a date to manage training, journal and gratitude."
+          "날짜 칸에 마우스를 올리면 나타나는 +로 일지를 작성하세요.",
+          "Hover over a date and press + to write its journal entry."
         )}
       </p>
 
@@ -979,6 +1033,39 @@ function scheduleView() {
           ).split(",").map(d => `<span>${d}</span>`).join("")}
         </div>
         <div class="calendar">${cells}</div>
+      </div>
+      <div id="calendarJournal" hidden style="margin-top:18px;padding-top:16px;border-top:1px solid var(--line)">
+        <h2>${tr("훈련 일지","Training journal")} · ${selectedDay}</h2>
+        <form id="journalForm">
+          ${field(tr("수면 시간 · 선택","Sleep hours · optional"),"sleep","number",
+            sleepByDate().get(selectedDay)?.hours ?? "",'min="0" max="24" step="0.1"')}
+          <label>
+            ${tr("컨디션","Condition")}
+            <select name="mood">
+              ${[
+                ["great","좋음","Great"],
+                ["normal","보통","Okay"],
+                ["tired","피곤함","Tired"]
+              ].map(([value,ko,en]) => `
+                <option value="${value}"
+                  ${journal.mood === value ? "selected" : ""}>
+                  ${tr(ko,en)}
+                </option>
+              `).join("")}
+            </select>
+          </label>
+
+          ${field(tr("오늘의 목표","Daily goal"),"goal",
+            "text",journal.goal || "",'maxlength="200"')}
+
+          ${area(tr("훈련 내용 · 느낀 점","Training & reflections"),
+            "body",journal.body || "","required")}
+
+          ${area(tr("다음 훈련에서 개선할 점","Next session focus"),
+            "next",journal.next || "")}
+
+          <button>${tr("일지 저장","Save journal")}</button>
+        </form>
       </div>
     </section>
 
@@ -1022,39 +1109,6 @@ function scheduleView() {
         </details>
       </section>
 
-      <section class="card">
-        <details class="writing-toggle">
-          <summary>${tr("훈련 일지 적기","Write training journal")}</summary>
-        <form id="journalForm">
-          <label>
-            ${tr("컨디션","Condition")}
-            <select name="mood">
-              ${[
-                ["great","좋음","Great"],
-                ["normal","보통","Okay"],
-                ["tired","피곤함","Tired"]
-              ].map(([value,ko,en]) => `
-                <option value="${value}"
-                  ${journal.mood === value ? "selected" : ""}>
-                  ${tr(ko,en)}
-                </option>
-              `).join("")}
-            </select>
-          </label>
-
-          ${field(tr("오늘의 목표","Daily goal"),"goal",
-            "text",journal.goal || "",'maxlength="200"')}
-
-          ${area(tr("훈련 내용 · 느낀 점","Training & reflections"),
-            "body",journal.body || "","required")}
-
-          ${area(tr("다음 훈련에서 개선할 점","Next session focus"),
-            "next",journal.next || "")}
-
-          <button>${tr("일지 저장","Save journal")}</button>
-        </form>
-        </details>
-      </section>
     </div>
 
     <section class="card">
@@ -1152,11 +1206,22 @@ function bindSchedule() {
     }
   };
 
+  document.querySelectorAll("[data-journal-day]").forEach(button => {
+    button.onclick = () => {
+      if(!canLeave()) return;
+      selectedDay = button.dataset.journalDay;
+      render();
+      $("calendarJournal").hidden = false;
+      $("journalForm").querySelector("select").focus();
+    };
+  });
+
   $("journalForm").onsubmit = event => {
     event.preventDefault();
 
     const record = Object.fromEntries(new FormData(event.target));
     if(!record.body.trim()) return;
+    record.sleep = record.sleep === "" ? null : Number(record.sleep);
 
     record.date = selectedDay;
     record.updatedAt = new Date().toISOString();
@@ -1568,69 +1633,268 @@ function bindMatches() {
    회복 관리
 ========================================= */
 
+function sleepByDate() {
+  const days = new Map();
+  for(const row of [...db.recovery,...db.journals]) {
+    if(!row || typeof row.date !== "string" || row.sleep == null || String(row.sleep).trim() === "") continue;
+    const hours = Number(row.sleep);
+    if(!Number.isFinite(hours) || hours < 0 || hours > 24) continue;
+    const stamp = row.updatedAt || "";
+    if(!days.has(row.date) || stamp >= days.get(row.date).stamp) days.set(row.date,{hours,stamp});
+  }
+  return days;
+}
+
+function sleepSummary() {
+  const today = new Date();
+  const days = sleepByDate();
+  const end = dayKey(today);
+  const format = new Intl.NumberFormat(lang,{maximumFractionDigits:1});
+  return `<section class="card"><h2>${tr("수면 통계","Sleep statistics")}</h2>
+    <div class="sleep-stat-grid">${[7,30].map(n => {
+      const start = new Date(today);
+      start.setDate(start.getDate()-n+1);
+      const first = dayKey(start);
+      const values = [...days].filter(([date]) => date >= first && date <= end).map(([,row]) => row.hours);
+      const total = values.reduce((a,b) => a+b,0);
+      const avg = values.length ? total / values.length : null;
+      return `<div class="sleep-stat"><h3>${n === 7 ? tr("최근 7일","Last 7 days") : tr("최근 30일","Last 30 days")}</h3>
+        <div class="sleep-ring" style="--sleep-angle:${(avg ?? 0)/24*360}deg" aria-hidden="true"><strong>${avg === null ? "—" : format.format(avg)+" h"}</strong></div>
+        <p>${values.length ? tr("평균","Average")+" <strong>"+format.format(total/values.length)+" h</strong> · "+tr("합계","Total")+" "+format.format(total)+" h" : tr("수면 기록 없음","No sleep records")}</p>
+        <p class="small">${tr("기록한 날","Days logged")}: ${values.length}/${n}</p></div>`;
+    }).join("")}</div>
+    <p class="small">${tr("원의 색칠된 부분은 하루 24시간 중 평균 수면 시간입니다. 기록한 날만 평균에 포함됩니다.","The filled arc shows average sleep out of 24 hours. Only logged days count.")}</p></section>`;
+}
+
 function recoveryView() {
   return `
-    <div class="notice">
-      ${tr(
-        "통증이나 심한 피로가 있으면 무리하지 말고 코치·의료 전문가와 상담하세요.",
-        "Consult a coach or healthcare professional for pain or severe fatigue."
-      )}
-    </div>
+    ${sleepSummary()}
+    <form id="sleepAlarmForm" class="card">
+      <h2>${tr("수면 알람","Sleep alarms")}</h2>
+      <div class="grid">${[["wake","기상 알람","Wake-up alarm","07:00"],["bed","잠 준비 알람","Bedtime preparation reminder","22:30"]].map(([key,ko,en,time]) => `
+        <fieldset><legend>${tr(ko,en)}</legend>
+        ${alarmPicker(key,sleepAlarm[key]?.time || time)}
+        <label><input name="${key}Enabled" type="checkbox" ${sleepAlarm[key]?.enabled ? "checked" : ""}> ${tr("알람 켜기","Enable alarm")}</label>
+        <label>${tr("내 알람 소리","Custom alarm sound")}<input type="file" accept="audio/*,.mp3,.m4a,.wav,.ogg" data-alarm-file="${key}"></label>
+        <p class="small" data-sound-status="${key}">${tr("기본 소리","Default sound")}</p>
+        <div class="alarm-picker-controls"><button class="secondary" type="button" data-sound-preview="${key}">${tr("미리 듣기","Preview")}</button><button class="secondary" type="button" data-sound-reset="${key}">${tr("기본 소리로","Use default")}</button></div>
+        </fieldset>
+      `).join("")}</div>
+      <p class="small">${tr("사이트가 열려 있고 기기가 깨어 있을 때만 작동합니다. 기상 알람 소리는 브라우저가 허용할 때 재생됩니다.","Alarms work only while the site is open and the device is awake. Wake-up audio depends on browser permission.")}</p>
+      <button>${tr("알림 설정 저장","Save reminder")}</button>
+    </form>
 
     <div class="grid">
       <form id="recoveryForm" class="card">
-        <h2>${tr("회복 체크인","Recovery check-in")}</h2>
+        <h2>${tr("수면 기록 추가","Log sleep")}</h2>
 
         ${field(tr("날짜","Date"),"date","date",
           dayKey(new Date()),"required")}
         ${field(tr("수면 시간","Sleep hours"),"sleep","number",
           8,'required min="0" max="24" step="0.5"')}
-        ${field(tr("피로도 · 0~10","Fatigue · 0–10"),"fatigue","number",
-          3,'required min="0" max="10"')}
-        ${field(tr("통증 · 0~10","Pain · 0–10"),"pain","number",
-          0,'required min="0" max="10"')}
-
         <button>${tr("저장","Save")}</button>
       </form>
 
       <section class="card">
-        <h2>${tr("회복 기록","Recovery history")}</h2>
+        <h2>${tr("수면 기록","Sleep history")}</h2>
 
-        ${[...db.recovery].reverse().map(r => `
-          <div class="record">
-            <div>
-              <strong>${esc(r.date)}</strong>
-              <div class="small">
-                ${tr("수면","Sleep")} ${Number(r.sleep) || 0}h ·
-                ${tr("피로","Fatigue")} ${Number(r.fatigue) || 0}/10 ·
-                ${tr("통증","Pain")} ${Number(r.pain) || 0}/10
-              </div>
-            </div>
-            ${removeButton("recovery",r.id)}
-          </div>
+        ${[...sleepByDate()].sort(([a],[b]) => b.localeCompare(a)).map(([date,row]) => `
+          <div class="record"><strong>${esc(date)}</strong><span>${row.hours} h</span></div>
         `).join("") || emptyMessage()}
       </section>
     </div>
   `;
 }
 
+let sleepAlarm = {};
+const sleepAlarmLast = {};
+let sleepAudio;
+try {
+  const saved = JSON.parse(localStorage.getItem(KEY+"-sleep-alarm")) || {};
+  sleepAlarm = saved.bed || saved.wake ? saved : {bed:saved};
+} catch {}
+const alarmSounds = Object.create(null);
+let activeAlarmSound;
+function soundStorage(action,key,file) {
+  return new Promise((resolve,reject) => {
+    const request = indexedDB.open(KEY+"-alarm-sounds",1);
+    request.onupgradeneeded = () => request.result.createObjectStore("audio");
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => {
+      const storeDb = request.result;
+      const tx = storeDb.transaction("audio",action === "get" ? "readonly" : "readwrite");
+      const store = tx.objectStore("audio");
+      const work = action === "get" ? store.get(key) : action === "put" ? store.put(file,key) : store.delete(key);
+      tx.oncomplete = () => {storeDb.close(); resolve(work.result);};
+      tx.onabort = () => {storeDb.close(); reject(tx.error);};
+    };
+  });
+}
+function unlockAlarmAudio() {
+  const Audio = window.AudioContext || window.webkitAudioContext;
+  if(!Audio) return Promise.reject(new Error("Audio unavailable"));
+  sleepAudio ||= new Audio();
+  return sleepAudio.resume();
+}
+function playAlarmSound(key,preview=false) {
+  if(sleepAudio?.state !== "running") return false;
+  try { activeAlarmSound?.stop(); } catch {}
+  if(!alarmSounds[key]?.buffer) {ringWakeAlarm(key); return true;}
+  const source = sleepAudio.createBufferSource();
+  source.buffer = alarmSounds[key].buffer;
+  source.connect(sleepAudio.destination);
+  source.start(0,0,preview ? 5 : 20);
+  activeAlarmSound = source;
+  return true;
+}
+function bindAlarmSounds() {
+  for(const key of ["wake","bed"]) {
+    const input = document.querySelector(`[data-alarm-file="${key}"]`);
+    const status = document.querySelector(`[data-sound-status="${key}"]`);
+    const paint = () => {status.textContent = alarmSounds[key]?.file.name || tr("기본 소리","Default sound");};
+    paint();
+    input.onchange = async () => {
+      const file = input.files[0];
+      if(!file) return;
+      if(file.size > 25_000_000) {notify(tr("25MB 이하의 오디오 파일을 선택하세요.","Choose an audio file under 25 MB.")); input.value=""; return;}
+      try {
+        await unlockAlarmAudio();
+        const buffer = await sleepAudio.decodeAudioData(await file.arrayBuffer());
+        await soundStorage("put",key,file);
+        alarmSounds[key] = {file,buffer}; paint();
+      } catch {notify(tr("오디오 파일을 읽거나 저장할 수 없습니다.","Could not read or save this audio file."));}
+      input.value = "";
+    };
+    document.querySelector(`[data-sound-preview="${key}"]`).onclick = async () => {
+      try {await unlockAlarmAudio(); if(!playAlarmSound(key,true)) throw Error();}
+      catch {notify(tr("브라우저에서 소리를 재생할 수 없습니다.","The browser could not play the sound."));}
+    };
+    document.querySelector(`[data-sound-reset="${key}"]`).onclick = async () => {
+      try {await soundStorage("delete",key); delete alarmSounds[key]; paint();}
+      catch {notify(tr("기본 소리로 변경하지 못했습니다.","Could not restore the default sound."));}
+    };
+  }
+}
+Promise.all(["wake","bed"].map(async key => {
+  try {
+    const file = await soundStorage("get",key);
+    if(!file || alarmSounds[key]) return;
+    const Audio = window.AudioContext || window.webkitAudioContext;
+    if(!Audio) return;
+    sleepAudio ||= new Audio();
+    const buffer = await sleepAudio.decodeAudioData(await file.arrayBuffer());
+    if(alarmSounds[key]) return;
+    alarmSounds[key] = {file,buffer};
+    const label = document.querySelector(`[data-sound-status="${key}"]`);
+    if(label) label.textContent = file.name;
+  } catch {}
+}));
+function ringWakeAlarm(key) {
+  if(sleepAudio?.state !== "running") return;
+  for(let i=0;i<(key === "bed" ? 2 : 5);i++) {
+    const tone = sleepAudio.createOscillator();
+    const gain = sleepAudio.createGain();
+    const t = sleepAudio.currentTime + i*.45;
+    tone.frequency.value = key === "bed" ? 440 : 740;
+    gain.gain.setValueAtTime(.16,t);
+    gain.gain.exponentialRampToValueAtTime(.001,t+.28);
+    tone.connect(gain).connect(sleepAudio.destination);
+    tone.start(t); tone.stop(t+.3);
+  }
+}
+function checkSleepAlarm() {
+  const now = new Date();
+  const current = String(now.getHours()).padStart(2,"0")+":"+String(now.getMinutes()).padStart(2,"0");
+  const today = dayKey(now);
+  const messages = [];
+  for(const key of ["wake","bed"]) {
+    if(!sleepAlarm[key]?.enabled || current !== sleepAlarm[key].time || sleepAlarmLast[key] === today) continue;
+    sleepAlarmLast[key] = today;
+    playAlarmSound(key);
+    messages.push(key === "wake" ? tr("일어날 시간이에요!","Time to wake up!") : tr("잠잘 준비를 시작할 시간이에요.","Time to get ready for bed."));
+  }
+  if(messages.length) notify(messages.join(" · "));
+}
+function alarmPicker(key,time) {
+  const [h,m] = time.split(":");
+  return `<div class="alarm-picker">
+    <input type="hidden" name="${key}Hour" value="${esc(h)}"><input type="hidden" name="${key}Minute" value="${esc(m)}">
+    <output class="alarm-readout"></output>
+    <div class="alarm-picker-controls">
+      <button type="button" data-mode="hour">${tr("시","Hour")}</button><button type="button" data-mode="minute">${tr("분","Minute")}</button>
+      <button type="button" data-period="0">${tr("오전","AM")}</button><button type="button" data-period="1">${tr("오후","PM")}</button>
+    </div>
+    <div class="alarm-picker-face"><span class="picker-brand" aria-hidden="true">TOUCHLINE</span><span class="picker-hand" aria-hidden="true"></span><span class="clock-pin" aria-hidden="true"></span>
+      ${Array.from({length:12},(_,i) => `<button type="button" data-tick="${i}" style="--tick:${i*30}deg"></button>`).join("")}
+    </div>
+    <div class="alarm-picker-controls"><button type="button" data-step="-1">−1 ${tr("분","min")}</button><button type="button" data-step="1">+1 ${tr("분","min")}</button></div>
+  </div>`;
+}
+function bindAlarmPicker(picker) {
+  const [hour,minute] = picker.querySelectorAll('input[type="hidden"]');
+  let mode = "hour";
+  const pad = n => String(n).padStart(2,"0");
+  function paint() {
+    const h = Number(hour.value), m = Number(minute.value);
+    picker.querySelector("output").textContent = hour.value+":"+minute.value;
+    picker.querySelector(".picker-hand").style.rotate = (mode === "hour" ? h%12*30 : m*6)+"deg";
+    for(const btn of picker.querySelectorAll("[data-tick]")) {
+      const i = Number(btn.dataset.tick);
+      btn.textContent = mode === "hour" ? i || 12 : pad(i*5);
+      btn.setAttribute("aria-pressed", String(mode === "hour" ? h%12 === i : m === i*5));
+    }
+    for(const btn of picker.querySelectorAll("[data-mode],[data-period]")) btn.setAttribute("aria-pressed",String(btn.dataset.mode ? btn.dataset.mode === mode : Number(btn.dataset.period) === Math.floor(h/12)));
+  }
+  picker.onclick = event => {
+    const btn = event.target.closest("button");
+    if(!btn) return;
+    if(btn.dataset.mode) mode = btn.dataset.mode;
+    if(btn.dataset.period != null) hour.value = pad(Number(hour.value)%12+Number(btn.dataset.period)*12);
+    if(btn.dataset.tick != null) {
+      const i = Number(btn.dataset.tick);
+      if(mode === "hour") { hour.value = pad(Math.floor(Number(hour.value)/12)*12+i); mode = "minute"; }
+      else minute.value = pad(i*5);
+    }
+    if(btn.dataset.step) {
+      const total = (Number(hour.value)*60+Number(minute.value)+Number(btn.dataset.step)+1440)%1440;
+      hour.value = pad(Math.floor(total/60)); minute.value = pad(total%60); mode = "minute";
+    }
+    paint();
+  };
+  paint();
+}
+setInterval(checkSleepAlarm,1000);
+
 function bindRecovery() {
+  document.querySelectorAll(".alarm-picker").forEach(bindAlarmPicker);
+  bindAlarmSounds();
+  $("sleepAlarmForm").onsubmit = event => {
+    event.preventDefault();
+    const values = new FormData(event.target);
+    const next = Object.fromEntries(["wake","bed"].map(key => [key,{time:values.get(key+"Hour")+":"+values.get(key+"Minute"),enabled:values.has(key+"Enabled")} ]));
+    if(next.wake.enabled || next.bed.enabled) {
+      try {
+        const Audio = window.AudioContext || window.webkitAudioContext;
+        if(Audio) { sleepAudio ||= new Audio(); sleepAudio.resume().catch(() => {}); }
+      } catch {}
+    }
+    try { localStorage.setItem(KEY+"-sleep-alarm",JSON.stringify(next)); }
+    catch { notify(tr("알림 설정을 저장하지 못했습니다.","Could not save reminder settings.")); return; }
+    sleepAlarm = next;
+    notify(tr("알림 설정을 저장했습니다.","Reminder settings saved."));
+    checkSleepAlarm();
+  };
   $("recoveryForm").onsubmit = event => {
     event.preventDefault();
 
     const record = Object.fromEntries(new FormData(event.target));
 
-    ["sleep","fatigue","pain"].forEach(key => {
-      record[key] = Number(record[key]);
-    });
-
-    if(db.recovery.some(r => r.date === record.date) &&
-       !confirm(tr(
-         "같은 날짜의 기록을 교체할까요?",
-         "Replace the entry for this date?"
-       ))) return;
-
-    record.id = uid();
+    record.sleep = Number(record.sleep);
+    if(!Number.isFinite(record.sleep) || record.sleep < 0 || record.sleep > 24) return;
+    const previous = db.recovery.find(r => r.date === record.date);
+    if(previous) Object.assign(record,{id:previous.id,fatigue:previous.fatigue,pain:previous.pain});
+    else record.id = uid();
+    record.updatedAt = new Date().toISOString();
     db.recovery = db.recovery.filter(r => r.date !== record.date);
     db.recovery.push(record);
 
