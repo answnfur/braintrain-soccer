@@ -1675,16 +1675,14 @@ function recoveryView() {
       <div class="grid">${[["wake","기상 알람","Wake-up alarm","07:00"],["bed","잠 준비 알람","Bedtime preparation reminder","22:30"]].map(([key,ko,en,time]) => `
         <fieldset><legend>${tr(ko,en)}</legend>
         ${alarmPicker(key,sleepAlarm[key]?.time || time)}
-        <label><input name="${key}Enabled" type="checkbox" ${sleepAlarm[key]?.enabled ? "checked" : ""}> ${tr("알람 켜기","Enable alarm")}</label>
         <label>${tr("내 알람 소리","Custom alarm sound")}<input type="file" accept="audio/*,.mp3,.m4a,.wav,.ogg" data-alarm-file="${key}"></label>
         <p class="small" data-sound-status="${key}">${tr("기본 소리","Default sound")}</p>
         <div class="alarm-picker-controls"><button class="secondary" type="button" data-sound-preview="${key}">${tr("미리 듣기","Preview")}</button><button class="secondary" type="button" data-sound-reset="${key}">${tr("기본 소리로","Use default")}</button></div>
+        <button type="submit" name="alarmAction" value="${key}">${tr("알람 저장","Save alarm")}</button>
+        ${sleepAlarm[key]?.enabled ? `<button type="submit" class="secondary" name="alarmAction" value="cancel-${key}">${tr("예약 취소","Cancel schedule")}</button><p class="small">${tr("예약됨","Scheduled")} · ${esc(sleepAlarm[key].time)}</p>` : ""}
         </fieldset>
       `).join("")}</div>
       <p class="small">${tr("사이트가 열려 있고 기기가 깨어 있을 때만 작동합니다. 기상 알람 소리는 브라우저가 허용할 때 재생됩니다.","Alarms work only while the site is open and the device is awake. Wake-up audio depends on browser permission.")}</p>
-      <button>${tr("알림 설정 저장","Save reminder")}</button>
-      <button type="button" class="secondary" id="enableAlarmAudio">${tr("알람 소리 켜기","Enable alarm audio")}</button>
-      <p class="small" id="alarmAudioStatus" role="status">${sleepAudio?.state === "running" ? tr("소리 준비됨","Audio ready") : tr("새로고침 후에는 알람 소리 켜기를 눌러 주세요.","Enable alarm audio after reloading.")}</p>
     </form>
 
     <div class="grid">
@@ -1763,13 +1761,13 @@ function unlockAlarmAudio() {
 function playAlarmSound(key,preview=false) {
   if(sleepAudio?.state !== "running") return false;
   stopAlarmAudio();
-  if(!alarmSounds[key]?.buffer) {ringWakeAlarm(key); showStopAlarm(); return true;}
+  if(!alarmSounds[key]?.buffer) {ringWakeAlarm(key); if(!preview) showStopAlarm(); return true;}
   const source = sleepAudio.createBufferSource();
   source.buffer = alarmSounds[key].buffer;
   source.connect(sleepAudio.destination);
   source.start(0,0,preview ? 5 : 20);
   trackAlarmNode(source);
-  showStopAlarm();
+  if(!preview) showStopAlarm();
   return true;
 }
 function bindAlarmSounds() {
@@ -1846,7 +1844,7 @@ function checkSleepAlarm() {
       const blocked = key+"-blocked";
       if(sleepAlarmLast[blocked] !== today) {
         sleepAlarmLast[blocked] = today;
-        notify(tr("알람 시간입니다. 소리를 들으려면 수면 시간에서 알람 소리 켜기를 누르세요.","Alarm due. Open Sleep hours and enable alarm audio."));
+        notify(tr("알람 시간입니다. 소리를 들으려면 수면 시간에서 미리 듣기 또는 알람 저장을 눌러 소리를 허용하세요.","Alarm due. Use Preview or Save alarm in Sleep hours to allow audio."));
       }
       continue;
     }
@@ -1910,30 +1908,26 @@ document.addEventListener("visibilitychange",() => {if(!document.hidden) checkSl
 function bindRecovery() {
   document.querySelectorAll(".alarm-picker").forEach(bindAlarmPicker);
   bindAlarmSounds();
-  $("enableAlarmAudio").onclick = async () => {
-    const status = $("alarmAudioStatus");
-    try {
-      await unlockAlarmAudio();
-      status.textContent = tr("소리 준비됨 · 테스트음 재생","Audio ready · test tone");
-      if(!playAlarmSound("wake",true)) throw Error();
-      checkSleepAlarm();
-    } catch {status.textContent = tr("소리 재생이 차단됐어요. 브라우저의 사이트 소리 설정을 확인하세요.","Audio blocked. Check the browser’s site sound settings.");}
-  };
-  $("sleepAlarmForm").onsubmit = event => {
+  $("sleepAlarmForm").onsubmit = async event => {
     event.preventDefault();
+    const action = event.submitter?.value || "";
+    if(!/^(cancel-)?(wake|bed)$/.test(action)) return;
+    const cancel = action.startsWith("cancel-");
+    const key = action.replace("cancel-", "");
     const values = new FormData(event.target);
-    const next = Object.fromEntries(["wake","bed"].map(key => [key,{time:values.get(key+"Hour")+":"+values.get(key+"Minute"),enabled:values.has(key+"Enabled")} ]));
-    if(next.wake.enabled || next.bed.enabled) {
-      try {
-        const Audio = window.AudioContext || window.webkitAudioContext;
-        if(Audio) { sleepAudio ||= new Audio(); sleepAudio.resume().catch(() => {}); }
-      } catch {}
-    }
-    try { localStorage.setItem(KEY+"-sleep-alarm",JSON.stringify(next)); }
-    catch { notify(tr("알림 설정을 저장하지 못했습니다.","Could not save reminder settings.")); return; }
+    const time = values.get(key+"Hour")+":"+values.get(key+"Minute");
+    if(!/^(?:[01][0-9]|2[0-3]):[0-5][0-9]$/.test(time)) return;
+    const next = {...sleepAlarm,[key]:{time,enabled:!cancel}};
+    try {localStorage.setItem(KEY+"-sleep-alarm",JSON.stringify(next));}
+    catch {notify(tr("알람을 저장하지 못했습니다.","Could not save alarm."));return;}
     sleepAlarm = next;
-    notify(tr("알림 설정을 저장했습니다.","Reminder settings saved."));
-    checkSleepAlarm();
+    if(!cancel) {
+      delete sleepAlarmLast[key];
+      delete sleepAlarmLast[key+"-blocked"];
+      try {unlockAlarmAudio().then(checkSleepAlarm).catch(() => {});} catch {}
+    }
+    render();
+    notify(cancel ? tr("예약을 취소했어요.","Schedule cancelled.") : tr("알람 예약: ","Alarm scheduled: ")+time);
   };
   $("recoveryForm").onsubmit = event => {
     event.preventDefault();
